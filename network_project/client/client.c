@@ -1,13 +1,9 @@
 #include "client.h"
 
-#define MAX_COMMAND 2000
-
-
 int main(void) {
 
   sess_t session = session_setup("192.168.0.101", 2000);
-
-  char server_message[2000], client_message[MAX_COMMAND];
+  char server_message[MAX_BUFFER], client_message[MAX_BUFFER];
 
   memset(server_message,'\0',sizeof(server_message));
   memset(client_message,'\0',sizeof(client_message));
