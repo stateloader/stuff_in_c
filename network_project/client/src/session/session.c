@@ -14,7 +14,7 @@ static void setsocket(sess_t *session) {
   }
 }
 
-sess_t session_setup(char *address, int port) {
+sess_t session_setup(char *address, int port) { // init
 
   sess_t session = {.status = 0x00};
 
@@ -26,5 +26,3 @@ sess_t session_setup(char *address, int port) {
 
   return session;
 }
-
-
