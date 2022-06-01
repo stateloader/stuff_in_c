@@ -19,9 +19,9 @@ GENERAL
 #define FAIL 0
 #define SUCC 1
 
-#define STATE_READ_SCAN 0
-#define STATE_BYTE_SCAN 1
-#define STATE_QUIT_SCAN 2
+#define READ_SCAN 0
+#define BYTE_SCAN 1
+#define QUIT_SCAN 2
 
 #define check_ascii(b) (b >= 0x00 && b <= 0x7F)
 #define check_alpha(b) (b >= 'a' && b <= 'Z')

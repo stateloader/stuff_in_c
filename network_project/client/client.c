@@ -2,16 +2,17 @@
 
 #define MAX_COMMAND 2000
 
+
 int main(void) {
 
-  int socket_desc;
-  struct sockaddr_in server_addr;
+  sess_t session = session_setup("192.168.0.101", 2000);
+  
   char server_message[2000], client_message[MAX_COMMAND];
 
-  // Clean buffers:
   memset(server_message,'\0',sizeof(server_message));
   memset(client_message,'\0',sizeof(client_message));
 
+<<<<<<< HEAD
   // Create socket:
   socket_desc = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -29,33 +30,30 @@ int main(void) {
 
   // Send connection request to server:
   if (connect(socket_desc, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0){
+=======
+  if (connect(session.socket_desc, (struct sockaddr *)&session.server_addr, sizeof(session.server_addr)) < 0){
+>>>>>>> 3d616b43c84642e226aeed01d3f2b12b0cd87f98
       printf("Unable to connect\n");
       return -1;
   }
-
+  
   printf("Connected with server successfully\n");
 
-  // Get input from the user:
-  printf("Enter message: ");
-  fgets(client_message, MAX_COMMAND, stdin);
+  scan_t scan = scan_driver("enter message");
 
-  // Send the message to server:
-
-  if(send(socket_desc, client_message, strlen(client_message), 0) < 0){
+  if(send(session.socket_desc, scan.scanner, strlen(scan.scanner), 0) < 0){
       printf("Unable to send message\n");
       return -1;
   }
 
-  // Receive the server's response:
-  if(recv(socket_desc, server_message, sizeof(server_message), 0) < 0){
+  if(recv(session.socket_desc, server_message, sizeof(server_message), 0) < 0){
       printf("Error while receiving server's msg\n");
       return -1;
   }
 
   printf("Server's response: %s\n",server_message);
 
-  // Close the socket:
-  close(socket_desc);
+  close(session.socket_desc);
 
   return 0;
 }
