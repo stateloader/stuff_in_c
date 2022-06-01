@@ -7,7 +7,7 @@ void print_byte(uint8_t byte) {
 
 static int connection(sess_t *session) {
 
-  if (connect(session->socket, (struct sockaddr *)&session->server, sizeof(session->server)) < 0){
+  if (connect(session->socket, (struct sockaddr *)&session->server, sizeof(session->server)) < 0) {
 		printf("connection failed.\n");
     return 0;
   } else {
@@ -17,7 +17,7 @@ static int connection(sess_t *session) {
   }
 }
 
-int main(void) {
+int main(int argc, char **argv) {
 
   sess_t session = session_setup("127.0.0.1", 2000);
   char server_message[MAX_BUFFER], client_message[MAX_BUFFER];

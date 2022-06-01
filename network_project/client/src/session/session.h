@@ -18,7 +18,6 @@ typedef struct Session {
   uint8_t status;
   int socket;
   struct sockaddr_in server;
-  scan_t scanner;
 } sess_t;
 
 sess_t session_setup(char *address, int port);
