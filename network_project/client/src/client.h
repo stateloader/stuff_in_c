@@ -4,20 +4,20 @@
 #include "scan.h"
 #include "connection.h"
 
-#define WFREE 0x00
-#define WALLC 0x01
-#define WMENU 0x02
-#define WRQST 0x03
-#define WRESP 0x04
+#define WFREE 0
+#define WALLC 1
+#define WMENU 2
+#define WRQST 3
+#define WRESP 4
 
 typedef struct Client {
-  conn_t *conn;
+  conn_t conn;
   uint8_t controller;
   size_t sizereq, sizeres;
   char request[MAX_BUFFER];
   char response[MAX_BUFFER];
 } cent_t;
 
-void client_request(cent_t *client, char *message);
+void client_session(cent_t *client);
 
 #endif
