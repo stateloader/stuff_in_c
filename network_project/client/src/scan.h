@@ -10,15 +10,13 @@ GENERAL
 
 #include "utils.h"
 
-#define FAIL 0
-#define SUCC 1
+//#define FAIL 0
+//#define SUCC 1
 
-#define READ_SCAN 0
-#define BYTE_SCAN 1
-#define QUIT_SCAN 2
+#define ONGOING 0
+#define NOGOING 1
 
 #define check_ascii(B) (B >= 0x00 && B <= 0x7F)
-#define check_term(S, L) (S[L - 1] == '\0')
 
 typedef struct Scan {
   size_t length;
