@@ -17,4 +17,12 @@
 #define tog_bit(byte, bit) byte ^= (1 << bit)
 #define clr_bit(byte, bit) byte &= ~(1 << bit)
 
+
+/*
+void print_byte(uint8_t byte) {
+  for (uint8_t i = 1 << 7; i > 0; i = i / 2)
+    (byte & i) ? printf("1") : printf("0");
+}
+*/
+
 #endif

@@ -17,10 +17,10 @@ GENERAL
 #define BYTE_SCAN 1
 #define QUIT_SCAN 2
 
-#define check_ascii(b) (b >= 0x00 && b <= 0x7F)
+#define check_ascii(B) (B >= 0x00 && B <= 0x7F)
+#define check_term(S, L) (S[L - 1] == '\0')
 
 typedef struct Scan {
-  uint8_t status;
   size_t length;
   char scanner[MAX_BUFFER];
 } scan_t;
