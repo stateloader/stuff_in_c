@@ -17,7 +17,7 @@ static uint8_t read_scan(scan_t *scan) {
   }
 
   scan->scanner[scan->length - 1] = '\0';
-  if (scan->scanner[scan->length - 1] != '\0') {
+  if (!check_term(scan->scanner, scan->length)) {
     printf("input corrupted.\nterminating.\n\n");
     exit(EXIT_FAILURE);
   }

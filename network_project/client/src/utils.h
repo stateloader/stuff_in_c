@@ -17,6 +17,7 @@
 #define tog_bit(byte, bit) byte ^= (1 << bit)
 #define clr_bit(byte, bit) byte &= ~(1 << bit)
 
+#define check_term(str, len) (str[len - 1] == '\0')
 
 /*
 void print_byte(uint8_t byte) {

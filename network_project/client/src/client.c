@@ -1,30 +1,35 @@
+#include "scan.h"
 #include "client.h"
 
-static void request_checker(cent_t *client, scan_t *scan) {
+static const char *TESTCMD[] = {"-add comment", "-fetch data", "-control device"};
+
+static void comreq_checker(cent_t *client, scan_t *scan) {
 
   client->sizereq = scan->length;
 
-  char *cpy_result = strncpy(client->request, scan->scanner, client->sizereq);
-  if (!cpy_result) printf("error strncpy.\n");
+  if (!strncpy(client->request, scan->scanner, client->sizereq))
+    printf("failed to copy input from scanner.\nterminating..\n");
 
-  size_t cmp_result = strncmp(client->request, scan->scanner, client->sizereq);
-  if (cmp_result != 0) printf("error strncmp.\n");
+  if (!strncmp(client->request, scan->scanner, client->sizereq) == 0)
+    printf("corrupted input copy.\nterminating..\n");
 
+  if (!check_term(client->request, client->sizereq))
+    printf("input copy not terminated.\nterminating..\n");
 }
 
 static void client_request(cent_t *client, char *message) {
 
   scan_t scan = scan_driver(message);
-  request_checker(client, &scan);
+  comreq_checker(client, &scan);
 
   if (send(client->conn.socket, client->request, client->sizereq, 0) < 0){
     printf("couldn't sent message to server. terminating.\n");
-    exit(0);
+    exit(EXIT_FAILURE);
  	}
   memset(client->request, '\0', MAX_BUFFER);
 }
 
-static void server_response(cent_t * client) {
+static void server_response(cent_t *client) {
 
   if (recv(client->conn.socket, client->response, MAX_BUFFER, 0) < 0){
     printf("couldn't recieve server message. terminating.");

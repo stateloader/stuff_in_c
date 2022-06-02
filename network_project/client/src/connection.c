@@ -41,7 +41,3 @@ conn_t setup_connection(char *address, int port) {
 
   return conn;
 }
-
-void browse_session(conn_t *conn) {
-;
-}
