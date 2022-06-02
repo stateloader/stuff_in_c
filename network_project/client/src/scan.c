@@ -25,7 +25,6 @@ static uint8_t read_scan(scan_t *scan) {
 }
 
 static uint8_t byte_scan(scan_t *scan) {
-/*mode-arg decides type of input desired.*/
 
   for (size_t i = 0; i < scan->length; i++) {
     if (!check_ascii(scan->scanner[i])) {
@@ -37,7 +36,6 @@ static uint8_t byte_scan(scan_t *scan) {
 }
 
 scan_t scan_driver(char *message) {
-/*statemachine of some sort.*/
 
   scan_t scan;
   uint8_t state = ONGOING;

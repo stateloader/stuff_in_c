@@ -6,47 +6,60 @@
 
 static void view_memory_alloc(view_t *view) {
 
-  view->main_menu = (char**) malloc(ROWS * sizeof(char *));
-  view->resp_menu = (char**) malloc(ROWS * sizeof(char *));
-  view->reqt_menu = (char**) malloc(ROWS * sizeof(char *));
-
-  for (size_t i = 0; i < ROWS; i++) {
-    view->main_menu[i] = (char *) malloc(COLS * sizeof(char));
-    view->resp_menu[i] = (char *) malloc(ROWS * sizeof(char));
-    view->reqt_menu[i] = (char *) malloc(ROWS * sizeof(char));
-  }
+  view->curr_view = (char**) malloc(ROWS * sizeof(char *));
+  for (size_t i = 0; i < ROWS; i++)
+    view->curr_view[i] = (char *) malloc(COLS * sizeof(char));
 }
 
 static void view_memory_free(view_t *view) {
 
-  for (size_t i = 0; i < ROWS; i++) {
-    free(view->main_menu[i]);
-    free(view->resp_menu[i]);
-    free(view->reqt_menu[i]);
-  }
-  free(view->main_menu);
-  free(view->resp_menu);
-  free(view->reqt_menu);
+  for (size_t i = 0; i < ROWS; i++)
+    free(view->curr_view[i]);
+  free(view->curr_view);
+}
+
+void memory_driver(uint8_t controller, view_t *view) {
+
+  if (controller) view_memory_alloc(view);
+  else view_memory_free(view);
 }
 
 /*-------------------------------------------------------------------------------------
                                                                                RENDER
 -------------------------------------------------------------------------------------*/
 
-static void render_main_menu(char **view) {
- ;
+static void clear_old_view(view_t *view) {
+
+  for (size_t i = 0; i < ROWS; i++) {
+    for (size_t j = 0; i < COLS; j++) {
+      view->curr_view[i][j] = '\0';
+    }
+  }
+}
+
+static void draw_new_view(uint8_t controller, view_t *view) {
+
+  for (size_t i = 0; i < ROWS; i++) {
+    for (size_t j = 0; i < COLS; j++) {
+      if (controller == WMENU)
+        view->curr_view[i][j] = '#';
+      else if (controller == WRQST)
+        view->curr_view[i][j] = 'o';
+      else
+        view->curr_view[i][j] = '%';
+    }
+  }
+}
+
+void render_view(cent_t *client, view_t *view) {
+
+
 }
 
 /*-------------------------------------------------------------------------------------
                                                                                  VIEW
 -------------------------------------------------------------------------------------*/
-
-view_t views_create() {
-  view_t views;
-  view_memory_alloc(&views);
-  view_memory_free(&views);
-}
-
+/*
 static void view_main_menu(cent_t *client) {
   printf("Here's main menu.\n");
 }
@@ -55,7 +68,7 @@ static void view_resp_menu(cent_t *client) {
   printf("Here's response.\n");
 }
 
-static void view_reqt_menu(cent_t *client) {
+static void view_rqst_menu(cent_t *client) {
   printf("Here's request.n\n");
 }
 
@@ -66,11 +79,10 @@ typedef struct {
 } view_item;
 
 static view_item view_items[] = {
-  {view_main_menu}, {view_resp_menu}, {view_reqt_menu}
+  {view_main_menu}, {view_resp_menu}, {view_rqst_menu}
 };
 
 void view_driver(cent_t *client) {
   view_items[client->view].func(client);
 }
-
-
+*/

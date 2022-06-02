@@ -7,12 +7,10 @@
 #define COLS 16
 
 typedef struct View {
-  char **main_menu;
-  char **resp_menu;
-  char **reqt_menu;
+  char **curr_view;
 } view_t;
 
-view_t views_create();
-void view_driver(cent_t *client);
+void memory_driver(uint8_t controller, view_t *view);
+void render_view(cent_t *client, view_t *view);
 
 #endif

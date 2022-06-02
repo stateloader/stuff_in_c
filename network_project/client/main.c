@@ -6,10 +6,16 @@ static void clear_buffers(cent_t *client) {
   memset(client->response,'\0', MAX_BUFFER);
 }
 
+//#define WFREE 0x00
+//#define WALLC 0x01
 int main(int argc, char **argv) {
 
-  view_t views = views_create();
-  cent_t client = {.view = WMENU};
+  view_t view;
+  cent_t client = {.controller = WALLC};
+  memory_driver(client.controller, &view);
+
+  client.controller = WFREE;
+  memory_driver(client.controller, &view);
   //view_driver(&client);
 /*
   conn_t conn = setup_connection("127.0.0.1", 2000);

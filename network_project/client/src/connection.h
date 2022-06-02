@@ -9,7 +9,6 @@ GENERAL
 #define CONNECTION_H_
 
 #include "utils.h"
-//#include "client.h"
 
 #define SOCK 0
 #define CONN 1

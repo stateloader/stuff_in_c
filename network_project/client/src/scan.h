@@ -10,9 +10,6 @@ GENERAL
 
 #include "utils.h"
 
-//#define FAIL 0
-//#define SUCC 1
-
 #define ONGOING 0
 #define NOGOING 1
 
