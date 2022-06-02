@@ -43,9 +43,9 @@ static void draw_new_view(uint8_t controller, view_t *view) {
 
   for (size_t i = 0; i < ROWS; i++) {
     for (size_t j = 0; i < COLS; j++) {
-      if (controller == WMENU)
+      if (controller == 0)
         view->curr_view[i][j] = '#';
-      else if (controller == WRQST)
+      else if (controller == 1)
         view->curr_view[i][j] = 'o';
       else
         view->curr_view[i][j] = '%';
@@ -53,7 +53,7 @@ static void draw_new_view(uint8_t controller, view_t *view) {
   }
 }
 
-void render_view(cent_t *client, view_t *view) {
+void render_view(view_t *view) {
 
 
 }

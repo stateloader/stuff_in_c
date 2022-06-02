@@ -4,6 +4,8 @@
 #define ROWS 8
 #define COLS 16
 
+#include "utils.h"
+
 typedef struct View {
   char **curr_view;
 } view_t;
