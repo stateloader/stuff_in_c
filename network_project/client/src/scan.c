@@ -19,16 +19,16 @@ static uint8_t read_scan(scan_t *scan) {
   scan->scanner[scan->length - 1] = '\0';
 
   if (!scan->scanner) {
-    printf("something went south while reading input. terminating.\n\n");
+    printf("fgets doesn't respond.\nterminating.\n\n");
     return FAIL;
 
   } else if (scan->length >= MAX_BUFFER - 1) {
-    printf("you've reached current inputlimit. terminating.\n\n");
+    printf("buffer-limit reached.\nterminating.\n\n");
     flush_buffer(scan);
     return FAIL;
 
   } else if (scan->scanner[scan->length - 1] != '\0') {
-    printf("input not safe. terminating.\n\n");
+    printf("input-string corrupted.\nterminating.\n\n");
     return FAIL;
   }
   return SUCC;
