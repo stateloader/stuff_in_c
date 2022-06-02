@@ -13,5 +13,5 @@ void client_request(cent_t *client, char *message) {
 }
 
 void client_command(cent_t *client, char *message) {
-;
+  ;
 }

@@ -4,9 +4,9 @@
 #include "scan.h"
 #include "connection.h"
 
-#define WMENU 0
-#define WREQT 1
-#define WRESP 2
+#define WMENU 0x00
+#define WREQT 0x01
+#define WRESP 0x02
 
 typedef struct User {
   char time[16];
@@ -18,8 +18,8 @@ typedef struct Client {
   conn_t *conn;
   user_t user;
   size_t sizereq, sizeres;
-  char request[MAX_BUFFER];		//reqcmnd
-  char response[MAX_BUFFER];  //resmesg
+  char request[MAX_BUFFER];
+  char response[MAX_BUFFER];
 } cent_t;
 
 
