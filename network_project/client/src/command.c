@@ -2,17 +2,16 @@
 #include "connection.h"
 #include "command.h"
 
-uint8_t static OPTION = 0x00;
+static uint8_t OPTION = START;
 
 static const char *OPTION_START[] = {
   "-fetch data", "-steer device", "-exit"
 };
 static const char *OPTION_FETCH[] = {
-  "-temperature", "-humidity",
+  "-temperature", "-humidity", "-back"
 };
-
 static const char *OPTION_STEER[] = {
-  "-red", "-blue", "-green",
+  "-red", "-blue", "-green", "-back"
 };
 
 static void string_copy(char *destination, char *origin, size_t length) {			// egen modul
@@ -31,47 +30,81 @@ static void string_copy(char *destination, char *origin, size_t length) {			// e
   }
 }
 
-static uint8_t option_compare(char *command, char *option[], size_t arrlen) {
+static int8_t option_compare(char *command, const char *option[], int8_t array_size) {
 
-  for (size_t cmp = 0; cmp < arrlen; cmp++) {
-    if (strcmp(command), option[i] == 0)
+  for (int8_t cmp = 0; cmp < array_size; cmp++) {
+    if (strcmp(command, option[cmp]) == 0)
       return cmp;
   }
-  printf("you've entered invalid command, try again!\n\n");
-  return OPTION;
+  printf("you've typed an invalid command, try again!\n\n");
+  return - 1;
 }
 
-static uint8_t option_fetch(char *command, uint8_t *state) {																	// incl view
+static int8_t option_start(char *command, uint8_t *state) {                      // incl view
 
-  size_t array_size = ARRAY_SIZE(OPTION_FETCH);
+  int8_t array_size = ARRAY_SIZE(OPTION_START);
+  scan_t scan = scan_driver("start phrase");
+  string_copy(command, scan.scanner, scan.length);
+
+  int8_t choice = option_compare(command, OPTION_START, array_size);
+
+  if (choice == - 1) {
+    return START;
+  } else if (choice == array_size - 1) {
+    *state ^= (1 << CMND);
+    *state |= (1 << EXIT);
+    return START;
+  } else {
+    return choice + 1;
+  }
+}
+
+static int8_t option_fetch(char *command, uint8_t *state) {																	// incl view
+
+  int8_t array_size = ARRAY_SIZE(OPTION_FETCH);
   scan_t scan = scan_driver("fetch phrase");
+
   string_copy(command, scan.scanner, scan.length);
+  int8_t choice = option_compare(command, OPTION_FETCH, array_size);
+
+  if (choice == - 1 || choice == array_size - 1)
+    return START;
+
+  *state ^= (1 << CMND);
+  return START;
 }
 
+static int8_t option_steer(char *command, uint8_t *state) {
 
-static uint8_t option_steer(char *command, uint8_t *state) {
-
-  size_t array_size = ARRAY_SIZE(OPTION_STEER);
+  int8_t array_size = ARRAY_SIZE(OPTION_STEER);
   scan_t scan = scan_driver("steer phrase");
+
   string_copy(command, scan.scanner, scan.length);
+  int8_t choice = option_compare(command, OPTION_STEER, array_size);
+
+  if (choice == - 1 || choice == array_size - 1)
+    return START;
+
+  *state ^= (1 << CMND);
+  return START;
 }
-
-
-static option_item option_items[] = {
-  {option_fetch}, {option_steer}
-}
-
-static uint8_t option_start(char *command, uint8_t *state) {                      // incl view
-
-  size_t array_size = ARRAY_SIZE(OPTION_START);
-  scan_t scan = scan_driver("entry phrase");
-  string_copy(command, scan.scanner, scan.length);
-
-  return option_compare(command, OPTION_START, array_size);
-
-}
-
 
 void command_driver(char *command, uint8_t *state) {
 
+  memset(command, '\0', MAX_BUFFER);
+  switch(OPTION) {
+
+  case START:
+    OPTION = option_start(command, state);
+    break;
+  case FETCH:
+    OPTION = option_fetch(command, state);
+    break;
+  case STEER:
+    OPTION = option_steer(command, state);
+    break;
+  default:
+    printf("something isn't right.\n");
+    exit(EXIT_FAILURE);
+  }
 }
