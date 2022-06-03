@@ -1,6 +1,15 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                               SCAN MODULE
+--------------------------------------------------------------------------------------------------------------------------
+info info info info info info
+------------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "scan.h"
 
 static uint8_t read_scan(scan_t *scan) {
+//(naive) inputlogic. the program will terminate if fgets having a bad day, the user reached
+//max buffer or the string hasn't been null-terminated.
 
   memset(scan->scanner,'\0', MAX_BUFFER);
 
@@ -25,6 +34,7 @@ static uint8_t read_scan(scan_t *scan) {
 }
 
 static uint8_t byte_scan(scan_t *scan) {
+//the application is very anglophilic at the moment.
 
   for (size_t i = 0; i < scan->length; i++) {
     if (!check_ascii(scan->scanner[i])) {
@@ -36,7 +46,7 @@ static uint8_t byte_scan(scan_t *scan) {
 }
 
 scan_t scan_driver(char *message) {
-
+//the driver.
   scan_t scan;
   uint8_t state = ONGOING;
 

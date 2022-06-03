@@ -12,11 +12,6 @@
 
 #define MAX_BUFFER 4096
 
-#define set_state(byte, bit) byte |= (1 << bit)
-#define get_state(byte, bit) byte &= (1 << bit)
-#define tog_state(byte, bit) byte ^= (1 << bit)
-#define clr_state(byte, bit) byte &= ~(1 << bit)
-
 #define check_term(str, len) (str[len - 1] == '\0')
 
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
@@ -29,73 +24,40 @@ void print_byte(uint8_t byte) {
 */
 
 
+
 /*
-static void client_request(cent_t *client, char *message) {
+static void request(cent_t *client) {
 
-  scan_t scan = scan_driver(message);
-  comreq_checker(client, &scan);
+  ssize_t status = 0;
+  while (status == 0)
+    status = send(client->conn.socket, client->command, MAX_BUFFER, 0);
 
-  if (send(client->conn.socket, client->request, client->sizereq, 0) < 0){
+  if (status < 0) {
     printf("couldn't sent message to server. terminating.\n");
     exit(EXIT_FAILURE);
- 	}
-  memset(client->request, '\0', MAX_BUFFER);
+  }
+  client->state &= ~(1 << RQST);
+  client->state |= (1 << RECV);
 }
 
-static void server_response(cent_t *client) {
+static void recieve(cent_t *client) {
 
-  if (recv(client->conn.socket, client->response, MAX_BUFFER, 0) < 0){
+  ssize_t status = recv(client->conn.socket, client->response, MAX_BUFFER, 0);
+  if (status < 0) {
     printf("couldn't recieve server message. terminating.");
-    exit(0);
+    exit(EXIT_FAILURE);
+  } else if (status > 0) {
+    printf("server response: %s\n", client->response);
+    client->state &= ~(1 << RECV);
+    client->state |= (1 << CMND);
+  } else {
+    ;
   }
-  printf("from server: %s\n", client->response);
-  memset(client->response, '\0', MAX_BUFFER);
-}
-
-
-
- // client_request(client, "skriv natt kul: ");
-  //server_response(client);
-
-//  close(client->conn.socket);
-
-}
-
-  switch(PHASE) {
-  case START:
-    PHASE = option_start(command);
-    break;
-  case FETCH:
-    PHASE = option_fetch(command);
-    break;
-  case STEER:
-    PHASE = option_steer(command);
-  }
-
-  return option_items[PHASE].func(command);
-
-
-static void option_start(char *command, uint8_t *state) {																	// incl view
-
-	scan_t scan = scan_driver("select");
-  string_copy(command, scan.scanner, scan.length);
-}
-
-static void option_fetch(char *command, uint8_t *state) {																	// incl view
-
-  scan_t scan = scan_driver("select");
-  *state ^= (1 << CMND);
-}
-
-static void option_steer(char *command, uint8_t *state) {																	// incl view
-
-  scan_t scan = scan_driver("select");
-  *state ^= (1 << CMND);
-}
-
-static option_item option_items[] = {
-  {option_start},{option_fetch},{option_steer}
 }
 */
 
+//  if (client->state &= RQST)
+ //   request(client);
+  //if (client->state &= RECV)
+  //  recieve(client);
 #endif

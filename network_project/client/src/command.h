@@ -6,12 +6,7 @@
 #define START 0
 #define FETCH 1
 #define STEER 2
-void command_driver(char *command, uint8_t *state);
-/*
-typedef uint8_t (*option_func)(char *command, char *state);
+#define LEAVE 3
+size_t command_driver(char *command, uint8_t *state);
 
-typedef sttruct OptionItem {
-  option_func func;
-} option_item;
-*/
 #endif
