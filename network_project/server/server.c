@@ -4,24 +4,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-//#include <sys/types.h>
-#define MAX 4096
+
+#define MAX_BUFFER 4096
 #define PORT 2000
 #define SA struct sockaddr
 
 void respond(int connfd) {
   for (;;) {
-    char incoming[MAX];
-    char outgoing[MAX];
 
-    memset(incoming, '\0', MAX);
-    memset(outgoing, '\0', MAX);
-    recv(connfd, incoming, MAX, 0);
+    char incoming[MAX_BUFFER];
+    char outgoing[MAX_BUFFER];
+    memset(incoming, '\0', MAX_BUFFER);
+    memset(outgoing, '\0', MAX_BUFFER);
+
+    recv(connfd, incoming, MAX_BUFFER, 0);
 
     printf("from client: %s\n", incoming);
+
     char *response = "hundra grader";
     strcpy(outgoing, response);
-    send(connfd, outgoing, MAX, 0);
+    send(connfd, outgoing, MAX_BUFFER, 0);
   }
 }
 

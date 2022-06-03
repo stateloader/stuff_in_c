@@ -7,9 +7,8 @@ typedef struct Client {
   uint8_t state;
   conn_t conn;
   size_t length;
-  char request[MAX_BUFFER];    // used for both commands and requests
-  char command[MAX_BUFFER];
-  char response[MAX_BUFFER];
+  char command[MAX_BUFFER];		// outgoing?
+  char response[MAX_BUFFER];	// incoming?
 } cent_t;
 
 void client_session(cent_t *client);

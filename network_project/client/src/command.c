@@ -75,7 +75,7 @@ static int8_t option_start(char *command, size_t *return_length) {              
   }
 }
 
-static int8_t option_fetch(char *command, size_t * return_length) {																	// incl view
+static int8_t option_fetch(char *command, size_t *return_length) {																	// incl view
 
   int8_t array_size = ARRAY_SIZE(OPTION_FETCH);
   print_options("option_fetch", OPTION_FETCH, array_size);
@@ -114,7 +114,6 @@ static int8_t option_steer(char *command, size_t *return_length) {
 size_t command_driver(char *command, uint8_t *state) {
 
   size_t return_length = 0;
-  memset(command, '\0', MAX_BUFFER);
 
   while (OPTION != LEAVE) {
 

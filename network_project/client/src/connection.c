@@ -1,3 +1,10 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                         CONNECTION MODULE
+--------------------------------------------------------------------------------------------------------------------------
+info info info info info info
+------------------------------------------------------------------------------------------------------------------------*/
+
+
 #include "connection.h"
 
 static void init_portip(conn_t *conn, char *address, int port) {
@@ -38,5 +45,6 @@ conn_t setup_connection(char *address, int port, uint8_t *state) {
 
   init_connection(&conn);
   *state |= (1 << CONN) | (1 << CMND);
+
   return conn;
 }
