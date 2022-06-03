@@ -16,7 +16,7 @@ static void init_socket(conn_t *conn) {
     exit(0);
   } else {
     printf("socket created.\n");
-    set_bit(conn->status, SOCK);
+    set_state(conn->status, SOCK);
   }
 }
 
@@ -27,7 +27,7 @@ static void init_connection(conn_t *conn) {
     exit(0);
   } else {
 		printf("connection established.\n");
-    set_bit(conn->status, CONN);
+    set_state(conn->status, CONN);
   }
 }
 

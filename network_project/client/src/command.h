@@ -3,18 +3,17 @@
 
 #include "utils.h"
 
-#define ARRNOW 3
+#define OSTART 0
+#define OFETCH 1
+#define OSTEER 2
+#define OLEAVE 3
 
-#define BEGIN_ENTRY 0
-#define FETCH_ENTRY 1
-#define STEER_ENTRY 2
+void command_driver(char *command, uint8_t *state);
 
-typedef void (*cmnd_func)(char *command);
+typedef uint8_t (*option_func)(char *command, char *state);
 
-typedef struct {
-  cmnd_func func;
-} cmnd_item;
-
-void command_driver(char *command, size_t size);
+typedef sttruct OptionItem {
+  option_func func;
+} option_item;
 
 #endif

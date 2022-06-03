@@ -5,10 +5,10 @@
 
 #define SOCK 0
 #define CONN 1
-#define SEND 2
-#define RECV 3
-#define FREQ 4
-#define FRES 5
+#define CMND 2
+#define RQST 3
+#define RESP 4
+#define EXIT 5
 
 typedef struct Connection {
   uint8_t status;
