@@ -1,2 +1,4 @@
 prog:
-	gcc -o server server.c command_parser.c
+	gcc -o server server.c
+clean:
+	rm server
