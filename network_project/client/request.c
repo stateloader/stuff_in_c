@@ -7,7 +7,7 @@ info info info info info info
 #include <stdlib.h>
 #include <string.h>
 #include "scan.h"
-#include "command.h"
+#include "request.h"
 
 
 static uint8_t OPTION = START;
@@ -46,27 +46,27 @@ static void string_copy(char *destination, char *origin, size_t length) {
   }
 }
 
-static int8_t option_input(char *command, const char *options[], int8_t array_size, size_t *command_length) {
+static int8_t option_input(char *request, const char *options[], int8_t array_size, size_t *request_length) {
 
   print_options("option_start", options, array_size);
 
-  memset(command, '\0', MAX_BUFFER);
+  memset(request, '\0', MAX_BUFFER);
   scan_t scan = scan_driver("enter command phrase");
-  string_copy(command, scan.scanner, scan.length);
-  *command_length = scan.length;
+  string_copy(request, scan.scanner, scan.length);
+  *request_length = scan.length;
 
   for (int8_t cmp = 0; cmp < array_size; cmp++) {
-    if (strcmp(command, options[cmp]) == 0)
+    if (strcmp(request, options[cmp]) == 0)
       return cmp;
   }
   printf("you've typed an invalid command, try again!\n\n");
   return - 1;
 }
 
-static int8_t option_start(char *command, size_t *command_length) {                      // incl view
+static int8_t option_start(char *request, size_t *request_length) {                      // incl view
 
   int8_t array_size = ARRAY_SIZE(OPTION_START);
-  int8_t choice = option_input(command, OPTION_START, array_size, command_length);
+  int8_t choice = option_input(request, OPTION_START, array_size, request_length);
   if (choice == - 1) {
     return START;
   } else if (choice == array_size - 1) {
@@ -76,42 +76,42 @@ static int8_t option_start(char *command, size_t *command_length) {             
   }
 }
 
-static int8_t option_fetch(char *command, size_t *command_length) {																	// incl view
+static int8_t option_fetch(char *request, size_t *request_length) {																	// incl view
 
   int8_t array_size = ARRAY_SIZE(OPTION_FETCH);
-  int8_t choice = option_input(command, OPTION_FETCH, array_size, command_length);
+  int8_t choice = option_input(request, OPTION_FETCH, array_size, request_length);
   if (choice == - 1 || choice == array_size - 1)
     return START;
   return LEAVE;
 }
 
-static int8_t option_steer(char *command, size_t *command_length) {
+static int8_t option_steer(char *request, size_t *request_length) {
 
   int8_t array_size = ARRAY_SIZE(OPTION_STEER);
-  int8_t choice = option_input(command, OPTION_STEER, array_size, command_length);
+  int8_t choice = option_input(request, OPTION_STEER, array_size, request_length);
   if (choice == - 1 || choice == array_size - 1)
     return START;
   return LEAVE;
 }
 
-int command_driver(char *command) {
+int request_driver(char *request) {
 
-  size_t command_length = 0;
+  size_t request_length = 0;
 
   while (OPTION != LEAVE) {
 
 	  switch(OPTION) {
 
 	  case START:
-	    OPTION = option_start(command, &command_length);
+	    OPTION = option_start(request, &request_length);
 	    break;
 
 	  case FETCH:
-	    OPTION = option_fetch(command, &command_length);
+	    OPTION = option_fetch(request, &request_length);
 	    break;
 
 	  case STEER:
-	    OPTION = option_steer(command, &command_length);
+	    OPTION = option_steer(request, &request_length);
 	    break;
 
 	  default:
@@ -120,5 +120,5 @@ int command_driver(char *command) {
 	  }
   }
   OPTION = START;
-  return (int) command_length;
+  return (int) request_length;
 }

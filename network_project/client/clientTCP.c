@@ -4,7 +4,7 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "utils.h"
-#include "command.h"
+#include "request.h"
 #include "socket.h"
 
 int main(int argc, char *argv[]) {
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   int client_socket = socket_create();
   socket_connect(client_socket, "127.0.0.1", 90190);
 
-  int request_size = command_driver(request);
+  int request_size = request_driver(request);
   socket_send(client_socket, request, request_size);
   
   int response_size = socket_recieve(client_socket, response, MAX_BUFFER);

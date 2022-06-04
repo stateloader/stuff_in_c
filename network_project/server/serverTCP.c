@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
   while(1) {
 
     int client_size = sizeof(client_address);
+    printf("check-- client_size: %d\n", client_size);
     int client_socket = accept(server_socket, (struct sockaddr*) &client_address, (socklen_t*) &client_size);
     
     printf("Client connected at IP: %s and port: %i\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
@@ -39,7 +40,6 @@ int main(int argc, char *argv[]) {
     } else {
       strcpy(server_respond,"Invalid Message !");
     }
-    // Send some data
     if (send(client_socket, server_respond, strlen(server_respond), 0) < 0){
       printf("Send failed");
       return 1;
