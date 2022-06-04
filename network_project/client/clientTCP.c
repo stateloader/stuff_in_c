@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 
   int request_size = request_driver(request);
   socket_send(client_socket, request, request_size);
-  
+
   int response_size = socket_recieve(client_socket, response, MAX_BUFFER);
   printf("Server Response : %s\n\n",response);
 
