@@ -15,8 +15,8 @@
 
 int socket_create(void);
 int socket_connect(int client_socket, char *address, int port);
-int socket_send(int client_socket, char* request, size_t request_size);
-int socket_recieve(int client_socket, char* response, size_t response_size);
+int socket_send(int client_socket, char* request, int request_size);
+int socket_recieve(int client_socket, char* response, int response_size);
 void socket_close(int client_socket);
 
 #endif

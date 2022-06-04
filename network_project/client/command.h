@@ -9,6 +9,7 @@
 #define FETCH 1
 #define STEER 2
 #define LEAVE 3
-size_t command_driver(char *command);
+
+int command_driver(char *command);
 
 #endif

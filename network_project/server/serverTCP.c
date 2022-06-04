@@ -3,93 +3,47 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "socket.h"
 
 #define MAX_BUFFER 4096
 
-short socket_create(void) {
-  short hSocket;
-  printf("Create the socket\n");
-  hSocket = socket(AF_INET, SOCK_STREAM, 0);
-  return hSocket;
-}
-
-int BindCreatedSocket(int hSocket) {
-
-  int iRetval=-1;
-  int ClientPort = 90190;
-  struct sockaddr_in remote = {0};
-
-  /* Internet address family */
-  remote.sin_family = AF_INET;
-
-  /* Any incoming interface */
-  remote.sin_addr.s_addr = htonl(INADDR_ANY);
-  remote.sin_port = htons(ClientPort); /* Local port */
-  iRetval = bind(hSocket,(struct sockaddr *)&remote,sizeof(remote));
-  return iRetval;
-}
-
 int main(int argc, char *argv[]) {
-  int socket_desc, sock, clientLen, read_size;
-  struct sockaddr_in server, client;
-  char client_message[200]= {0};
-  char message[100] = {0};
+  int clientLen, read_size;
 
-  const char *pMessage = "-temperature";
+  struct sockaddr_in client_address;
 
-  //Create socket
-  socket_desc = socket_create();
-  if (socket_desc == -1) {
-    printf("Could not create socket");
-    return 1;
-  }
+  char client_request[MAX_BUFFER]= {0};
+  char server_respond[MAX_BUFFER] = {0};
+  int server_socket = socket_create();
 
-  printf("Socket created\n");
-  //Bind
-  if (BindCreatedSocket(socket_desc) < 0){
-    //print the error message
-    perror("bind failed.");
-    return 1;
-  }
-  printf("bind done\n");
-  //Listen
-  listen(socket_desc, 3);
-  //Accept and incoming connection
+  socket_bind(server_socket, "127.0.0.1", 90190);
+  listen(server_socket, 3);
+
   while(1) {
-    printf("Waiting for incoming connections...\n");
-    clientLen = sizeof(struct sockaddr_in);
-    //accept connection from an incoming client
-    sock = accept(socket_desc,(struct sockaddr *)&client,(socklen_t*)&clientLen);
-    if (sock < 0) {
-      perror("accept failed");
-      return 1;
-    }
 
-    printf("Connection accepted\n");
+    int client_socket = socket_accept(server_socket, client_address);
 
-    memset(client_message, '\0', MAX_BUFFER);
-    memset(message, '\0', MAX_BUFFER);
-    //Receive a reply from the client
+    memset(client_request, '\0', MAX_BUFFER);
+    memset(server_respond, '\0', MAX_BUFFER);
 
-    if (recv(sock, client_message, MAX_BUFFER, 0) < 0) {
+    if (recv(client_socket, client_request, MAX_BUFFER, 0) < 0) {
       printf("recv failed");
       break;
     }
 
-    printf("Client reply : %s\n", client_message);
+    printf("Client reply : %s\n", client_request);
 
-    if(strcmp(pMessage, client_message) == 0) {
-      strcpy(message,"Hi there !");
-    }
-    else {
-      strcpy(message,"Invalid Message !");
+    if (strcmp("-temperature", client_request) == 0) {
+      strcpy(server_respond,"Hi there !");
+    } else {
+      strcpy(server_respond,"Invalid Message !");
     }
     // Send some data
-    if( send(sock, message, strlen(message), 0) < 0){
+    if (send(client_socket, server_respond, strlen(server_respond), 0) < 0){
       printf("Send failed");
       return 1;
     }
-    close(sock);
+    close(client_socket);
     sleep(1);
   }
   return 0;

@@ -9,6 +9,7 @@ info info info info info info
 #include "scan.h"
 #include "command.h"
 
+
 static uint8_t OPTION = START;
 
 static const char *OPTION_START[] = {
@@ -49,8 +50,8 @@ static int8_t option_input(char *command, const char *options[], int8_t array_si
 
   print_options("option_start", options, array_size);
 
-  scan_t scan = scan_driver("start phrase");
-
+  memset(command, '\0', MAX_BUFFER);
+  scan_t scan = scan_driver("enter command phrase");
   string_copy(command, scan.scanner, scan.length);
   *command_length = scan.length;
 
@@ -93,12 +94,12 @@ static int8_t option_steer(char *command, size_t *command_length) {
   return LEAVE;
 }
 
-size_t command_driver(char *command) {
+int command_driver(char *command) {
 
   size_t command_length = 0;
 
   while (OPTION != LEAVE) {
-    memset(command, '\0', MAX_BUFFER);
+
 	  switch(OPTION) {
 
 	  case START:
@@ -119,5 +120,5 @@ size_t command_driver(char *command) {
 	  }
   }
   OPTION = START;
-  return command_length;
+  return (int) command_length;
 }
