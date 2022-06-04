@@ -8,12 +8,12 @@
 #define MAX_BUFFER 4096
 
 int main(int argc, char *argv[]) {
-  int clientLen, read_size;
 
   struct sockaddr_in client_address;
 
   char client_request[MAX_BUFFER]= {0};
   char server_respond[MAX_BUFFER] = {0};
+  
   int server_socket = socket_create();
 
   socket_bind(server_socket, "127.0.0.1", 90190);
@@ -21,8 +21,11 @@ int main(int argc, char *argv[]) {
 
   while(1) {
 
-    int client_socket = socket_accept(server_socket, client_address);
-
+    int client_size = sizeof(client_address);
+    int client_socket = accept(server_socket, (struct sockaddr*) &client_address, (socklen_t*) &client_size);
+    
+    printf("Client connected at IP: %s and port: %i\n", inet_ntoa(client_address.sin_addr), ntohs(client_address.sin_port));
+    
     memset(client_request, '\0', MAX_BUFFER);
     memset(server_respond, '\0', MAX_BUFFER);
 
@@ -30,8 +33,6 @@ int main(int argc, char *argv[]) {
       printf("recv failed");
       break;
     }
-
-    printf("Client reply : %s\n", client_request);
 
     if (strcmp("-temperature", client_request) == 0) {
       strcpy(server_respond,"Hi there !");

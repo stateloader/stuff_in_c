@@ -17,13 +17,14 @@ int socket_bind(int server_socket, char *address, int port) {
 
   return bind(server_socket, (struct sockaddr *) &server_address, sizeof(struct sockaddr_in)); 
 }
-
+/*
 int socket_accept(int server_socket, struct sockaddr_in client_address) {
   printf("Waiting for incoming connections...\n");
+  //struct sockaddr_in client_address = {0};
   int clientLen = sizeof(struct sockaddr_in);
-  return accept(server_socket,(struct sockaddr *)&client_address,(socklen_t*)&clientLen);
+  return accept(server_socket, (struct sockaddr *) &client_address, (socklen_t*) &clientLen);
 }
-
+*/
 void socket_close(int client_socket) {
   close(client_socket);
   shutdown(client_socket, 0);
