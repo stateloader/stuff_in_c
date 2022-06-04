@@ -6,7 +6,7 @@
 
 #define MAX_BUFFER 4096
 
-short SocketCreate(void) {
+short socket_create(void) {
   short hSocket;
   printf("Create the socket\n");
   hSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   const char *pMessage = "-temperature";
 
   //Create socket
-  socket_desc = SocketCreate();
+  socket_desc = socket_create();
   if (socket_desc == -1) {
     printf("Could not create socket");
     return 1;

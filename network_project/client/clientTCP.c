@@ -15,7 +15,7 @@ info info info info info info
 #define MAX_BUFFER 4096
 
 //socket create.
-short SocketCreate(void) {
+short socket_create(void) {
   short hSocket;
   printf("Create the socket\n");
   hSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
   char SendToServer[MAX_BUFFER] = {0};
   char server_reply[MAX_BUFFER] = {0};
   //Create socket
-  hSocket = SocketCreate();
+  hSocket = socket_create();
   if(hSocket == -1) {
     printf("Could not create socket\n");
     return 1;
