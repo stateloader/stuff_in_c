@@ -1,4 +1,4 @@
-prog:
-	gcc -o main.c main.c src/server.c -Wall -Wextra
+make:
+	gcc -o main main.c src/*c -Wall -Wextra -g
 clean:
-	rm server
+	rm -f $(obj) main
