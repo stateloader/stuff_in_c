@@ -23,7 +23,7 @@ short socket_create(void) {
 }
 
 //socket connect.
-int SocketConnect(int hSocket) {
+int socket_connect(int hSocket) {
 
   int iRetval=-1;
   int ServerPort = 90190;
@@ -37,7 +37,7 @@ int SocketConnect(int hSocket) {
 
 // Send the data to the server and set the timeout of 20 seconds
 
-int SocketSend(int hSocket,char* Rqst,short lenRqst) {
+int socket_send(int hSocket,char* Rqst,short lenRqst) {
 
   int shortRetval = -1;
   struct timeval tv;
@@ -51,7 +51,7 @@ int SocketSend(int hSocket,char* Rqst,short lenRqst) {
   return shortRetval;
 }
 //receive the data from the server
-int SocketReceive(int hSocket,char* Rsp,short RvcSize) {
+int socket_recieve(int hSocket,char* Rsp,short RvcSize) {
 
     int shortRetval = -1;
     struct timeval tv;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
   printf("Socket is created\n");
   //Connect to remote server
-  if (SocketConnect(hSocket) < 0) {
+  if (socket_connect(hSocket) < 0) {
     perror("connect failed.\n");
     return 1;
   }
@@ -93,11 +93,11 @@ int main(int argc, char *argv[]) {
   size_t send_length = command_driver(SendToServer);
 
   //Send data to the server
-  SocketSend(hSocket, SendToServer, send_length);
+  socket_send(hSocket, SendToServer, send_length);
 
   //Received the data from the server
 
-  read_size = SocketReceive(hSocket, server_reply, MAX_BUFFER);
+  read_size = socket_recieve(hSocket, server_reply, MAX_BUFFER);
   printf("Server Response : %s\n\n",server_reply);
 
   close(hSocket);
