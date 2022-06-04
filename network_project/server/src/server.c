@@ -19,9 +19,9 @@ static void init_portip(char *address, int port, serv_t *server) {
 
 static void init_socket(serv_t *server) {
 
-  server->socket_server = socket(AF_INET, SOCK_STREAM, 0);
+  server->server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-  if (server->socket_server < 0) {
+  if (server->server_socket < 0) {
     printf("failed to create socket.\nterminating.\n\n");
     exit(EXIT_FAILURE);
   }
@@ -32,7 +32,7 @@ static void init_socket(serv_t *server) {
 static void init_bind(serv_t *server) {
 
   if (bind(
-			server->socket_server, (struct sockaddr *)&server->server_address, sizeof(server->server_address)) < 0)
+			server->server_socket, (struct sockaddr *)&server->server_address, sizeof(server->server_address)) < 0)
 	{
 		printf("failed to bind socket.\nterminating.\n\n");
 		exit(EXIT_FAILURE);
@@ -44,7 +44,7 @@ static void init_bind(serv_t *server) {
 
 static void init_listen(serv_t *server) {
 
-  if (listen(server->socket_server, 1) < 0) {
+  if (listen(server->server_socket, 1) < 0) {
     printf("failed to listen.\nterminating.\n\n");
     exit(EXIT_FAILURE);
   }
@@ -69,9 +69,9 @@ serv_t setup_connection(char *address, int port) {
 void accept_connection(serv_t *server) {
 
   int client_size = sizeof(server->client_address);
-  server->socket_client = accept(server->socket_server, (struct sockaddr*)&server->client_address, &client_size);
+  server->client_socket = accept(server->server_socket, (struct sockaddr*)&server->client_address, &client_size);
 
-	if (server->socket_client < 0) {
+	if (server->client_socket < 0) {
 		printf("can't accept\n");
     exit(EXIT_FAILURE);
   }
@@ -98,18 +98,18 @@ void server_session(serv_t *server) {
 
     accept_connection(server);
 
-	  if (recv(server->socket_client, client_incoming, sizeof(client_incoming), 0) < 0) {
+	  if (recv(server->client_socket, client_incoming, sizeof(client_incoming), 0) < 0) {
 	    printf("couldn't recieve client message. terminating.");
 	    exit(EXIT_FAILURE);
 	  }
     printf("client wrote: %s\n\n", client_incoming);
     strcpy(server_outgoing, teststring);
 
-	  if (send(server->socket_client, server_outgoing, strlen(server_outgoing), 0) < 0) {
+	  if (send(server->client_socket, server_outgoing, strlen(server_outgoing), 0) < 0) {
 	    printf("couldn't send server  message. terminating.");
 	    exit(EXIT_FAILURE);
 	  }
-	  close(server->socket_client);
+	  close(server->client_socket);
   }
-  close(server->socket_server);
+  close(server->server_socket);
 }

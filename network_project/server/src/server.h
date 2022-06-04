@@ -28,8 +28,8 @@ typedef struct Session {
 typedef struct Server {
   uint8_t state;
   sess_t session;
-  int socket_server;
-  int socket_client;
+  int server_socket;
+  int client_socket;
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;
 } serv_t;

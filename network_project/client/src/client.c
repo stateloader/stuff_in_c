@@ -16,11 +16,14 @@ void print_byte(uint8_t byte) {
 
 void client_session(cent_t *client) {
 
-	for (;;) {
+	while (1) {
+    
+    memset(client->response, '\0', MAX_BUFFER);
+
 		client->length = command_driver(client->command, &client->state);
 	  printf("length: %ld\n", client->length);
 
-	  if (send(client->conn.socket, client->command, client->length, 0) < 0) {
+	  if (send(client->conn.socket, client->command, MAX_BUFFER, 0) < 0) {
 	    printf("couldn't recieve server message. terminating.");
 	    exit(EXIT_FAILURE);
 	  }
@@ -30,6 +33,5 @@ void client_session(cent_t *client) {
 	    exit(EXIT_FAILURE);
 	  }
     printf("server response: %s\n", client->response);
-    memset(client->response, '\0', MAX_BUFFER);
   }
 }
