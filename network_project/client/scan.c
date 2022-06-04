@@ -4,7 +4,9 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "scan.h"
 
 static uint8_t read_scan(scan_t *scan) {

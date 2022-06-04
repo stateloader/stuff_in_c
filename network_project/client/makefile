@@ -1,5 +1,5 @@
 make:
-	gcc -o main main.c src/*c -Wall -Wextra -g
+	gcc -o clientTCP clientTCP.c scan.c command.c -Wall -Wextra -g
 
 clean:
-	rm -f $(obj) main
+	rm -f $(obj) clientTCP

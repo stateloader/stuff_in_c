@@ -5,6 +5,8 @@
 #define NOGOING 1
 
 #include "utils.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #define check_ascii(B) (B >= 0x00 && B <= 0x7F)
 
