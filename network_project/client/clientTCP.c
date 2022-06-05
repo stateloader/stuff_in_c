@@ -13,12 +13,13 @@ int main(int argc, char *argv[]) {
   char response[MAX_BUFFER] = {0};
 
   int client_socket = socket_create();
+
   socket_connect(client_socket, "127.0.0.1", 90190);
 
-  int request_size = request_driver(request);
-  socket_send(client_socket, request, request_size);
+  socket_send(client_socket, request, request_driver(request));
 
-  int response_size = socket_recieve(client_socket, response, MAX_BUFFER);
+  socket_recieve(client_socket, response, MAX_BUFFER);
+
   printf("Server Response : %s\n\n",response);
 
   socket_close(client_socket);

@@ -20,13 +20,11 @@ static void string_term(char *string, size_t size) {
 size_t string_size(char *string) {
 
   size_t size = strnlen(string, MAX_BUFFER - 1);
-  string[size - 1] = '\0';
 
   if (size >= MAX_BUFFER - 1) {
     printf("ERROR SIZE  -- string %s would overflow the buffer.\n", string);
     exit(EXIT_FAILURE);
   }
-  string_term(string, size);
   return size;
 }
 
