@@ -4,15 +4,12 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <string.h>
 #include "socket.h"
-
-#define MAX_BUFFER 4096
+#include "response.h"
 
 int main(int argc, char *argv[]) {
 
@@ -23,8 +20,8 @@ int main(int argc, char *argv[]) {
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;
 
-  char client_request[MAX_BUFFER] = {0};
-  char server_response[MAX_BUFFER] = {0};
+  char request[MAX_BUFFER] = {0};
+  char response[MAX_BUFFER] = {0};
 
   socket_create(&server_socket);
   socket_bind(server_socket, &server_address, "127.0.0.1", 90190);
@@ -32,26 +29,9 @@ int main(int argc, char *argv[]) {
 
   while(1) {
 
-    memset(client_request, '\0', MAX_BUFFER);
-    memset(server_response, '\0', MAX_BUFFER);
 		socket_accept(server_socket, &client_socket, &client_address);
-
-    if (recv(client_socket, client_request, MAX_BUFFER, 0) < 0) {
-      printf("recv failed");
-      break;
-    }
-    printf("client request: %s\n", client_request);
-    if (strcmp("-temperature", client_request) == 0) {
-      strcpy(server_response,"Hi there !");
-    } else {
-      strcpy(server_response,"Invalid Message !");
-    }
-    if (send(client_socket, server_response, strlen(server_response), 0) < 0){
-      printf("Send failed");
-      return 1;
-    }
+    response_driver(client_socket, request, response);
     close(client_socket);
-    sleep(1);
   }
   return 0;
 }

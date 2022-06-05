@@ -21,8 +21,5 @@ void socket_create(int *server_socket);
 void socket_bind(int server_socket, struct sockaddr_in *server_address, char *address, int port);
 void socket_listen(int server_socket);
 void socket_accept(int server_socket, int *client_socket, struct sockaddr_in *client_address);
-//int socket_recieve(int client_socket, char *response, int response_size);
-//int socket_send(int client_socket, char *request, int request_size);
-//void socket_close(int client_socket);
 
 #endif
