@@ -10,11 +10,12 @@ info info info info info info
 #include "strdriver.h"
 #include "scan.h"
 
+static size_t scan_size = 0;
 
-static uint8_t read_byte(char *scanner, size_t *size) {
+static uint8_t read_byte(char *scan) {
 
-  for (size_t i = 0; i < *size; i++) {
-    if (!check_ascii(scanner[i])) {
+  for (size_t i = 0; i < scan_size; i++) {
+    if (!check_ascii(scan[i])) {
       printf("only English ('ascii') characters allowed. try again!\n\n");
 		  return SCAN;
     }
@@ -22,29 +23,27 @@ static uint8_t read_byte(char *scanner, size_t *size) {
   return DONE;
 }
 
-static uint8_t read_scan(char *scanner, size_t *size, char *message) {
+static uint8_t read_scan(char *scan, size_t buffer_size) {
 
-  printf("%s> ", message);
-  fgets(scanner, MAX_BUFFER - 1, stdin);
+  fgets(scan, buffer_size - 1, stdin);
 
-  if (!scanner) {
+  if (!scan) {
     printf("fgets doesn't respond.\nterminating.\n\n");
     exit(EXIT_FAILURE);
   }
-	*size = string_size(scanner);
-  scanner[*size - 1] = '\0';
-  return read_byte(scanner, size);
+
+	scan_size = string_size(scan, buffer_size);
+  return read_byte(scan);
 }
 
-size_t scan_driver(char *scanner, char *message) {
+size_t scan_driver(char *scan, size_t buffer_size, char *message) {
 
-  size_t size = 0;
   uint8_t state = SCAN;
 
   while (state != DONE) {
-		memset(scanner,'\0', READ_LIMIT);
-    state = read_scan(scanner, &size, message);
+		printf("%s> ", message);
+		memset(scan,'\0', buffer_size);
+    state = read_scan(scan, buffer_size);
 	}
-  string_test(scanner, size);
-  return size;
+  return scan_size;
 }

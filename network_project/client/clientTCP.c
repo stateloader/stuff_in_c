@@ -3,7 +3,6 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "utils.h"
 #include "request.h"
 #include "socket.h"
 
@@ -22,6 +21,6 @@ int main(int argc, char *argv[]) {
 
   printf("Server Response : %s\n\n",response);
 
-  socket_close(client_socket);
+  close(client_socket);
   return 0;
 }

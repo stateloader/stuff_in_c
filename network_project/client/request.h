@@ -3,13 +3,15 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include "utils.h"
+
+#define MAX_BUFFER 4096
+#define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 #define START 0
 #define FETCH 1
 #define STEER 2
 #define LEAVE 3
 
-int request_driver(char *request);
+size_t request_driver(char *request);
 
 #endif

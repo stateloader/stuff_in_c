@@ -1,16 +1,8 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                             CLIENT MODULE
+                                                                                                             SOCKET MODULE
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-/*
-#define SOCK 0
-#define CONN 1
-#define CMND 2
-#define RQST 3
-#define RECV 4
-#define EXIT 5
-*/
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -41,11 +33,4 @@ int socket_send(int client_socket, char *request, int request_size) {
 int socket_recieve(int client_socket, char *response, int response_size) {
 
   return recv(client_socket, response, response_size, 0);
-}
-
-void socket_close(int client_socket) {
-  close(client_socket);
-  shutdown(client_socket, 0);
-  shutdown(client_socket, 1);
-  shutdown(client_socket, 2);
 }
