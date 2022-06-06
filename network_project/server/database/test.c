@@ -2,7 +2,6 @@
 
 int main(void) {
 
-  char *content = NULL;
-  database_client_driver(&content);
+  database_driver();
   return 0;
 }

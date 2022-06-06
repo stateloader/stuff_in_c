@@ -5,7 +5,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-void database_client_driver(char **content);
-void database_sample_driver(char **content);
+void database_driver(void);
 
 #endif

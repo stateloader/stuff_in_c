@@ -1,26 +1,28 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "read.h"
 
-static size_t item_count(char *content, size_t size) {
-  size_t pipes = 0;
-  for (size_t i = 0; i < size; i++)
-    pipes += content[i] == DELIM ? 1 : 0;
-  return (pipes / 6);
+static size_t entry_counter(read_t *reader) {
+
+  size_t delims = 0;
+  for (size_t i = 0; i < reader->data_size; i++)
+    delims += reader->file_data[i] == DELIM ? 1 : 0;
+  return (delims / PIPE);
 }
 
-static void tokenazier(char *content, size_t size) {
+static void tokenizer(read_t *reader) {
 
-  size_t items = item_count(content, size);
-  printf("%ld", items);
+  reader->item_size = entry_counter(reader);
+  printf("%ld", reader->item_size);
 }
 
-size_t read_driver(char *content) {
+void read_driver(read_t *reader) {
 
-  FILE *file_reader = fopen("resources/client.txt", "r");
-  size_t size = fread(content, sizeof(char), FILE_BUFFER, file_reader);
-  fclose(file_reader); 
-  tokenazier(content, size);
-  return size;
+  reader->file = fopen("resources/client.txt", "r");
+  reader->file_data = calloc(FILE_BUFFER, sizeof(char));
+  reader->data_size = fread(reader->file_data, sizeof(char), FILE_BUFFER, reader->file);
+
+  fclose(reader->file);
+
+  tokenizer(reader);
 }
