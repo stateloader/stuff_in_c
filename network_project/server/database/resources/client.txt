@@ -1,3 +1,3 @@
-|0|2022-03-24 06:45:37|Belle|password|-steer|-red|
-|1|2022-04-15 23:45:29|Arne|password|-fetch|18.9, 17,8|
-|2|2022-06-08 19:11:01|Burk|aik123|-comnt|Idag var jag ute och cyklade, cyklade var vad jag gjorde.|
+0|2022-03-24 06:45:37|Belle|password|-steer|-red|
+1|2022-04-15 23:45:29|Arne|password|-fetch|18.9, 17,8|
+2|2022-06-08 19:11:01|Burk|aik123|-comnt|Idag var jag ute och cyklade, cyklade var vad jag gjorde.|

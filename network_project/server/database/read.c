@@ -1,20 +1,26 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "read.h"
 
+static size_t item_count(char *content, size_t size) {
+  size_t pipes = 0;
+  for (size_t i = 0; i < size; i++)
+    pipes += content[i] == DELIM ? 1 : 0;
+  return (pipes / 6);
+}
+
+static void tokenazier(char *content, size_t size) {
+
+  size_t items = item_count(content, size);
+  printf("%ld", items);
+}
+
 size_t read_driver(char *content) {
 
-  size_t size = 0;
-
-  FILE *read_file = fopen("resources/client.txt", "r");
-
-  size = fread(content, sizeof(char), FSIZE_LIMIT, read_file);
-  if (!size) {
-    printf("fi pajj size");
-    free(content);
-    fclose(read_file);
-    exit(EXIT_FAILURE);
-  }
-  fclose(read_file);
+  FILE *file_reader = fopen("resources/client.txt", "r");
+  size_t size = fread(content, sizeof(char), FILE_BUFFER, file_reader);
+  fclose(file_reader); 
+  tokenazier(content, size);
   return size;
 }

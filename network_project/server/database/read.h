@@ -3,8 +3,8 @@
 
 #include <stddef.h>
 
-#define FSIZE_LIMIT 262114
-#define DELIM |
+#define FILE_BUFFER 262114
+#define DELIM '|'
 
 size_t read_driver(char *file_content);
 
