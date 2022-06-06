@@ -1,0 +1,23 @@
+#define MAX_LOGINDAT 16
+ 9 #define MAX_FILENAME 16
+10
+11 #define CLIENT 0
+12 #define SAMPLE 1
+13
+14 typedef struct DBClient {
+15   char username[MAX_LOGINDAT];
+16   char password[MAX_LOGINDAT];
+17   char *activity;
+18 } dbcent_t;
+19
+20 typedef struct DBSample {
+21   char *samples;
+22 } dbsamp_t;
+23
+24 typedef struct DataBase {
+25   char filename[MAX_FILENAME];
+26   FILE *file_client;
+27   FILE *file_sample;
+28   dbcent_t **clients;
+29   dbsamp_t *samples;
+30 } base_t;
