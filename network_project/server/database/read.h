@@ -3,21 +3,7 @@
 
 #include <stdio.h>
 #include <stddef.h>
-
-#define DELIM '|'
-
-#define INTERVAL_SM 4
-#define INTERVAL_CM 2
-
-#define MEMB_SMODEL_TP 0
-#define MEMB_SMODEL_HD 1
-#define MEMB_SMODEL_TS 2
-
-#define MAX_FILE_DATA 4096
-#define MAX_USER_DATA 64
-#define MAX_PASS_DATA 64
-
-#define TIMESTAMP 24
+#include "dbconfigs.h"
 
 typedef struct CModel {
   size_t id;
@@ -40,6 +26,13 @@ typedef struct Reader {
   char *file_data;
   FILE *file;
 } read_t;
+
+typedef void (*read_func)(read_t *read);
+
+typedef struct {
+  const char *sysmesg;
+  read_func func;
+} read_item;
 
 void read_driver(read_t *reader);
 void free_driver(read_t *reader);
