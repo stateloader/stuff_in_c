@@ -21,3 +21,148 @@
 28   dbcent_t **clients;
 29   dbsamp_t *samples;
 30 } base_t;
+
+/*
+static void table_cmods_dist(read_t *reader) {
+
+  size_t cmod_index = 0;
+  size_t memb_index = 0;
+
+  char inbyte = ' '; 
+  char number_buffer[6] = {0};
+
+  for (size_t i = 0; i < reader->file_size; i++) {
+    
+    inbyte = reader->file_data[i];
+    memb_index += (inbyte == DELIM) ? 1 : 0;
+
+    switch(memb_index) {
+
+    case MEMB_CMOD_ID:
+      number_buffer[i] = inbyte;
+      if (number_buffer[i] == DELIM) {
+        number_buffer[i] = '\0';
+        reader->model_cmods[cmod_index].id = atoi(number_buffer);
+      }
+      break;
+
+    case MEMB_CMOD_UN:
+      if (inbyte != DELIM)
+        reader->model_cmods[cmod_index].username[i] = inbyte;
+      else
+        reader->model_cmods[cmod_index].username[i] = '\0';
+      break;
+
+    case MEMB_CMOD_PW:
+      if (inbyte != DELIM)
+        reader->model_cmods[cmod_index].password[i] = inbyte;
+      else
+        reader->model_cmods[cmod_index].password[i] = '\0';
+      break;
+
+    case TABLE_DONE:
+      printf("model done\n");
+      break;
+
+    default:
+      free_driver(reader);
+      printf("something went south dst_data_cmods\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if (memb_index % INTERVAL_CM == 0) {
+      memb_index = 0;
+      cmod_index++;
+    }
+  }
+  printf("\ntable done\n");
+}
+*/
+
+
+/*-------------------------------------------------------------------------------------
+                                                                               MEMORY
+-------------------------------------------------------------------------------------*/
+
+static void view_memory_alloc(view_t *view) {
+
+  view->curr_view = (char**) malloc(ROWS * sizeof(char *));
+  for (size_t i = 0; i < ROWS; i++)
+    view->curr_view[i] = (char *) malloc(COLS * sizeof(char));
+}
+
+static void view_memory_free(view_t *view) {
+
+  for (size_t i = 0; i < ROWS; i++)
+    free(view->curr_view[i]);
+  free(view->curr_view);
+}
+
+void memory_driver(uint8_t controller, view_t *view) {
+
+  if (controller) view_memory_alloc(view);
+  else view_memory_free(view);
+}
+
+/*-------------------------------------------------------------------------------------
+                                                                               RENDER
+-------------------------------------------------------------------------------------*/
+
+static void clear_old_view(view_t *view) {
+
+  for (size_t i = 0; i < ROWS; i++) {
+    for (size_t j = 0; i < COLS; j++) {
+      view->curr_view[i][j] = '\0';
+    }
+  }
+}
+
+static void draw_new_view(uint8_t controller, view_t *view) {
+
+  for (size_t i = 0; i < ROWS; i++) {
+    for (size_t j = 0; i < COLS; j++) {
+      if (controller == 0)
+        view->curr_view[i][j] = '#';
+      else if (controller == 1)
+        view->curr_view[i][j] = 'o';
+      else
+        view->curr_view[i][j] = '%';
+    }
+  }
+}
+
+void render_view(view_t *view) {
+
+
+}
+
+/*-------------------------------------------------------------------------------------
+                                                                                 VIEW
+-------------------------------------------------------------------------------------*/
+/*
+static void view_main_menu(cent_t *client) {
+  printf("Here's main menu.\n");
+}
+
+static void view_resp_menu(cent_t *client) {
+  printf("Here's response.\n");
+}
+
+static void view_rqst_menu(cent_t *client) {
+  printf("Here's request.n\n");
+}
+
+typedef void (*view_func)(cent_t *client);
+
+typedef struct {
+  view_func func;
+} view_item;
+
+static view_item view_items[] = {
+  {view_main_menu}, {view_resp_menu}, {view_rqst_menu}
+};
+
+void view_driver(cent_t *client) {
+  view_items[client->view].func(client);
+}
+*/

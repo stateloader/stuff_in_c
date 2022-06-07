@@ -3,18 +3,12 @@
 
 #include <stdio.h>
 #include <stddef.h>
-
-#define DELIM '|'
-
-#define MAX_FILE_DATA 262114           // File Size Buffer
-#define TIMESTAMP 24
-#define INTERVAL_SM 4
-#define INTERVAL_CM 3
+#include "dbconfigs.h"
 
 typedef struct CModel {
   size_t id;
-  char *username;
-  char *password;
+  char username[MAX_USER_DATA];
+  char password[MAX_PASS_DATA];
 } cmod_t;
 
 typedef struct SModel {
@@ -25,14 +19,20 @@ typedef struct SModel {
 } smod_t;
 
 typedef struct Reader {
-  size_t model_count;             // given number of entries ("SM or CM").
-  size_t *model_sizes;            // array of SModel-sizes.
-  cmod_t **client_models;          // handler for CModel-array.
-  smod_t **sample_models;          // handler for SModel-array.
+  size_t rows;
+  cmod_t *table_client;
+  smod_t *table_sample;
   size_t file_size;
   char *file_data;
   FILE *file;
 } read_t;
+
+typedef void (*read_func)(read_t *read);
+
+typedef struct {
+  const char *sysmesg;
+  read_func func;
+} read_item;
 
 void read_driver(read_t *reader);
 void free_driver(read_t *reader);
