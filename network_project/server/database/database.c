@@ -5,7 +5,7 @@
 
 static read_t database_client_read(void) {
 
-  read_t reader = {.data_size = 0};
+  read_t reader = {.count_entries = 0};
   read_driver(&reader);
 
   printf("raw_data\n\n%s\n", reader.file_data);

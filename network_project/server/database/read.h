@@ -5,23 +5,30 @@
 #include <stddef.h>
 
 #define FILE_BUFFER 262114
-#define DELIM '|'
-#define PIPE 6
+#define USERDATA 16
+#define TIMESTAMP 24
+#define INTERVAL_SM 4
+#define INTERVAL_CM 3
 
-typedef struct Entry {
+typedef struct CModel {
   size_t id;
-  size_t timestamp;
-  char *username;
-  char *password;
-  char *request;
-  char *response;
-} entr_t;
+  char username[USERDATA];
+  char password[USERDATA];
+} cmod_t;
+
+typedef struct SModel {
+  size_t id;
+  float temperature;
+  float humidity;
+  char timestamp[TIMESTAMP];
+} smod_t;
 
 typedef struct Reader {
-  size_t data_size;
-  size_t item_size;
-  entr_t *entries;
+  size_t count_entries;
+  cmod_t *client_model;
+  smod_t *sample_model;
   char *file_data;
+  size_t file_size;
   FILE *file;
 } read_t;
 
