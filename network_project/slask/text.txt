@@ -21,3 +21,62 @@
 28   dbcent_t **clients;
 29   dbsamp_t *samples;
 30 } base_t;
+
+
+
+/*
+static void table_cmods_dist(read_t *reader) {
+
+  size_t cmod_index = 0;
+  size_t memb_index = 0;
+
+  char inbyte = ' '; 
+  char number_buffer[6] = {0};
+
+  for (size_t i = 0; i < reader->file_size; i++) {
+    
+    inbyte = reader->file_data[i];
+    memb_index += (inbyte == DELIM) ? 1 : 0;
+
+    switch(memb_index) {
+
+    case MEMB_CMOD_ID:
+      number_buffer[i] = inbyte;
+      if (number_buffer[i] == DELIM) {
+        number_buffer[i] = '\0';
+        reader->model_cmods[cmod_index].id = atoi(number_buffer);
+      }
+      break;
+
+    case MEMB_CMOD_UN:
+      if (inbyte != DELIM)
+        reader->model_cmods[cmod_index].username[i] = inbyte;
+      else
+        reader->model_cmods[cmod_index].username[i] = '\0';
+      break;
+
+    case MEMB_CMOD_PW:
+      if (inbyte != DELIM)
+        reader->model_cmods[cmod_index].password[i] = inbyte;
+      else
+        reader->model_cmods[cmod_index].password[i] = '\0';
+      break;
+
+    case TABLE_DONE:
+      printf("model done\n");
+      break;
+
+    default:
+      free_driver(reader);
+      printf("something went south dst_data_cmods\n");
+      exit(EXIT_FAILURE);
+    }
+
+    if (memb_index % INTERVAL_CM == 0) {
+      memb_index = 0;
+      cmod_index++;
+    }
+  }
+  printf("\ntable done\n");
+}
+*/

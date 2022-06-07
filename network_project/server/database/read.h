@@ -6,13 +6,18 @@
 
 #define DELIM '|'
 
-#define MAX_FILE_DATA 262114           // File Size Buffer
+#define INTERVAL_SM 4
+#define INTERVAL_CM 2
+
+#define MEMB_SMODEL_TP 0
+#define MEMB_SMODEL_HD 1
+#define MEMB_SMODEL_TS 2
+
+#define MAX_FILE_DATA 4096
 #define MAX_USER_DATA 64
 #define MAX_PASS_DATA 64
 
 #define TIMESTAMP 24
-#define INTERVAL_SM 4
-#define INTERVAL_CM 3
 
 typedef struct CModel {
   size_t id;
@@ -28,9 +33,9 @@ typedef struct SModel {
 } smod_t;
 
 typedef struct Reader {
-  size_t model_count;             // given number of entries ("SM or CM").
-  cmod_t **model_cmods;          // handler for CModel-array.
-  smod_t **model_smods;          // handler for SModel-array.
+  size_t rows;
+  cmod_t *table_client;
+  smod_t *table_sample;
   size_t file_size;
   char *file_data;
   FILE *file;

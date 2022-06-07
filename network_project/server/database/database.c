@@ -5,7 +5,7 @@
 
 static read_t read_client(void) {
 
-  read_t reader = {.model_count = 0};
+  read_t reader = {.rows = 0};
   read_driver(&reader);
   return reader;
 }

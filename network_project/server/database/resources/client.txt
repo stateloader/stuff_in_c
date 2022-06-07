@@ -1,1 +1,1 @@
-0|UserHej|123456|1|UserHello|password|2|UserTjenare|Majs|
+UserHej|123456|UserHello|password|UserTjenare|Majs|
