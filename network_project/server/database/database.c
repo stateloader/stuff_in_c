@@ -3,18 +3,13 @@
 #include "write.h"
 #include "database.h"
 
-static read_t database_client_read(void) {
+static read_t read_client(void) {
 
-  read_t reader = {.count_entries = 0};
+  read_t reader = {.entry_count = 0};
   read_driver(&reader);
-
-  printf("raw_data\n\n%s\n", reader.file_data);
-
-  free(reader.file_data);
-
   return reader;
 }
 
 void database_driver(void) {
-  database_client_read();
+  read_t reader = read_client();
 }
