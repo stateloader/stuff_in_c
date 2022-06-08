@@ -1,19 +1,44 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                           DBCONFIG HEADER
+--------------------------------------------------------------------------------------------------------------------------
+description to be
+------------------------------------------------------------------------------------------------------------------------*/
 #ifndef DBCONFIGS_H_
 #define DBCONFIGS_H_
 
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#define SUCC 1
+#define FAIL 0
+
+#define ERROR_MESSAGE_FORMAT "[action] (%s) \t [topic] (%s) \t [result] (%s)\n\n"
+//-------------------------------------------------------------------------------------------------------------dbresources
+#define PATH_CLIENT "resources/client.txt"
+#define PATH_SAMPLE "resources/sample.txt"
+//-------------------------------------------------------------------------------------------------------------explanation
+#define READ_ROUTINE 0
+#define WRITE_ROUTINE 1
+//-------------------------------------------------------------------------------------------------------------explanation
+#define CLIENT 0
+#define SAMPLE 1
+//-------------------------------------------------------------------------------------------------------------explanation
 #define DELIM '|'
+#define FREQ_DELIM_CLIENT 2
+#define FREQ_DELIM_SAMPLE 2
+//------------------------------------------------------------------------------------------------------------------------
+#define FILE_BUFFER 4096
+#define DATA_BUFFER 64
+#define TIME_BUFFER 64
+//-------------------------------------------------------------------------------------------------------------explanation
+#define STATE_USER 0
+#define STATE_PASS 1
 
-#define INTERVAL_SM 4
-#define INTERVAL_CM 2
+#define STATE_TEMP 0
+#define STATE_DTME 2
+//------------------------------------------------------------------------------------------------------------------------
 
-#define MEMB_SMODEL_TP 0
-#define MEMB_SMODEL_HD 1
-#define MEMB_SMODEL_TS 2
-
-#define MAX_FILE_DATA 4096
-#define MAX_USER_DATA 64
-#define MAX_PASS_DATA 64
-
-#define TIMESTAMP 24
 
 #endif
