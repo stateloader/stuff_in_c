@@ -2,9 +2,9 @@
 #include "filedriver.h"
 
 int main(void) {
-  filed_t driver = {.rows = 0};
-  driver.bill = READ_CLIENT_ROUTINE;
-  uint8_t majs = file_driver(&driver);
+  filed_t driver = {.routine = READ_ROUTINE,.model = CLIENT};
+  uint8_t result = file_driver(&driver);
+  printf("result : %d\n", result);
   free_driver(&driver);
   return 0;
 }

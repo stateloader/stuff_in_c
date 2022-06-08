@@ -8,15 +8,6 @@
 
 #define MAX_CLIENT 16
 
-uint8_t STATE;
-
-#define SOCK 0
-#define CONN 1
-#define CMND 2
-#define RQST 3
-#define RECV 4
-#define EXIT 5
-
 void socket_create(int *server_socket);
 void socket_bind(int server_socket, struct sockaddr_in *server_address, char *address, int port);
 void socket_listen(int server_socket);
