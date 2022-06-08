@@ -166,3 +166,30 @@ void view_driver(cent_t *client) {
   view_items[client->view].func(client);
 }
 */
+
+#define READ_FILE 0     // as set, WRITE FILE as clear.
+#define READ_CLIENT 1
+#define READ_SAMPLE 2
+#define WRITE_CLIENT 3
+#define WRITE_SAMPLE 4
+
+#define SUCCESS 5       // as set, FAILURE as clear.
+
+#define byte_check(byte, bit) (byte &= (1 << bit))
+
+
+static filed_item field_items[] = {
+  {"ERROR FILE  --  failed to open file %s\n", open_file},
+  {file_driver_fetch_rows},
+  {file_driver_alloc_rows}
+};
+
+//---------------------------------------------------------------------------------------------------------error handeling
+typedef uint8_t (*filed_func)(filed_t *driver);
+
+typedef struct FileDriverError {
+  const char *error_message;
+  filed_func func;
+} filed_item;
+
+uint8_t server_assert(filed_item *item);
