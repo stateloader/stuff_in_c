@@ -6,45 +6,44 @@ description to be
 #ifndef FILEDRIVER_H_
 #define FILEDRIVER_H_
 
-#include "dbconfigs.h"
+#include "database.h"
 
 typedef struct MModel {
   size_t id;
-  char username[DATA_BUFFER];
-  char topic[DATA_BUFFER];
-  char datetime[TIME_BUFFER];
-  char message[MESG_BUFFER];
+  char username[DBUFF];
+  char topic[DBUFF];
+  char datetime[TBUFF];
+  char message[MBUFF];
 } mmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct CModel {
   size_t id;
-  char username[DATA_BUFFER];
-  char password[DATA_BUFFER];
+  char username[DBUFF];
+  char password[DBUFF];
 } cmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct SModel {
   size_t id;
-  char temperature[DATA_BUFFER];
-  char datetime[TIME_BUFFER];
+  char temperature[DBUFF];
+  char datetime[TBUFF];
 } smod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct TableItem {
-  const char *file_path;
   uint8_t model;
-  uint8_t interval;
-  uint8_t members;
+  uint8_t membr;
+  const char *file_path;
 } table_item;
-
+//----------------------------------------------------------------------------------------------------------------------*/
 typedef struct FileDriver {
+  uint8_t route;
+  uint8_t model;
   size_t rows;
   size_t file_size;
   char *file_buffer;
-  uint8_t model;
-  uint8_t routine;
   cmod_t *table_client;
   smod_t *table_sample;
   mmod_t *table_message;
-  table_item items;
+  table_item item;
   FILE *file;
 } filed_t;
 //----------------------------------------------------------------------------------------------------------------------*/

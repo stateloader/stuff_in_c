@@ -1,0 +1,47 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                           DBCONFIG HEADER
+--------------------------------------------------------------------------------------------------------------------------
+description to be
+------------------------------------------------------------------------------------------------------------------------*/
+#ifndef DATABASE_H_
+#define DATABASE_H_
+
+#include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#define SUCC 1
+#define FAIL 0
+//-----------------------------------------------------------------------------------------------------------file/db-paths
+#define PCLNT "resources/client.txt"
+#define PSMPL "resources/sample.txt"
+#define PMSGE "resources/message.txt"
+//------------------------------------------------------------------------------------------------------read or write init
+#define RINIT 0
+#define WINIT 1
+//------------------------------------------------------------------------------------------------------------------models
+#define MCLNT 0
+#define MSMPL 1
+#define MMSGE 2
+//---------------------------------------------------------------------------------------"delimiter counts" before new row
+#define DELIM '|'
+#define CCLNT 2
+#define CSMPL 2
+#define CMSGE 4
+//------------------------------------------------------------------------------------------------------------------------
+#define FBUFF 4096
+#define MBUFF 512
+#define DBUFF 64
+#define TBUFF 24
+//-------------------------------------------------------------------------------------------------------------explanation
+#define SUSER 0
+#define SPASS 1
+
+#define STEMP 0
+#define SDTME 1
+//-------------------------------------------------------------------------------------------------------------------other
+#define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+#define ERROR_MESSAGE_FORMAT "[action] (%s) \t [topic] (%s) \t [result] (%s)\n\n"
+
+#endif

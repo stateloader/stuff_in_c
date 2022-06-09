@@ -5,19 +5,14 @@ info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
-#include "dbconfigs.h"
+#include "database.h"
 #include "filedriver.h"
 
-static uint8_t MODELS[] = {CLIENT, SAMPLE};
-static uint8_t DMNUMS[] = {DMNUM_CLIENT, DMNUM_SAMPLE};
-static char *FILE_PATH[] = {PATH_CLIENT, PATH_SAMPLE};
+static uint8_t MODELS[] = {MCLNT, MSMPL, MMSGE};
+static uint8_t CDLMTR[] = {CCLNT, CSMPL, CMSGE};
+static char *FILE_PATH[] = {PCLNT, PSMPL, PMSGE};
 
 //-----------------------------------------------------------------------------------------------read routine logic part
-
-static table_item table_items[] = {
-  {"resources/client.txt", CLIENT, DMNUM_CLIENT, 1},
-  {"resources/sample.txt", SAMPLE, DMNUM_SAMPLE, 1},
-};
 
 static uint8_t read_fetch_file(filed_t *driver) {
 //iterates through existing models/tables from database. opens "mapped" path.
@@ -35,14 +30,14 @@ static uint8_t read_fetch_file(filed_t *driver) {
 static uint8_t read_fetch_filebuff(filed_t *driver) {
 //alloc memory size of FILE_BUFFER.
 
-  uint8_t result = (driver->file_buffer = calloc(FILE_BUFFER, sizeof(char))) != NULL ? SUCC : FAIL;
+  uint8_t result = (driver->file_buffer = calloc(FBUFF, sizeof(char))) != NULL ? SUCC : FAIL;
   return result;
 }
 
 static uint8_t read_fetch_filedata(filed_t *driver) {
 //reads file-content to FILE_BUFFER, storing it's size in member file_size.
 
-  driver->file_size = fread(driver->file_buffer, sizeof(char), FILE_BUFFER, driver->file);
+  driver->file_size = fread(driver->file_buffer, sizeof(char), FBUFF, driver->file);
   uint8_t result = (driver->file_size > 0) ? SUCC : FAIL; 
   return result;
 }
@@ -53,7 +48,7 @@ static uint8_t read_fetch_filerows(filed_t *driver) {
 
   for (size_t i = 0; i < ARRAY_SIZE(MODELS); i++) {
     if (driver->model == MODELS[i])
-      interval = DMNUMS[i];
+      interval = CDLMTR[i];
   }
 
   for (size_t i = 0; i < driver->file_size; i++)
@@ -69,7 +64,7 @@ static uint8_t read_fetch_rowmem(filed_t *driver) {
 
   switch(driver->model) {
 
-  case CLIENT:
+  case MCLNT:
     result = (driver->table_client = malloc(sizeof(cmod_t) * driver->rows)) != NULL ? SUCC : FAIL;
     if (result) {
       for (size_t i = 0; i < driver->rows; i++) {
@@ -78,7 +73,7 @@ static uint8_t read_fetch_rowmem(filed_t *driver) {
       }
     }
     break;
-  case SAMPLE:
+  case MSMPL:
     result = (driver->table_sample = malloc(sizeof(smod_t) * driver->rows)) != NULL ? SUCC : FAIL;
     if (result) {
       for (size_t i = 0; i < driver->rows; i++) {
@@ -95,31 +90,31 @@ static uint8_t read_fetch_rowmem(filed_t *driver) {
 
 static uint8_t fetch_client_data(filed_t *driver) {
 
-  uint8_t state = STATE_USER;
+  uint8_t state = SUSER;
   size_t index = 0, row = 0;
 
   for (size_t i = 0; i < driver->file_size; i++) {
     char byte = driver->file_buffer[i];
 
     switch(state) {
-    case STATE_USER:
+    case SUSER:
       if (byte != DELIM) {
         driver->table_client[row].username[index] = byte;
         index++;
       } else {
         driver->table_client[row].username[index] = '\0';
-        state = STATE_PASS;
+        state = SPASS;
         index = 0;
       }
       break;
 
-    case STATE_PASS:
+    case SPASS:
       if (byte != DELIM) {
         driver->table_client[row].password[index] = byte;
         index++;
       } else {
         driver->table_client[row].password[index] = '\0';
-        state = STATE_USER;
+        state = SPASS;
         index = 0, row++;
       }
       break;
@@ -133,30 +128,30 @@ static uint8_t fetch_client_data(filed_t *driver) {
 
 static uint8_t fetch_sample_data(filed_t *driver) {
 
-  uint8_t state = STATE_TEMP;
+  uint8_t state = STEMP;
   size_t index = 0, row = 0;
 
   for (size_t i = 0; i < driver->file_size; i++) {
     char byte = driver->file_buffer[i];
 
     switch(state) {
-    case STATE_TEMP:
+    case STEMP:
       if (byte != DELIM) {
         driver->table_sample[row].temperature[index] = byte;
         index++;
       } else {
         driver->table_sample[row].temperature[index] = '\0';
-        state = STATE_DTME;
+        state = SDTME;
         index = 0;
       }
       break;
-    case STATE_DTME:
+    case SDTME:
       if (byte != DELIM) {
         driver->table_sample[row].datetime[index] = byte;
         index++;
       } else {
         driver->table_sample[row].datetime[index] = '\0';
-        state = STATE_TEMP;
+        state = STEMP;
         index = 0, row++;
       }
       break;
@@ -168,13 +163,13 @@ static uint8_t fetch_sample_data(filed_t *driver) {
   return SUCC;
 }
 
-static uint8_t rread_fetch_rowdata(filed_t *driver) {
+static uint8_t read_fetch_rowdata(filed_t *driver) {
 
   switch(driver->model) {
-  case CLIENT:
+  case MCLNT:
     return fetch_client_data(driver);
     break;
-  case SAMPLE:
+  case MSMPL:
     return fetch_sample_data(driver);
     break;
   default:
@@ -186,7 +181,7 @@ static uint8_t rread_fetch_rowdata(filed_t *driver) {
 static filed_item filed_read_items[] = {
   {"failed to open file\n", read_fetch_file}, {"failed to create filebuffer\n", read_fetch_filebuff},
   {"failed to read file\n",read_fetch_filedata}, {"failed to fetch amnt rows\n", read_fetch_filerows},
-  {"failed to memalloc\n", read_fetch_rowmem}, {"failed copy data_rows\n", rread_fetch_rowdata}
+  {"failed to memalloc\n", read_fetch_rowmem}, {"failed copy data_rows\n", read_fetch_rowdata}
 };
 
 static uint8_t run_read_routine(filed_t *driver) {
@@ -210,10 +205,10 @@ static uint8_t run_write_routine(filed_t *driver) {
 
 uint8_t file_driver(filed_t *driver) {
   
-  switch(driver->routine) {
-  case READ_ROUTINE:
+  switch(driver->route) {
+  case RINIT:
     return run_read_routine(driver);
-  case WRITE_ROUTINE:
+  case WINIT:
     return run_write_routine(driver);
   default: ;
   }
