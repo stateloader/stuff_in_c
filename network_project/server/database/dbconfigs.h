@@ -13,7 +13,7 @@ description to be
 
 #define SUCC 1
 #define FAIL 0
-
+#define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define ERROR_MESSAGE_FORMAT "[action] (%s) \t [topic] (%s) \t [result] (%s)\n\n"
 //-------------------------------------------------------------------------------------------------------------dbresources
 #define PATH_CLIENT "resources/client.txt"
@@ -26,19 +26,19 @@ description to be
 #define SAMPLE 1
 //-------------------------------------------------------------------------------------------------------------explanation
 #define DELIM '|'
-#define FREQ_DELIM_CLIENT 2
-#define FREQ_DELIM_SAMPLE 2
+#define DMNUM_CLIENT 2
+#define DMNUM_SAMPLE 2
+#define DMNUM_MESSAGE 4
 //------------------------------------------------------------------------------------------------------------------------
 #define FILE_BUFFER 4096
+#define MESG_BUFFER 512
 #define DATA_BUFFER 64
-#define TIME_BUFFER 64
+#define TIME_BUFFER 24
 //-------------------------------------------------------------------------------------------------------------explanation
 #define STATE_USER 0
 #define STATE_PASS 1
 
 #define STATE_TEMP 0
-#define STATE_DTME 2
-//------------------------------------------------------------------------------------------------------------------------
-
+#define STATE_DTME 1
 
 #endif

@@ -8,52 +8,67 @@ info fasda
 #include "dbconfigs.h"
 #include "filedriver.h"
 
-//-----------------------------------------------------------------------------------------------read routine logic part 1
+static uint8_t MODELS[] = {CLIENT, SAMPLE};
+static uint8_t DMNUMS[] = {DMNUM_CLIENT, DMNUM_SAMPLE};
+static char *FILE_PATH[] = {PATH_CLIENT, PATH_SAMPLE};
 
-static uint8_t file_driver_file_open(filed_t *driver) {
+//-----------------------------------------------------------------------------------------------read routine logic part
+
+static table_item table_items[] = {
+  {"resources/client.txt", CLIENT, DMNUM_CLIENT, 1},
+  {"resources/sample.txt", SAMPLE, DMNUM_SAMPLE, 1},
+};
+
+static uint8_t read_fetch_file(filed_t *driver) {
+//iterates through existing models/tables from database. opens "mapped" path.
 
   uint8_t result = 0;
-
-  switch(driver->model) {
-  case CLIENT:
-    result = (driver->file = fopen(PATH_CLIENT, "r")) != NULL ? 1 : 0;
-    break;
-  case SAMPLE:
-    result = (driver->file = fopen(PATH_SAMPLE, "r")) != NULL ? 1 : 0;
-    break;
-  default:
-    result = FAIL;
+  for (size_t i = 0; i < ARRAY_SIZE(MODELS); i++) {
+    if (driver->model == MODELS[i]) {
+      result = (driver->file = fopen(FILE_PATH[i], "r")) != NULL ? 1 : 0;
+      return result;
+    }
   }
+  return FAIL;
+}
+
+static uint8_t read_fetch_filebuff(filed_t *driver) {
+//alloc memory size of FILE_BUFFER.
+
+  uint8_t result = (driver->file_buffer = calloc(FILE_BUFFER, sizeof(char))) != NULL ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t file_driver_file_buff(filed_t *driver) {
+static uint8_t read_fetch_filedata(filed_t *driver) {
+//reads file-content to FILE_BUFFER, storing it's size in member file_size.
 
-  uint8_t result = (driver->file_data = calloc(FILE_BUFFER, sizeof(char))) != NULL ? SUCC : FAIL;
-  return result;
-}
-
-static uint8_t file_driver_file_read(filed_t *driver) {
-
-  driver->file_size = fread(driver->file_data, sizeof(char), FILE_BUFFER, driver->file);
+  driver->file_size = fread(driver->file_buffer, sizeof(char), FILE_BUFFER, driver->file);
   uint8_t result = (driver->file_size > 0) ? SUCC : FAIL; 
   return result;
 }
 
-static uint8_t file_driver_calc_rows(filed_t *driver) {
+static uint8_t read_fetch_filerows(filed_t *driver) {
 
-  uint8_t delim_interval = (driver->model == CLIENT) ? FREQ_DELIM_CLIENT : FREQ_DELIM_SAMPLE;
+  uint8_t interval = 0;
+
+  for (size_t i = 0; i < ARRAY_SIZE(MODELS); i++) {
+    if (driver->model == MODELS[i])
+      interval = DMNUMS[i];
+  }
 
   for (size_t i = 0; i < driver->file_size; i++)
-    driver->rows += (driver->file_data[i] == DELIM) ? 1 : 0;
-  driver->rows = (driver->rows / delim_interval);
+    driver->rows += (driver->file_buffer[i] == DELIM) ? 1 : 0;
+  driver->rows = (driver->rows / interval);
+
   return SUCC;
 }
 
-static uint8_t file_driver_allc_rows(filed_t *driver) {
+static uint8_t read_fetch_rowmem(filed_t *driver) {
 
   uint8_t result = 0;
+
   switch(driver->model) {
+
   case CLIENT:
     result = (driver->table_client = malloc(sizeof(cmod_t) * driver->rows)) != NULL ? SUCC : FAIL;
     if (result) {
@@ -64,7 +79,7 @@ static uint8_t file_driver_allc_rows(filed_t *driver) {
     }
     break;
   case SAMPLE:
-    result = (driver->table_sample = malloc(sizeof(cmod_t) * driver->rows)) != NULL ? SUCC : FAIL;
+    result = (driver->table_sample = malloc(sizeof(smod_t) * driver->rows)) != NULL ? SUCC : FAIL;
     if (result) {
       for (size_t i = 0; i < driver->rows; i++) {
         smod_t rows = {.id = i};
@@ -84,7 +99,7 @@ static uint8_t fetch_client_data(filed_t *driver) {
   size_t index = 0, row = 0;
 
   for (size_t i = 0; i < driver->file_size; i++) {
-    char byte = driver->file_data[i];
+    char byte = driver->file_buffer[i];
 
     switch(state) {
     case STATE_USER:
@@ -118,11 +133,11 @@ static uint8_t fetch_client_data(filed_t *driver) {
 
 static uint8_t fetch_sample_data(filed_t *driver) {
 
-  size_t index = 0, row = 0;
   uint8_t state = STATE_TEMP;
+  size_t index = 0, row = 0;
 
   for (size_t i = 0; i < driver->file_size; i++) {
-    char byte = driver->file_data[i];
+    char byte = driver->file_buffer[i];
 
     switch(state) {
     case STATE_TEMP:
@@ -153,7 +168,7 @@ static uint8_t fetch_sample_data(filed_t *driver) {
   return SUCC;
 }
 
-static uint8_t file_driver_data_rows(filed_t *driver) {
+static uint8_t rread_fetch_rowdata(filed_t *driver) {
 
   switch(driver->model) {
   case CLIENT:
@@ -169,16 +184,16 @@ static uint8_t file_driver_data_rows(filed_t *driver) {
 }
 
 static filed_item filed_read_items[] = {
-  {"failed to open file\n", file_driver_file_open}, {"failed to create filebuffer\n", file_driver_file_buff},
-  {"failed to read file\n",file_driver_file_read}, {"failed to fetch amnt rows\n", file_driver_calc_rows},
-  {"failed to memalloc\n", file_driver_allc_rows}, {"failed copy data_rows\n", file_driver_data_rows}
+  {"failed to open file\n", read_fetch_file}, {"failed to create filebuffer\n", read_fetch_filebuff},
+  {"failed to read file\n",read_fetch_filedata}, {"failed to fetch amnt rows\n", read_fetch_filerows},
+  {"failed to memalloc\n", read_fetch_rowmem}, {"failed copy data_rows\n", rread_fetch_rowdata}
 };
 
 static uint8_t run_read_routine(filed_t *driver) {
 
-  for (size_t i = 0; i < 6; i++) {
+  for (size_t i = 0; i < ARRAY_SIZE(filed_read_items); i++) {
     if (!filed_read_items[i].func(driver)) {
-      printf("failed number %ld\n", i);
+      printf("%s\n", filed_read_items[i].error_message);
       return FAIL;
     }
   }
@@ -189,6 +204,7 @@ static uint8_t run_write_routine(filed_t *driver) {
   printf("write routine test\n");
   return SUCC;
 }
+
 //-----------------------------------------------------------------------------------------------------write routine logic
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -199,9 +215,7 @@ uint8_t file_driver(filed_t *driver) {
     return run_read_routine(driver);
   case WRITE_ROUTINE:
     return run_write_routine(driver);
-  default:
-    free_driver(driver);
-    return FAIL;
+  default: ;
   }
   free_driver(driver);
   return FAIL;
@@ -209,8 +223,8 @@ uint8_t file_driver(filed_t *driver) {
 
 void free_driver(filed_t *driver) {
 
-  if (driver->file_data)
-    free(driver->file_data);
+  if (driver->file_buffer)
+    free(driver->file_buffer);
   if (driver->table_client)
     free(driver->table_client);
   if (driver->table_sample)
