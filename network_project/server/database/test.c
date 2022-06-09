@@ -2,7 +2,8 @@
 #include "filedriver.h"
 
 int main(void) {
-  filed_t driver = {.routine = READ_ROUTINE,.model = CLIENT};
+  
+  filed_t driver = {.routine = READ_ROUTINE,.model = SAMPLE};
   uint8_t result = file_driver(&driver);
   printf("result : %d\n", result);
   free_driver(&driver);
