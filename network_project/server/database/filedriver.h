@@ -28,6 +28,7 @@ typedef struct SModel {
   char datetime[TBUFF];
 } smod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
+
 typedef struct TableItem {
   uint8_t model;
   uint8_t membr;
@@ -55,7 +56,7 @@ typedef struct FileDriverItem{
 } filed_item;
 
 //----------------------f------------------------------------------------------------------------------------------drivers
-uint8_t file_driver(filed_t *driver);
+uint8_t file_driver(uint8_t request, filed_t *driver);
 void free_driver(filed_t *driver);
 //------------------------------------------------------------------------------------------------------------message print
 

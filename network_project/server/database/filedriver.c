@@ -8,53 +8,65 @@ info fasda
 #include "database.h"
 #include "filedriver.h"
 
-static uint8_t MODELS[] = {MCLNT, MSMPL, MMSGE};
-static uint8_t CDLMTR[] = {CCLNT, CSMPL, CMSGE};
-static char *FILE_PATH[] = {PCLNT, PSMPL, PMSGE};
+//------------------------------------------------------------------------------------------------------setup "route" part
 
-//-----------------------------------------------------------------------------------------------read routine logic part
+static table_item table_items[] = {
 
-static uint8_t read_fetch_file(filed_t *driver) {
-//iterates through existing models/tables from database. opens "mapped" path.
+  {MCLNT, CCLNT, "resources/client.txt"},
+  {MSMPL, CSMPL, "resources/sample.txt"},
+  {MMSGE, CMSGE, "resources/message.txt"},
+};
 
-  uint8_t result = 0;
-  for (size_t i = 0; i < ARRAY_SIZE(MODELS); i++) {
-    if (driver->model == MODELS[i]) {
-      result = (driver->file = fopen(FILE_PATH[i], "r")) != NULL ? 1 : 0;
-      return result;
-    }
+static void encode_route(uint8_t request, filed_t *driver) {
+  
+  uint8_t check_bit = 0;
+  
+  while (check_bit < 8) {
+    if (check_bit == 7)
+      driver->route = (request & 0x01) ? WINIT: RINIT;
+    else if (request & 0x01)
+      driver->item = table_items[check_bit];
+    check_bit++;
+    request = request >> 1;
   }
-  return FAIL;
+}
+//-------------------------------------------------------------------------------------------------read routine logic part
+static uint8_t read_fetch_file(filed_t *driver) {
+//opens file.
+
+  uint8_t result = (driver->file = fopen(driver->item.file_path, "r")) != NULL ? SUCC : FAIL;
+  return result;
 }
 
 static uint8_t read_fetch_filebuff(filed_t *driver) {
-//alloc memory size of FILE_BUFFER.
+//alloc memory of size FBUFF.
 
   uint8_t result = (driver->file_buffer = calloc(FBUFF, sizeof(char))) != NULL ? SUCC : FAIL;
   return result;
 }
 
 static uint8_t read_fetch_filedata(filed_t *driver) {
-//reads file-content to FILE_BUFFER, storing it's size in member file_size.
+//reads file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
 
   driver->file_size = fread(driver->file_buffer, sizeof(char), FBUFF, driver->file);
+
   uint8_t result = (driver->file_size > 0) ? SUCC : FAIL; 
   return result;
 }
 
 static uint8_t read_fetch_filerows(filed_t *driver) {
+//every struct-model/entry/row (semantics really fails me on this one) has N-size of members and every member has data.
+//while stored in file, every member is separated by a delimiter (pipe character '|', constant DELIM in this source-code).
 
-  uint8_t interval = 0;
-
-  for (size_t i = 0; i < ARRAY_SIZE(MODELS); i++) {
-    if (driver->model == MODELS[i])
-      interval = CDLMTR[i];
-  }
+//for now, my solution for fetching entries/rows in a given source-file is to count delimiters and just devide it with
+//N number of DELIM in every model/entry/row. this gives me a value for N-rows used while malloc:ing in the next step.
 
   for (size_t i = 0; i < driver->file_size; i++)
     driver->rows += (driver->file_buffer[i] == DELIM) ? 1 : 0;
-  driver->rows = (driver->rows / interval);
 
+  if (driver->rows % driver->item.membr != 0)
+    return FAIL;
+  driver->rows = (driver->rows / driver->item.membr);
   return SUCC;
 }
 
@@ -63,7 +75,6 @@ static uint8_t read_fetch_rowmem(filed_t *driver) {
   uint8_t result = 0;
 
   switch(driver->model) {
-
   case MCLNT:
     result = (driver->table_client = malloc(sizeof(cmod_t) * driver->rows)) != NULL ? SUCC : FAIL;
     if (result) {
@@ -114,7 +125,7 @@ static uint8_t fetch_client_data(filed_t *driver) {
         index++;
       } else {
         driver->table_client[row].password[index] = '\0';
-        state = SPASS;
+        state = SUSER;
         index = 0, row++;
       }
       break;
@@ -203,11 +214,14 @@ static uint8_t run_write_routine(filed_t *driver) {
 //-----------------------------------------------------------------------------------------------------write routine logic
 //------------------------------------------------------------------------------------------------------------------------
 
-uint8_t file_driver(filed_t *driver) {
+uint8_t file_driver(uint8_t request, filed_t *driver) {
   
+  encode_route(request, driver);
+
   switch(driver->route) {
   case RINIT:
     return run_read_routine(driver);
+    break;
   case WINIT:
     return run_write_routine(driver);
   default: ;
