@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                         FILEDRIVER MODULE
+                                                                                                             READER MODULE
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -49,7 +49,7 @@ static uint8_t read_fetch_filebuff(read_t *reader) {
 static uint8_t read_fetch_filedata(read_t *reader) {
 //read file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
 
-  reader->file_size = fread(reader->file_buffer, sizeof(char), FBUFF, reader->file);
+  reader->file_size = fread(reader->file_buffer, sizeof(char), FBUFF, reader->file) - 1;
 
   uint8_t result = (reader->file_size > 0) ? SUCC : FAIL;
   return result;

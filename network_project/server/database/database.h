@@ -14,9 +14,9 @@ description to be
 #define SUCC 1
 #define FAIL 0
 //-----------------------------------------------------------------------------------------------------------file/db-paths
-#define PCLNT "resources/client.txt"
-#define PSMPL "resources/sample.txt"
-#define PMSGE "resources/message.txt"
+#define PCLNT "resources/client.dat"
+#define PSMPL "resources/sample.dat"
+#define PMSGE "resources/message.dat"
 //------------------------------------------------------------------------------------------------------read or write init
 #define RINIT 0
 #define WINIT 1
