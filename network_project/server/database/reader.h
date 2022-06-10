@@ -3,8 +3,8 @@
 --------------------------------------------------------------------------------------------------------------------------
 description to be
 ------------------------------------------------------------------------------------------------------------------------*/
-#ifndef FILEDRIVER_H_
-#define FILEDRIVER_H_
+#ifndef READER_H_
+#define READER_H_
 
 #include "database.h"
 
@@ -28,15 +28,13 @@ typedef struct SModel {
   char datetime[TBUFF];
 } smod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
-
-typedef struct TableItem {
+typedef struct RouteItem {
   uint8_t model;
   uint8_t membr;
   const char *file_path;
-} table_item;
+} route_item;
 //----------------------------------------------------------------------------------------------------------------------*/
-typedef struct FileDriver {
-  uint8_t route;
+typedef struct ReadDriver {
   uint8_t model;
   size_t rows;
   size_t file_size;
@@ -44,20 +42,20 @@ typedef struct FileDriver {
   cmod_t *table_client;
   smod_t *table_sample;
   mmod_t *table_message;
-  table_item item;
+  route_item item;
   FILE *file;
-} filed_t;
+} read_t;
 //----------------------------------------------------------------------------------------------------------------------*/
-typedef uint8_t (*filed_func)(filed_t *driver);
+typedef uint8_t (*read_func)(read_t *reader);
 
 typedef struct FileDriverItem{
   const char *error_message;
-  filed_func func;
-} filed_item;
+  read_func func;
+} read_item;
 
 //----------------------f------------------------------------------------------------------------------------------drivers
-uint8_t file_driver(uint8_t request, filed_t *driver);
-void free_driver(filed_t *driver);
+uint8_t database_reader(uint8_t request, read_t *reader);
+void reader_free(read_t *reader);
 //------------------------------------------------------------------------------------------------------------message print
 
 #endif

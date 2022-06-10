@@ -1,7 +1,7 @@
 #include "database.h"
-#include "filedriver.h"
+#include "reader.h"
 
-static uint8_t request = 0;
+static uint8_t request = 0x00;
 
 /*-----------------------------------------------------------------------------------------------------------------------
                                                                                                                ROUTE BYTE
@@ -12,14 +12,33 @@ static uint8_t request = 0;
 
 ------------------------------------------------------------------------------------------------------------------------*/
 
+static uint8_t decode_route(uint8_t request) {
+//setups a "route-stack" (read or write, which table etc.) by parsing a route-byte sent from the response-module.
+  uint8_t mask = request, route = 0;
+  route = (mask & (1 << 7)) ? WINIT: RINIT;
+
+  return route;
+}
+
 int main(void) {
 
-  uint8_t result = 0;
-  filed_t driver = {.route = 0x00};
   request |= (0 << 7) | (1 << MCLNT);
 
-  result = file_driver(request, &driver);
-  printf("test result: %d\n", result);
-  free_driver(&driver);
+  uint8_t result = 0;
+  read_t reader = {.model = 0x00};
+
+  switch(decode_route(request)) {
+  
+  case RINIT:
+    result = database_reader(request, &reader);
+    printf("test result: %d\n", result);
+    break;
+  
+  case WINIT:
+    printf("WINIT RUN.\n");
+    break;
+  }
+
+  reader_free(&reader);
   return 0;
 }

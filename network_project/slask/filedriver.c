@@ -8,31 +8,36 @@ info fasda
 #include "database.h"
 #include "filedriver.h"
 
-//------------------------------------------------------------------------------------------------------setup "route" part
+/*-----------------------------------------------------------------------------------------------read routine logic part 0
+before a table being crated (...) info info info
+-------------------------------------------------------------------------------------------------------------------------*/
 
-static table_item table_items[] = {
-
-  {MCLNT, CCLNT, "resources/client.txt"},
-  {MSMPL, CSMPL, "resources/sample.txt"},
-  {MMSGE, CMSGE, "resources/message.txt"},
+static route_item route_items[] = {
+//custom datatype for mapping specific data given (...) [vilken model, därmed databas, ärendet rör etc].
+  {MCLNT, CCLNT, PCLNT},
+  {MSMPL, CSMPL, PSMPL},
+  {MMSGE, CMSGE, PMSGE},
 };
 
-static void encode_route(uint8_t request, filed_t *driver) {
-  
+static void decode_route(uint8_t request, filed_t *driver) {
+//setups a "route-stack" (read or write, which table etc.) by parsing a route-byte sent from the response-module.
+
   uint8_t check_bit = 0;
   
   while (check_bit < 8) {
     if (check_bit == 7)
       driver->route = (request & 0x01) ? WINIT: RINIT;
     else if (request & 0x01)
-      driver->item = table_items[check_bit];
+      driver->item = route_items[check_bit];
     check_bit++;
     request = request >> 1;
   }
 }
-//-------------------------------------------------------------------------------------------------read routine logic part
+/*-----------------------------------------------------------------------------------------------read routine logic part 1
+info info info
+-------------------------------------------------------------------------------------------------------------------------*/
 static uint8_t read_fetch_file(filed_t *driver) {
-//opens file.
+//open file.
 
   uint8_t result = (driver->file = fopen(driver->item.file_path, "r")) != NULL ? SUCC : FAIL;
   return result;
@@ -46,11 +51,11 @@ static uint8_t read_fetch_filebuff(filed_t *driver) {
 }
 
 static uint8_t read_fetch_filedata(filed_t *driver) {
-//reads file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
+//read file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
 
   driver->file_size = fread(driver->file_buffer, sizeof(char), FBUFF, driver->file);
 
-  uint8_t result = (driver->file_size > 0) ? SUCC : FAIL; 
+  uint8_t result = (driver->file_size > 0) ? SUCC : FAIL;
   return result;
 }
 
@@ -58,8 +63,8 @@ static uint8_t read_fetch_filerows(filed_t *driver) {
 //every struct-model/entry/row (semantics really fails me on this one) has N-size of members and every member has data.
 //while stored in file, every member is separated by a delimiter (pipe character '|', constant DELIM in this source-code).
 
-//for now, my solution for fetching entries/rows in a given source-file is to count delimiters and just devide it with
-//N number of DELIM in every model/entry/row. this gives me a value for N-rows used while malloc:ing in the next step.
+//for now, my solution for fetching correct amount of entries/rows of a given model from a given source-file is to count
+//delimiters and just devide it with N number of DELIM in every model/entry/row.
 
   for (size_t i = 0; i < driver->file_size; i++)
     driver->rows += (driver->file_buffer[i] == DELIM) ? 1 : 0;
@@ -69,6 +74,22 @@ static uint8_t read_fetch_filerows(filed_t *driver) {
   driver->rows = (driver->rows / driver->item.membr);
   return SUCC;
 }
+/*-----------------------------------------------------------------------------------------------read routine logic part 2
+info info info
+------------------------------------------------------------------------------------------------------------------------*/
+static void fetch_cmod_id(size_t rows, cmod_t *table) {
+  for (size_t i = 0; i < rows; i++) {
+    cmod_t rows = {.id = i};
+    table[i] = rows;
+  }
+}
+
+static void fetch_smod_id(size_t rows, smod_t *table) {
+  for (size_t i = 0; i < rows; i++) {
+    smod_t rows = {.id = i};
+    table[i] = rows;
+  }
+}
 
 static uint8_t read_fetch_rowmem(filed_t *driver) {
 
@@ -77,55 +98,46 @@ static uint8_t read_fetch_rowmem(filed_t *driver) {
   switch(driver->model) {
   case MCLNT:
     result = (driver->table_client = malloc(sizeof(cmod_t) * driver->rows)) != NULL ? SUCC : FAIL;
-    if (result) {
-      for (size_t i = 0; i < driver->rows; i++) {
-        cmod_t rows = {.id = i};
-        driver->table_client[i] = rows;
-      }
-    }
+    if (result) fetch_cmod_id(driver->rows, driver->table_client);
     break;
   case MSMPL:
     result = (driver->table_sample = malloc(sizeof(smod_t) * driver->rows)) != NULL ? SUCC : FAIL;
-    if (result) {
-      for (size_t i = 0; i < driver->rows; i++) {
-        smod_t rows = {.id = i};
-        driver->table_sample[i] = rows;
-      }
-    }
+    if (result) fetch_smod_id(driver->rows, driver->table_sample);
     break;
-    
   }
   return result;
 }
-//-----------------------------------------------------------------------------------------------read routine logic part 2
+/*-----------------------------------------------------------------------------------------------read routine logic part 2
+info info info
+------------------------------------------------------------------------------------------------------------------------*/
 
 static uint8_t fetch_client_data(filed_t *driver) {
 
-  uint8_t state = SUSER;
+  uint8_t member = 0;
   size_t index = 0, row = 0;
 
   for (size_t i = 0; i < driver->file_size; i++) {
     char byte = driver->file_buffer[i];
 
-    switch(state) {
-    case SUSER:
+    switch(member) {
+    case 0:
       if (byte != DELIM) {
         driver->table_client[row].username[index] = byte;
         index++;
       } else {
         driver->table_client[row].username[index] = '\0';
-        state = SPASS;
+        member = 1;
         index = 0;
       }
       break;
 
-    case SPASS:
+    case 1:
       if (byte != DELIM) {
         driver->table_client[row].password[index] = byte;
         index++;
       } else {
         driver->table_client[row].password[index] = '\0';
-        state = SUSER;
+        member = 0;
         index = 0, row++;
       }
       break;
@@ -205,7 +217,7 @@ static uint8_t run_read_routine(filed_t *driver) {
   }
   return SUCC;
 }
-
+//-----------------------------------------------------------------------------------------------------write routine logic
 static uint8_t run_write_routine(filed_t *driver) {
   printf("write routine test\n");
   return SUCC;
@@ -216,7 +228,7 @@ static uint8_t run_write_routine(filed_t *driver) {
 
 uint8_t file_driver(uint8_t request, filed_t *driver) {
   
-  encode_route(request, driver);
+  decode_route(request, driver);
 
   switch(driver->route) {
   case RINIT:
