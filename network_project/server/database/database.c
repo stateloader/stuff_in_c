@@ -1,19 +1,16 @@
 #include "database.h"
 #include "reader.h"
+#include "writer.h"
 
 static uint8_t request = 0x00;
 
 /*-----------------------------------------------------------------------------------------------------------------------
-                                                                                                               ROUTE BYTE
--------------------------------------------------------------------------------------------------------------------------
 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |  position
 |   R/W   |    -    |    -    |    -    |    -    |   MMSGE  |   MSMPL   |   MCLNT   |  variable
--------------------------------------------------------------------------------------------------------------------------
-
-------------------------------------------------------------------------------------------------------------------------*/
+-----------------------------------------------------------------------------------------------------------------------*/
 
 static uint8_t decode_route(uint8_t request) {
-//setups a "route-stack" (read or write, which table etc.) by parsing a route-byte sent from the response-module.
+
   uint8_t mask = request, route = 0;
   route = (mask & (1 << 7)) ? WINIT: RINIT;
 
@@ -25,7 +22,7 @@ int main(void) {
   request |= (0 << 7) | (1 << MCLNT);
 
   uint8_t result = 0;
-  read_t reader = {.model = 0x00};
+  read_t reader = {.rows = 0};
 
   switch(decode_route(request)) {
   

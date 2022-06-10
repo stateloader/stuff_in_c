@@ -4,8 +4,6 @@
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include <string.h>
-//#include "../database.h"
 #include "reader.h"
 
 /*-----------------------------------------------------------------------------------------------read routine logic part 0
@@ -93,7 +91,7 @@ static uint8_t read_fetch_rowmem(read_t *reader) {
 
   uint8_t result = 0;
 
-  switch(reader->model) {
+  switch(reader->item.model) {
   case MCLNT:
     result = (reader->table_client = malloc(sizeof(cmod_t) * reader->rows)) != NULL ? SUCC : FAIL;
     if (result) fetch_cmod_id(reader->rows, reader->table_client);
@@ -186,7 +184,7 @@ static uint8_t fetch_sample_data(read_t *reader) {
 
 static uint8_t read_fetch_rowdata(read_t *reader) {
 
-  switch(reader->model) {
+  switch(reader->item.model) {
   case MCLNT:
     return fetch_client_data(reader);
     break;

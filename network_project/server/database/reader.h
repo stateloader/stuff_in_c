@@ -35,20 +35,19 @@ typedef struct RouteItem {
 } route_item;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct ReadDriver {
-  uint8_t model;
   size_t rows;
   size_t file_size;
+  route_item item;
   char *file_buffer;
   cmod_t *table_client;
   smod_t *table_sample;
   mmod_t *table_message;
-  route_item item;
   FILE *file;
 } read_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef uint8_t (*read_func)(read_t *reader);
 
-typedef struct FileDriverItem{
+typedef struct ReadDriverItem{
   const char *error_message;
   read_func func;
 } read_item;

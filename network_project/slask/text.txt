@@ -192,4 +192,32 @@ typedef struct FileDriverError {
   filed_func func;
 } filed_item;
 
-uint8_t server_assert(filed_item *item);
+uint8_t server_assert(filed_item *item);'
+
+
+typedef struct MModel {
+  size_t id;
+  char username[DBUFF];
+  char topic[DBUFF];
+  char datetime[TBUFF];
+  char message[MBUFF];
+} mmod_t;
+//----------------------------------------------------------------------------------------------------------------------
+typedef struct CModel {
+  size_t id;
+  char username[DBUFF];
+  char password[DBUFF];
+} cmod_t;
+//----------------------------------------------------------------------------------------------------------------------
+typedef struct SModel {
+  size_t id;
+  char temperature[DBUFF];
+  char datetime[TBUFF];
+} smod_t;
+//----------------------------------------------------------------------------------------------------------------------
+typedef struct RouteItem {
+  uint8_t model;
+  uint8_t membr;
+  const char *file_path;
+} route_item;
+*/
