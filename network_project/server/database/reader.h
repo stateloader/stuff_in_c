@@ -6,7 +6,9 @@ description to be
 #ifndef READER_H_
 #define READER_H_
 
-#include "database.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "dbconfig.h"
 
 typedef struct MModel {
   size_t id;
@@ -53,7 +55,7 @@ typedef struct ReadDriverItem{
 } read_item;
 
 //----------------------f------------------------------------------------------------------------------------------drivers
-uint8_t database_reader(uint8_t request, read_t *reader);
+uint8_t database_reader(read_t *reader, uint8_t request);
 void reader_free(read_t *reader);
 //------------------------------------------------------------------------------------------------------------message print
 

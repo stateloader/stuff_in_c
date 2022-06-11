@@ -1,7 +1,9 @@
 #ifndef WRITER_H_
 #define WRITER_H_
 
-#include "database.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "dbconfig.h"
 
 typedef struct DataItem {
   uint8_t model;
@@ -10,12 +12,11 @@ typedef struct DataItem {
 
 typedef struct WriteDriver {
   data_item item;
-  size_t package_size;
-  size_t append_size;
+  size_t psize, asize;
   char package[MBUFF];
   FILE *file;
 } write_t;
 
-uint8_t database_writer(uint8_t request, write_t *writer);
+uint8_t database_writer(write_t *writer, uint8_t request);
 
 #endif

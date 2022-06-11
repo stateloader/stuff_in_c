@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-
+#include "../serverutils/serror.h"
+#include "../serverutils/sstrings.h"
 #include "reader.h"
 
 /*-----------------------------------------------------------------------------------------------read routine logic part 0
@@ -17,7 +18,7 @@ static route_item route_items[] = {
   {MMSGE, CMSGE, PMSGE},
 };
 
-static void decode_model(uint8_t request, read_t *reader) {
+static void decode_request(read_t *reader, uint8_t request) {
 //setups a "route-stack" (read or write, which table etc.) by parsing a route-byte sent from the response-module.
 
   uint8_t check_bit = 0;
@@ -32,30 +33,30 @@ static void decode_model(uint8_t request, read_t *reader) {
 /*-----------------------------------------------------------------------------------------------read routine logic part 1
 info info info
 -------------------------------------------------------------------------------------------------------------------------*/
-static uint8_t read_fetch_file(read_t *reader) {
+static uint8_t open_file(read_t *reader) {
 //open file.
 
   uint8_t result = (reader->file = fopen(reader->item.file_path, "r")) != NULL ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t read_fetch_filebuff(read_t *reader) {
+static uint8_t alloc_filebuff(read_t *reader) {
 //alloc memory of size FBUFF.
 
   uint8_t result = (reader->file_buffer = calloc(FBUFF, sizeof(char))) != NULL ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t read_fetch_filedata(read_t *reader) {
+static uint8_t read_filedata(read_t *reader) {
 //read file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
 
-  reader->file_size = fread(reader->file_buffer, sizeof(char), FBUFF, reader->file) - 1;
+  reader->file_size = fread(reader->file_buffer, sizeof(char), FBUFF, reader->file);
 
   uint8_t result = (reader->file_size > 0) ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t read_fetch_filerows(read_t *reader) {
+static uint8_t fetch_tablerows(read_t *reader) {
 //every struct-model/entry/row (semantics really fails me on this one) has N-size of members and every member has data.
 //while stored in file, every member is separated by a delimiter (pipe character '|', constant DELIM in this source-code).
 
@@ -87,7 +88,7 @@ static void fetch_smod_id(size_t rows, smod_t *table) {
   }
 }
 
-static uint8_t read_fetch_rowmem(read_t *reader) {
+static uint8_t alloc_tablerows(read_t *reader) {
 
   uint8_t result = 0;
 
@@ -107,7 +108,7 @@ static uint8_t read_fetch_rowmem(read_t *reader) {
 info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
-static uint8_t fetch_client_data(read_t *reader) {
+static uint8_t create_client_table(read_t *reader) {
 
   uint8_t member = 0;
   size_t index = 0, row = 0;
@@ -124,6 +125,7 @@ static uint8_t fetch_client_data(read_t *reader) {
         reader->table_client[row].username[index] = '\0';
         member = 1;
         index = 0;
+        printf("username [ld]%s\n", reader->table_client[row].username);
       }
       break;
 
@@ -134,6 +136,7 @@ static uint8_t fetch_client_data(read_t *reader) {
       } else {
         reader->table_client[row].password[index] = '\0';
         member = 0;
+        printf("password [ld]%s\n\n", reader->table_client[row].password);
         index = 0, row++;
       }
       break;
@@ -145,7 +148,7 @@ static uint8_t fetch_client_data(read_t *reader) {
   return SUCC;
 }
 
-static uint8_t fetch_sample_data(read_t *reader) {
+static uint8_t create_sample_table(read_t *reader) {
 
   uint8_t state = STEMP;
   size_t index = 0, row = 0;
@@ -182,14 +185,14 @@ static uint8_t fetch_sample_data(read_t *reader) {
   return SUCC;
 }
 
-static uint8_t read_fetch_rowdata(read_t *reader) {
+static uint8_t create_table(read_t *reader) {
 
   switch(reader->item.model) {
   case MCLNT:
-    return fetch_client_data(reader);
+    return create_client_table(reader);
     break;
   case MSMPL:
-    return fetch_sample_data(reader);
+    return create_sample_table(reader);
     break;
   default:
     return FAIL;
@@ -198,12 +201,15 @@ static uint8_t read_fetch_rowdata(read_t *reader) {
 }
 
 static read_item read_items[] = {
-  {"failed to open file\n", read_fetch_file}, {"failed to create filebuffer\n", read_fetch_filebuff},
-  {"failed to read file\n",read_fetch_filedata}, {"failed to fetch amnt rows\n", read_fetch_filerows},
-  {"failed to memalloc\n", read_fetch_rowmem}, {"failed copy data_rows\n", read_fetch_rowdata}
+  {"failed to open file", open_file},
+  {"failed to create filebuffer\n", alloc_filebuff},
+  {"failed to read file",read_filedata},
+  {"failed to fetch amnt rows\n", fetch_tablerows},
+  {"failed to memalloc", alloc_tablerows},
+  {"failed copy data_rows\n", create_table}
 };
 
-static uint8_t read_routine(read_t *reader) {
+static uint8_t reader_routine(read_t *reader) {
 
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (!read_items[i].func(reader)) {
@@ -214,10 +220,10 @@ static uint8_t read_routine(read_t *reader) {
   return SUCC;
 }
 
-uint8_t database_reader(uint8_t request, read_t *reader) {
+uint8_t database_reader(read_t *reader, uint8_t request) {
   
-  decode_model(request, reader);
-  return read_routine(reader);
+  decode_request(reader, request);
+  return reader_routine(reader);
 }
 
 void reader_free(read_t *reader) {

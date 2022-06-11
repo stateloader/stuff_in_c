@@ -3,8 +3,8 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-
-#include "nstrings.h"
+#include "../serverutils/serror.h"
+#include "../serverutils/sstrings.h"
 #include "writer.h"
 
 static data_item data_items[] = {
@@ -13,7 +13,7 @@ static data_item data_items[] = {
   {MMSGE, PMSGE},
 };
 
-static void decode_request(uint8_t request, write_t *writer) {
+static void decode_request(write_t *writer, uint8_t request) {
 
   uint8_t check_bit = 0;
   
@@ -33,15 +33,15 @@ static uint8_t write_fetch_file(write_t *writer) {
 
 static uint8_t write_append_file(write_t *writer) {
 
-  writer->append_size = fwrite(writer->package, sizeof(char), writer->package_size, writer->file);
-  uint8_t result = (writer->append_size > 0) ? SUCC : FAIL;
+  writer->asize = fwrite(writer->package, sizeof(char), writer->psize, writer->file);
+  uint8_t result = (writer->asize > 0) ? SUCC : FAIL;
   if (writer->file) fclose(writer->file);
   return result;
 }
 
-uint8_t database_writer(uint8_t request, write_t *writer) {
+uint8_t database_writer(write_t *writer, uint8_t request) {
 
-  decode_request(request, writer);
+  decode_request(writer, request);
 
   if (write_fetch_file(writer)) {
     printf("sucess open\n");
@@ -57,5 +57,3 @@ uint8_t database_writer(uint8_t request, write_t *writer) {
     return FAIL;
   }
 }
-//printf("package inside writer: %s\n", writer->package);
-//printf("sizepac inside writer: %ld\n", writer->package_size);
