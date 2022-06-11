@@ -19,17 +19,19 @@ uint8_t database_driver(read_t *reader, write_t *writer, uint8_t request, const 
     
   case RINIT:
     System_Info_Message("initializing read path");
-    result = database_reader(reader, request);
+    reader->request = request;
+    result = database_reader(reader);
     break;
 
   case WINIT:
-    result = string_copy(&writer->psize, writer->package, package);
+    result = string_copy(&writer->package_size, writer->package, package);
     if (!result) {
       System_Info_Message("failed to copy package before writing.");
       break;
     } else {
       System_Info_Message("initializing write path");
-      result = database_writer(writer, request);
+      writer->request = request;
+      result = database_writer(writer);
       break;
     }
   default:

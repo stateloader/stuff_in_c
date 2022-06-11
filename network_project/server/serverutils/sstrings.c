@@ -17,7 +17,7 @@ size_t string_size(const char *string) {
   return 0;
 }
 
-uint8_t string_copy(size_t *size, char *dest, const char *from) {
+uint8_t string_copy(uint32_t *size, char *dest, const char *from) {
   
   *size = string_size(from);
 

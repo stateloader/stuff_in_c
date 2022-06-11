@@ -15,6 +15,7 @@ info info info
 #define PCLNT "resources/client.dat"    // path client          - relative path to .dat-file storing clientdata.
 #define PSMPL "resources/sample.dat"    // Path sample          - relative path to .dat-file storing sampledata.
 #define PMSGE "resources/message.dat"   // Path message         - relative path to .dat-file storing messagedata.
+#define PDVCE "resources/device.dat"    // Path device          - relative path to .dat-file storing devicedata.
 
 /*---------------------------------------------------------------------------------------------------------BYTE: "REQUEST"
 
@@ -29,6 +30,7 @@ constant                |  RWBIT  |    -    |    -    |    -    |    -    |   MM
 #define MCLNT 0         // Model Client         - flag to deal with Client-data.
 #define MSMPL 1         // Model Sample         - flag to deal with Sample-data.
 #define MMSGE 2         // Model Message        - flag to deal with Message-data
+#define MDVCE 3         // Model Device         - flag to deal with Device-data.
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -36,6 +38,7 @@ constant                |  RWBIT  |    -    |    -    |    -    |    -    |   MM
 #define CCLNT 2         // Count Client         - "interval" of delims, (N) members, for each client row.
 #define CSMPL 2         // Count Sample         - "interval" of delims, (N) members, for each sample row.
 #define CMSGE 4         // Count Message        - "interval" of delims, (N) members, for each message row.
+#define CDVCE 3
 //------------------------------------------------------------------------------------------------------------------------
 
 #define FBUFF 4096      // File Buffer          - max allowed size of a file buffer.

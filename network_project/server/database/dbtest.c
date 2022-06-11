@@ -7,8 +7,9 @@
 
 /*---------------------------------------------------------------------------------------------------------BYTE: "REQUEST"
 bit                |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-constant           |  RWBIT  |    -    |    -    |    -    |    -    |   MMSGE  |   MSMPL   |   MCLNT   |
+constant           |  RWBIT  |  UCRTE  |    -    |    -    |  MTHNG  |   MMSGE  |   MSMPL   |   MCLNT   |
 ------------------------------------------------------------------------------------------------------------------------*/
+
 int main(void) {
 
 
@@ -19,10 +20,9 @@ int main(void) {
 
   const char *package = "jackepken|pasord|";
 
-  request |= (RINIT << RWBIT) | (1 << MCLNT);    // read
+  request |= (WINIT << RWBIT) | (1 << MCLNT);    // read
   result = database_driver(&reader, &writer, request, package);
 
-  printf("request %d\n", request);
   Integer_Info_Message(result, "result after r/w routine");
 
   reader_free(&reader);

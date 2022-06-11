@@ -10,8 +10,15 @@ description to be
 #include <stdint.h>
 #include "dbconfig.h"
 
+typedef struct DModel {
+  uint32_t id;
+  uint8_t ledcolour;
+  char username[DBUFF];
+  char datetime[TBUFF];
+} dmod_t;
+//----------------------------------------------------------------------------------------------------------------------*/
 typedef struct MModel {
-  size_t id;
+  uint32_t id;
   char username[DBUFF];
   char topic[DBUFF];
   char datetime[TBUFF];
@@ -19,13 +26,13 @@ typedef struct MModel {
 } mmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct CModel {
-  size_t id;
+  uint32_t id;
   char username[DBUFF];
   char password[DBUFF];
 } cmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct SModel {
-  size_t id;
+  uint32_t id;
   char temperature[DBUFF];
   char datetime[TBUFF];
 } smod_t;
@@ -37,13 +44,15 @@ typedef struct RouteItem {
 } route_item;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct ReadDriver {
-  size_t rows;
-  size_t file_size;
+  uint8_t request;
+  uint32_t id, rows;
   route_item item;
-  char *file_buffer;
   cmod_t *table_client;
   smod_t *table_sample;
   mmod_t *table_message;
+  dmod_t *table_device;
+  uint32_t file_size;
+  char *file_buffer;
   FILE *file;
 } read_t;
 //----------------------------------------------------------------------------------------------------------------------*/
@@ -55,7 +64,7 @@ typedef struct ReadDriverItem{
 } read_item;
 
 //----------------------f------------------------------------------------------------------------------------------drivers
-uint8_t database_reader(read_t *reader, uint8_t request);
+uint8_t database_reader(read_t *reader);
 void reader_free(read_t *reader);
 //------------------------------------------------------------------------------------------------------------message print
 

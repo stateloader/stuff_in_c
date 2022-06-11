@@ -4,6 +4,9 @@
 #define SYSTEM_INFO_FORMAT "INFO\t\t\t\t%s\n"
 #define System_Info_Message(info) (printf(SYSTEM_INFO_FORMAT, info))
 
+#define SYSTEM_ERROR_FORMAT "ERROR\t\t\t\t%s\n"
+#define System_Error_Message(error) (printf(SYSTEM_ERROR_FORMAT, error))
+
 #define STRING_ERROR_FORMAT "STRING ERROR----\nFUNC: %s\nNOTE %s\n\n'%s'\n"     
 #define String_Error_Message(errfunc, errnote, errstr) printf(STRING_ERROR_FORMAT, errfunc, errnote, errstr)
 

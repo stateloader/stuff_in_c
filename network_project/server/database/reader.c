@@ -16,18 +16,19 @@ static route_item route_items[] = {
   {MCLNT, CCLNT, PCLNT},
   {MSMPL, CSMPL, PSMPL},
   {MMSGE, CMSGE, PMSGE},
+  {MDVCE, CDVCE, PDVCE}
 };
 
-static void decode_request(read_t *reader, uint8_t request) {
+static void decode_request(read_t *reader) {
 //setups a "route-stack" (read or write, which table etc.) by parsing a route-byte sent from the response-module.
 
   uint8_t check_bit = 0;
-  
+  uint8_t reqmask = reader->request;
   while (check_bit < 7) {
-    if (request & 0x01)
+    if (reqmask & 0x01)
       reader->item = route_items[check_bit];
     check_bit++;
-    request = request >> 1;
+    reqmask = reqmask >> 1;
   }
 }
 /*-----------------------------------------------------------------------------------------------read routine logic part 1
@@ -63,7 +64,7 @@ static uint8_t fetch_tablerows(read_t *reader) {
 //for now, my solution for fetching correct amount of entries/rows of a given model from a given source-file is to count
 //delimiters and just devide it with N number of DELIM in every model/entry/row.
 
-  for (size_t i = 0; i < reader->file_size; i++)
+  for (uint32_t i = 0; i < reader->file_size; i++)
     reader->rows += (reader->file_buffer[i] == DELIM) ? 1 : 0;
 
   if (reader->rows % reader->item.membr != 0)
@@ -74,15 +75,15 @@ static uint8_t fetch_tablerows(read_t *reader) {
 /*-----------------------------------------------------------------------------------------------read routine logic part 2
 info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-static void fetch_cmod_id(size_t rows, cmod_t *table) {
-  for (size_t i = 0; i < rows; i++) {
+static void fetch_cmod_id(uint32_t rows, cmod_t *table) {
+  for (uint32_t i = 0; i < rows; i++) {
     cmod_t rows = {.id = i};
     table[i] = rows;
   }
 }
 
-static void fetch_smod_id(size_t rows, smod_t *table) {
-  for (size_t i = 0; i < rows; i++) {
+static void fetch_smod_id(uint32_t rows, smod_t *table) {
+  for (uint32_t i = 0; i < rows; i++) {
     smod_t rows = {.id = i};
     table[i] = rows;
   }
@@ -111,9 +112,9 @@ info info info
 static uint8_t create_client_table(read_t *reader) {
 
   uint8_t member = 0;
-  size_t index = 0, row = 0;
+  uint32_t index = 0, row = 0;
 
-  for (size_t i = 0; i < reader->file_size; i++) {
+  for (uint32_t i = 0; i < reader->file_size; i++) {
     char byte = reader->file_buffer[i];
 
     switch(member) {
@@ -151,9 +152,9 @@ static uint8_t create_client_table(read_t *reader) {
 static uint8_t create_sample_table(read_t *reader) {
 
   uint8_t state = STEMP;
-  size_t index = 0, row = 0;
+  uint32_t index = 0, row = 0;
 
-  for (size_t i = 0; i < reader->file_size; i++) {
+  for (uint32_t i = 0; i < reader->file_size; i++) {
     char byte = reader->file_buffer[i];
 
     switch(state) {
@@ -211,18 +212,18 @@ static read_item read_items[] = {
 
 static uint8_t reader_routine(read_t *reader) {
 
-  for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
+  for (uint32_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (!read_items[i].func(reader)) {
-      printf("%s\n", read_items[i].error_message);
+      System_Error_Message(read_items[i].error_message);
       return FAIL;
     }
   }
   return SUCC;
 }
 
-uint8_t database_reader(read_t *reader, uint8_t request) {
+uint8_t database_reader(read_t *reader) {
   
-  decode_request(reader, request);
+  decode_request(reader);
   return reader_routine(reader);
 }
 

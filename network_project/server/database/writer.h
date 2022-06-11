@@ -11,12 +11,21 @@ typedef struct DataItem {
 } data_item;
 
 typedef struct WriteDriver {
+  uint8_t request;
   data_item item;
-  size_t psize, asize;
+  uint32_t package_size;
+  uint32_t append_size;
   char package[MBUFF];
   FILE *file;
 } write_t;
 
-uint8_t database_writer(write_t *writer, uint8_t request);
+typedef uint8_t (*write_func)(write_t *writer);
+
+typedef struct WriteDriverItem{
+  const char *error_message;
+  write_func func;
+} write_item;
+
+uint8_t database_writer(write_t *writer);
 
 #endif

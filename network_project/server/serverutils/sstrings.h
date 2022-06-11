@@ -11,6 +11,6 @@
 #define check_term(str, size) (str[size - 1] == '\0')
 
 size_t string_size(const char *string);
-uint8_t string_copy(size_t *size, char *dest, const char *from);
+uint8_t string_copy(uint32_t *size, char *dest, const char *from);
 
 #endif
