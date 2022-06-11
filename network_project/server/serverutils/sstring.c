@@ -7,7 +7,7 @@ info fasda
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sstrings.h"
+#include "sstring.h"
 
 size_t string_size(const char *string) {
   for (size_t i = 0; i < MAX_STR_SIZE; i++) {

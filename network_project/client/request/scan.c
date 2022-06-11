@@ -7,7 +7,7 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "strdriver.h"
+#include "cstring.h"
 #include "scan.h"
 
 static size_t scan_size = 0;

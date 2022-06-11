@@ -12,6 +12,6 @@
 #define STEER 2
 #define LEAVE 3
 
-size_t request_driver(char *request);
+size_t request_driver(char *request, uint8_t *online);
 
 #endif

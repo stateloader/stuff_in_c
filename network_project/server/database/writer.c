@@ -4,7 +4,7 @@
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "../serverutils/serror.h"
-#include "../serverutils/sstrings.h"
+#include "../serverutils/sstring.h"
 #include "writer.h"
 
 static data_item data_items[] = {
@@ -18,6 +18,7 @@ static void decode_request(write_t *writer) {
 
   uint8_t check_bit = 0;
   uint8_t reqmask = writer->request;
+  
   while (check_bit < 7) {
     if (reqmask & 0x01)
       writer->item = data_items[check_bit];
