@@ -3,13 +3,22 @@
 --------------------------------------------------------------------------------------------------------------------------
 description to be
 ------------------------------------------------------------------------------------------------------------------------*/
-#ifndef FILEDRIVER_H_
-#define FILEDRIVER_H_
+#ifndef READER_H_
+#define READER_H_
 
-#include "database.h"
+#include <stddef.h>
+#include <stdint.h>
+#include "dbconfig.h"
 
+typedef struct DModel {
+  uint32_t id;
+  uint8_t ledcolour;
+  char username[DBUFF];
+  char datetime[TBUFF];
+} dmod_t;
+//----------------------------------------------------------------------------------------------------------------------*/
 typedef struct MModel {
-  size_t id;
+  uint32_t id;
   char username[DBUFF];
   char topic[DBUFF];
   char datetime[TBUFF];
@@ -17,47 +26,46 @@ typedef struct MModel {
 } mmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct CModel {
-  size_t id;
+  uint32_t id;
   char username[DBUFF];
   char password[DBUFF];
 } cmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
 typedef struct SModel {
-  size_t id;
+  uint32_t id;
   char temperature[DBUFF];
   char datetime[TBUFF];
 } smod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
-
-typedef struct TableItem {
+typedef struct RouteItem {
   uint8_t model;
   uint8_t membr;
   const char *file_path;
-} table_item;
+} route_item;
 //----------------------------------------------------------------------------------------------------------------------*/
-typedef struct FileDriver {
-  uint8_t route;
-  uint8_t model;
-  size_t rows;
-  size_t file_size;
-  char *file_buffer;
+typedef struct ReadDriver {
+  uint8_t request;
+  uint32_t id, rows;
+  route_item item;
   cmod_t *table_client;
   smod_t *table_sample;
   mmod_t *table_message;
-  table_item item;
+  dmod_t *table_device;
+  uint32_t file_size;
+  char *file_buffer;
   FILE *file;
-} filed_t;
+} read_t;
 //----------------------------------------------------------------------------------------------------------------------*/
-typedef uint8_t (*filed_func)(filed_t *driver);
+typedef uint8_t (*read_func)(read_t *reader);
 
-typedef struct FileDriverItem{
+typedef struct ReadDriverItem{
   const char *error_message;
-  filed_func func;
-} filed_item;
+  read_func func;
+} read_item;
 
 //----------------------f------------------------------------------------------------------------------------------drivers
-uint8_t file_driver(uint8_t request, filed_t *driver);
-void free_driver(filed_t *driver);
+uint8_t database_reader(read_t *reader);
+void reader_free(read_t *reader);
 //------------------------------------------------------------------------------------------------------------message print
 
 #endif

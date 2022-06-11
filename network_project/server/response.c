@@ -17,6 +17,10 @@ static void incoming(int client_socket, char *request) {
   printf("client request: %s\n", request);
 }
 
+static void encoding(char *request) {
+  ;
+}
+
 static void outgoing(int client_socket, char *response) {
 
   char ADELE_IT_IS[MAX_BUFFER] = \
@@ -39,7 +43,6 @@ void response_driver(int client_socket, char *request, char *response) {
 
   incoming(client_socket, request);
   memset(request, '\0', MAX_BUFFER);
-
   outgoing(client_socket, response);
   memset(response, '\0', MAX_BUFFER);
 }
