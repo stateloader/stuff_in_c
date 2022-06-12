@@ -221,3 +221,196 @@ typedef struct RouteItem {
   const char *file_path;
 } route_item;
 */
+
+/*
+static const char *REQUEST_START[] = {
+  "-fetch data", "-steer device", "-make comment", "-logout"
+};
+static const char *REQUEST_FETCH[] = {
+  "-temp", "-back"
+};
+static const char *REQUEST_STEER[] = {
+  "-red", "-blue", "-green", "-back"
+};
+
+static uint8_t MENU = START;
+static size_t request_size = 0;
+
+static int8_t request_scanner(char *request, const char *commands[], int8_t array_size) {
+
+  request_size = scan_driver(request, MAX_BUFFER, "enter");
+
+  for (int8_t cmp = 0; cmp < array_size; cmp++) {
+    if (strcmp(request, commands[cmp]) == 0)
+      return cmp;
+  }
+  printf("you've typed an invalid command, try again!\n\n");
+  return - 1;
+}
+
+static int8_t request_start(char *request) {
+
+  int8_t array_size = ARRAY_SIZE(REQUEST_START);
+  int8_t choice = request_scanner(request, REQUEST_START, array_size);
+
+  if (choice == - 1) {
+    return START;
+  } else if (choice == array_size - 1) {
+    return LEAVE;
+  } else {
+    return choice + 1;
+  }
+}
+
+static int8_t request_fetch(char *request) {
+
+  int8_t array_size = ARRAY_SIZE(REQUEST_FETCH);
+  int8_t choice = request_scanner(request, REQUEST_FETCH, array_size);
+
+  if (choice == - 1 || choice == array_size - 1)
+    return START;
+  return LEAVE;
+}
+
+static int8_t request_steer(char *request) {
+
+  int8_t array_size = ARRAY_SIZE(REQUEST_STEER);
+  int8_t choice = request_scanner(request, REQUEST_STEER, array_size);
+
+  if (choice == - 1 || choice == array_size - 1)
+    return START;
+  return LEAVE;
+}
+*/
+
+size_t request_driver(char *request, uint8_t *online) {
+
+  MENU = (!*online) ? command_driver(request, online) : START;
+
+  while (MENU != LEAVE) {
+
+	  switch(MENU) {
+    
+	  case START:
+	    MENU = request_start(request);
+	    break;
+
+	  case FETCH:
+	    MENU = request_fetch(request);
+	    break;
+
+	  case STEER:
+	    MENU = request_steer(request);
+	    break;
+
+	  default:
+	    printf("something isn't right.\n");
+	    exit(EXIT_FAILURE);
+	  }
+  }
+
+  return request_size;
+}
+
+#ifndef CLIENT_H_
+#define CLIENT_H_
+
+#include <stdint.h>
+#include "clientconfigs.h"
+
+typedef struct Client {
+  uint8_t online;
+  char request[RBUFF];
+  char command[DBUFF];
+  char username[DBUFF];
+  char password[DBUFF];
+} cent_t;
+
+#endif
+
+static uint8_t state_main(char *command) {
+  printf("state main\n");
+  return SUCC;
+}
+
+static state_item state_items[] = {
+  {SCONN, state_connect},
+  {SMAIN, state_main}
+};
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include "request.h"
+#include "cstring.h"
+#include "scan.h"
+#include "command.h"
+
+
+static const char *ACONN[] = {
+  "-login", "-signup", "-exit"
+};
+
+static void command_print(const char *view, const char **options, uint8_t array_size) {
+  Info_View_Print(view);
+
+  for (uint8_t i = 0; i < array_size; i++)
+    printf("\t\t%s\n", options[i]);
+}
+
+static int8_t command_check(char *command, const char **options, uint32_t cmnd_size, uint8_t array_size) {
+
+  for (uint8_t i = 0; i < array_size; i++) {
+    printf("command: %s\n", options[i]);
+    if (string_comp(command, options[i], cmnd_size))
+      return i;
+  }
+  printf("'%s' not an option, try again.\n");
+  memset(command, '\0', DBUFF);
+  return - 1;
+}
+
+static uint8_t command_scan(char **options) {
+
+  uint8_t option = 0;
+  uint32_t cmnd_size = 0;
+  uint8_t state = SELECT;
+
+  char command[DBUFF] = {'\0'};
+
+  while (state != COMMIT) {
+    
+    switch(state) {
+
+    case SELECT:
+      cmnd_size = scan_driver(command, DBUFF, "select command: ");
+      state = VERIFY;
+      break;
+    case VERIFY:
+      option = command_check(command, options, cmnd_size, ARRAY_SIZE(ACONN));
+      if (option < 0)
+        state = SELECT;
+      else
+        state = COMMIT;
+      break;
+    default:
+      printf("error message command_scan\n");
+      exit(EXIT_FAILURE);
+  }
+  return option;
+}
+
+static uint8_t state_connect(char *command) {
+  command_print(View_Connect, ACONN, ARRAY_SIZE(ACONN));
+  command_scan(ACONN);
+}
+
+static state_item state_items[] = {
+  {SCONN, state_connect}
+};
+
+uint8_t command_driver(char *request, uint8_t state) {
+  
+  char command[DBUFF] = {'\0'};
+  return state_items[state].func(command);
+}

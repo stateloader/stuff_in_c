@@ -6,7 +6,8 @@
 
 #define check_term(str, len) (str[len - 1] == '\0')
 
-void string_test(char *string, size_t size);
-size_t string_size(char *string, size_t buffer_size);
+void string_test(char *string, uint32_t size);
+uint32_t string_size(char *string, uint32_t buffer_size);
+uint8_t string_comp(char *str1, const char *str2, uint32_t comp_length);
 
 #endif

@@ -8,6 +8,6 @@
 #define DONE 1
 #define check_ascii(B) (B >= 0x00 && B <= 0x7F)
 
-size_t scan_driver(char *scanner, size_t buffer_size, char *message);
+uint32_t scan_driver(char *scanner, uint32_t buffer_size, char *message);
 
 #endif

@@ -10,11 +10,11 @@ info info info info info info
 #include "cstring.h"
 #include "scan.h"
 
-static size_t scan_size = 0;
+static uint32_t scan_size = 0;
 
 static uint8_t read_byte(char *scan) {
 
-  for (size_t i = 0; i < scan_size; i++) {
+  for (uint32_t i = 0; i < scan_size; i++) {
     if (!check_ascii(scan[i])) {
       printf("only English ('ascii') characters allowed. try again!\n\n");
 		  return SCAN;
@@ -23,7 +23,7 @@ static uint8_t read_byte(char *scan) {
   return DONE;
 }
 
-static uint8_t read_scan(char *scan, size_t buffer_size) {
+static uint8_t read_scan(char *scan, uint32_t buffer_size) {
 
   fgets(scan, buffer_size - 1, stdin);
 
@@ -36,7 +36,7 @@ static uint8_t read_scan(char *scan, size_t buffer_size) {
   return read_byte(scan);
 }
 
-size_t scan_driver(char *scan, size_t buffer_size, char *message) {
+uint32_t scan_driver(char *scan, uint32_t buffer_size, char *message) {
 
   uint8_t state = SCAN;
 

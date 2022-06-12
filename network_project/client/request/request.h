@@ -1,17 +1,15 @@
 #ifndef REQUEST_H_
 #define REQUEST_H_
 
-#include <stddef.h>
 #include <stdint.h>
+#include "cconfig.h"
 
-#define MAX_BUFFER 4096
-#define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+#define Conn_View "CONNECT\tchoose by enter one of the commands below and hit enter."
+#define Print_View_Item(item) printf("%s\n\n", item);
 
-#define START 0
-#define FETCH 1
-#define STEER 2
-#define LEAVE 3
+#define INFO_FORMAT "\n\tOoops: '%s' %s\n\n"
+#define Info_Message(istr, imsg) printf(INFO_FORMAT, istr, imsg);
 
-size_t request_driver(char *request, uint8_t *online);
-
+uint32_t request_driver(char *request, uint8_t *online);
+  
 #endif
