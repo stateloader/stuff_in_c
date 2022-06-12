@@ -1,5 +1,5 @@
 #include "../serverutils/serror.h"
-#include "../serverutils/sstrings.h"
+#include "../serverutils/sstring.h"
 #include "dbconfig.h"
 #include "database.h"
 

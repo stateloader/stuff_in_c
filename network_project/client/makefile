@@ -1,5 +1,5 @@
 make:
-	gcc -o clientTCP clientTCP.c socket.c scan.c request.c strdriver.c -Wall -Wextra -g
+	gcc -o clientTCP clientTCP.c client.c socket.c request/*c -Wall -Wextra -g
 
 clean:
 	rm -f $(obj) clientTCP

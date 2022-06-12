@@ -1,5 +1,5 @@
 #include "../serverutils/serror.h"
-#include "../serverutils/sstrings.h"
+#include "../serverutils/sstring.h"
 #include "dbconfig.h"
 #include "database.h"
 #include "reader.h"
@@ -7,7 +7,7 @@
 
 /*---------------------------------------------------------------------------------------------------------BYTE: "REQUEST"
 bit                |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-constant           |  RWBIT  |  UCRTE  |    -    |    -    |  MTHNG  |   MMSGE  |   MSMPL   |   MCLNT   |
+constant           |  RWBIT  |  UCRTE  |  UACCS  |    -    |  MDVCE  |   MMSGE  |   MSMPL   |   MCLNT   |
 ------------------------------------------------------------------------------------------------------------------------*/
 
 int main(void) {

@@ -1,5 +1,5 @@
-#ifndef STRINGDRIVER_H_
-#define STRINGDRIVER_H_
+#ifndef CSTRING_H_
+#define CSTRING_H_
 
 #include <stddef.h>
 #include <stdint.h>

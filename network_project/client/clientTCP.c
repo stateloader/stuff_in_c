@@ -3,10 +3,13 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "request.h"
+#include "request/request.h"
 #include "socket.h"
 
+
 int main(int argc, char *argv[]) {
+
+  uint8_t online = 0;
 
   char request[MAX_BUFFER] = {0};
   char response[MAX_BUFFER] = {0};
@@ -15,7 +18,7 @@ int main(int argc, char *argv[]) {
 
   socket_connect(client_socket, "127.0.0.1", 90190);
 
-  socket_send(client_socket, request, request_driver(request));
+  socket_send(client_socket, request, request_driver(request, &online));
 
   socket_recieve(client_socket, response, MAX_BUFFER);
 

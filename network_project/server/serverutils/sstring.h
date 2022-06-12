@@ -1,5 +1,5 @@
-#ifndef SSTRINGS_H_
-#define SSTRINGS_H_
+#ifndef SSTRING_H_
+#define SSTRING_H_
 
 #include <stddef.h>
 #include <stdint.h>
