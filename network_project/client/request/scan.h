@@ -4,10 +4,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define SCAN 0
-#define DONE 1
-#define check_ascii(B) (B >= 0x00 && B <= 0x7F)
+#define SCAN_INPUT 0
+#define BYTE_CHECK 1
+#define SCAN_COMPL 2
 
-uint32_t scan_driver(char *scanner, uint32_t buffer_size, char *message);
+#define check_ascii(B) (B >= 0x00 && B <= 0x7F)
+int8_t scan_driver(char *scanner, uint32_t size_buffer, char *message);
 
 #endif

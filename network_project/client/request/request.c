@@ -6,8 +6,10 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cutils/cconfig.h"
+#include "cutils/cstring.h"
 #include "scan.h"
-#include "cstring.h"
+#include "connect.h"
 #include "request.h"
 
 #include <stdint.h>
@@ -26,73 +28,36 @@ static const char *REQUEST_DVCE[] = {
 };
 
 static uint8_t state = MAIN;
-static size_t request_size = 0;
-
-static int8_t request_encode(char *request) {
-  printf("request: %s\n", request);
-  return SUCC;
-}
-
-static uint8_t load_request_view(char *item, const char **options, uint8_t array_size) {
-
-  Print_View_Item(item);
-  printf("\t");
-  for (uint8_t i = 0; i < array_size; i++)
-    printf("%s\t", options[i]);
-  printf("\n\n");
-
-  return array_size;
-}
+static uint32_t request_size = 0;
 
 static int8_t request_scanner(char *request, const char **options, int8_t array_size) {
 
-  request_size = scan_driver(request, RBUFF, "submit");
+  printf("\t\t");
+  for (uint8_t i = 0; i < array_size; i++)
+    printf("%s\t", options[i]);
+  printf("\n");
+
+  scan_driver(request, RBUFF, "submit");
 
   for (int8_t cmp = 0; cmp < array_size; cmp++) {
-    if (string_comp(request, options[cmp], request_size))
+    if (string_comp(request, options[cmp], string_size(request, DBUFF)))
       return cmp;
   }
-  Info_Message(request, "is not an option, try again.");
   return - 1;
 }
 
-static int8_t user_connect(char *request, uint8_t choice) {
-
-  char *username[DBUFF] = {'\0'};
-  char *password[DBUFF] = {'\0'};
-
-  switch(choice) {
-
-  case LOGN:
-    Print_View_Item("LOGIN");
-    break;
-  case SIGU:
-    Print_View_Item("SIGNUP");
-    break;
-  default:
-    printf("something isn't right.\n");
-    exit(EXIT_FAILURE);
-  }
-
-  return EXIT;
-}
-
 static int8_t request_conn(char *request) {
+  Print_Header("Connect", "Choose entry by enter one of the commands below.");
 
   int8_t array_size = ARRAY_SIZE(REQUEST_CONN);
-  load_request_view(Conn_View, REQUEST_CONN, array_size);
-
   int8_t choice = request_scanner(request, REQUEST_CONN, array_size);
 
-  if (choice == - 1)
+  if (choice == -1)
     return CONN;
-
-  else if (choice == LOGN || choice == SIGU)
-    return user_connect(request, choice);
-  else if (choice == array_size - 1)
+  else if (choice == array_size -1)
     return EXIT;
   else
-    return choice + 1;
+    return connect_driver(request, choice);
 }
 
 static int8_t request_main(char *request) {
@@ -102,7 +67,7 @@ static int8_t request_main(char *request) {
 
   if (choice == - 1)
     return MAIN;
-  else if (choice == array_size - 1)
+  else if (choice == array_size -1)
     return EXIT;
   else
     return choice + 1;
@@ -143,6 +108,8 @@ uint32_t request_driver(char *request, uint8_t *online) {
   if (!*online) state = CONN;
   while (state != EXIT) {
 
+    memset(request, '\0', RBUFF);
+
 	  switch(state) {
     case CONN:
 	    state = request_conn(request);
@@ -161,7 +128,7 @@ uint32_t request_driver(char *request, uint8_t *online) {
 	    break;
 	  default:
 	    printf("something isn't right.\n");
-	    exit(EXIT_FAILURE);
+	    return FLEE;
 	  }
   }
 

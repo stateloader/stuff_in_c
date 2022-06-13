@@ -414,3 +414,33 @@ uint8_t command_driver(char *request, uint8_t state) {
   char command[DBUFF] = {'\0'};
   return state_items[state].func(command);
 }
+
+  strncat(dest, )
+  for (uint32_t i = 0; i < size1 - 1; i++)
+    dest[i] = str1[i];
+  dest[size1 - 1] = DELIM;
+
+  for (uint32_t i = size1; i < merged_size - 1; i++)
+    dest[i] = str2[i];
+  dest[merged_size - 1] = '\0';
+
+  typedef int8_t (*check_func)(uint8_t check, char *func, char *strg, uint32_t size_strg, uint32_t size_buff);
+typedef struct CheckItem {
+  check_func func;
+} check_item;
+
+
+static check_item check_items[] = {
+ {check_string_term}, {check_string_size}
+};
+
+
+int8_t string_ccat(char *dest, char *str1, char *str2, uint8_t endbyte) {
+
+  memset(dest, '\0', RBUFF);
+
+  uint32_t ccat_buff = (string_size(str1, DBUFF) + string_size(str2, DBUFF)) + 1;
+
+
+  return SUCC;
+}

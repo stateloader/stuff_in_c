@@ -1,5 +1,5 @@
 make:
-	gcc -o reqtest *c -Wall -Wextra -g
+	gcc -o reqtest *c cutils/* -Wall -Wextra -g
 
 clean:
 	rm -f $(obj) reqtest
