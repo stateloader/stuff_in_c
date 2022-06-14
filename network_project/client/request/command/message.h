@@ -4,6 +4,6 @@
 #include <stdint.h>
 #include "utils/cconfig.h"
 
-int8_t message_driver(char *command, int8_t choice);
+int8_t message_driver(char *request, int8_t choice);
 
 #endif

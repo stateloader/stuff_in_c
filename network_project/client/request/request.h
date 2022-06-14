@@ -3,13 +3,14 @@
 
 #include <stdint.h>
 #include "command/utils/cconfig.h"
+#include "client.h"
 
-typedef int8_t (*command_func)(char *command);
+typedef int8_t (*command_func)(client_t *client);
 
 typedef struct CommandItem {
   command_func func;
 } command_item;
 
-uint32_t request_driver(char *request, char *command);
+int8_t request_driver(client_t *client);
   
 #endif

@@ -8,7 +8,7 @@ info info info info info info
 #include "utils/scan.h"
 #include "data.h"
 
-int8_t data_driver(char *command, int8_t choice) {
+int8_t data_driver(char *request, int8_t choice) {
   printf("inside data_driver");
   return MAIN; 
 }
