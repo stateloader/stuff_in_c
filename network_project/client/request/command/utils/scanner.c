@@ -7,9 +7,8 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cerror.h"
 #include "cstring.h"
-#include "scan.h"
+#include "scanner.h"
 
 static int32_t size_scan = 0;
 
@@ -17,14 +16,14 @@ static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
     if (!check_ascii(scan[i])) {
-      Print_Warning("only English ('ascii') characters allowed. try again!");
+      printf("\n\t\t%s\n\n", "only English ('ascii') characters allowed. try again!");
 		  return SCAN_INPUT;
     }
   }
   return SCAN_COMPL;
 }
 
-static int8_t scan_input(char *scan, uint32_t size_buffer, char *message) {
+static int8_t scan_input(char *scan, int32_t size_buffer, char *message) {
   
   printf("\n%s: ", message);
   buffer_flush(scan, size_buffer);
@@ -33,13 +32,20 @@ static int8_t scan_input(char *scan, uint32_t size_buffer, char *message) {
   size_scan = string_size(scan, size_buffer) - 1;
   scan[size_scan  - 1] = '\0';
   
-  return String_Check(SVSIZE, "read_scan", scan, size_scan - 1, size_buffer);
+  if (!check_size(size_scan, size_buffer)) {
+    printf("input to large.\n");
+    buffer_flush(scan, size_buffer);
+    return SCAN_INPUT;
+  }
+  return BYTE_CHECK;
 }
 
-int32_t scan_driver(char *scan, uint32_t size_buffer, char *message) {
+int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
 
   uint8_t state = SCAN_INPUT;
+
   while (state != SCAN_COMPL) {
+
     switch(state) {
     case SCAN_INPUT:
       state = scan_input(scan, size_buffer, message);
@@ -51,6 +57,7 @@ int32_t scan_driver(char *scan, uint32_t size_buffer, char *message) {
       exit(EXIT_FAILURE);
     }
   }
-  String_Check(SSTERM, "scan_driver", scan, size_scan, size_buffer);
+  if (!check_term(scan, size_scan))
+    return - 1;
   return size_scan;
 }

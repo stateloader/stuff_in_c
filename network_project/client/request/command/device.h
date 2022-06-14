@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 #include "utils/cconfig.h"
+#include "../client.h"
 
-int8_t device_driver(char *request, int8_t choice);
+int8_t device_driver(client_t *client, int8_t choice);
 
 #endif

@@ -5,7 +5,7 @@
 #include "command/utils/cconfig.h"
 
 typedef struct Client  {
-  int16_t status;
+  uint8_t online;
   int32_t request_size;
   int32_t username_size;
   int32_t password_size;

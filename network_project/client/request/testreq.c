@@ -1,6 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "command/utils/cstring.h"
-#include "command/utils/cerror.h"
 #include "command/utils/cconfig.h"
 #include "client.h"
 #include "request.h"
@@ -15,7 +15,7 @@ int main(void) {
   
   Print_Header("CLIENT", GENERAL);
   
-  client_t client = {.status = 0x00};
+  client_t client = {.online = 0};
 
   if (request_driver(&client) == FLEE)
     exit(EXIT_FAILURE);

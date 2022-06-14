@@ -25,7 +25,7 @@ typedef struct MModel {
   char message[MBUFF];
 } mmod_t;
 //----------------------------------------------------------------------------------------------------------------------*/
-typedef struct CModel {
+typedef struct CModel {  // UModel
   uint32_t id;
   char username[DBUFF];
   char password[DBUFF];

@@ -8,9 +8,9 @@ Attempt in creating some kind of command-driven interface.
 #include <string.h>
 #include <stdint.h>
 #include "command/utils/cstring.h"
-#include "command/utils/scan.h"
+#include "command/utils/scanner.h"
 #include "command/connect.h"
-#include "command/data.h"
+#include "command/fetcher.h"
 #include "command/device.h"
 #include "command/message.h"
 #include "request.h"
@@ -80,17 +80,16 @@ static int8_t command_scanner(char *command, const char **options, int8_t array_
 static int8_t command_main(client_t *client) {
 //return result from 'command_scanner'.
 
-  Print_Header("MAIN", "Navigate by enter one of the commands below.");
+  Print_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
   return command_scanner(client->command, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
 }
 
 static int8_t command_conn(client_t *client) {
 //return choce from 'command_scanner', if legit return the result from 'connect_driver'.
 
-  Print_Header("CONNECT", "Navigate by enter one of the commands below.");
+  Print_Header("CONNECT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t result = 0, choice = 0;
-  choice = command_scanner(client->command, COMMANDS_CONN, ARRAY_SIZE(COMMANDS_CONN));
+  int8_t choice = command_scanner(client->command, COMMANDS_CONN, ARRAY_SIZE(COMMANDS_CONN));
   if (choice > 0)
     return connect_driver(client, choice - 1);
   return choice;
@@ -99,36 +98,33 @@ static int8_t command_conn(client_t *client) {
 static int8_t command_data(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'data_driver'.
 
-  Print_Header("DATA", "Fetch data");
+  Print_Header("DATA", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t result = 0, choice = 0;
-  choice = command_scanner(client->command, COMMANDS_DATA, ARRAY_SIZE(COMMANDS_DATA));
-  if (choice >= 0)
-    return data_driver(client->request, choice - 1);
+  int8_t choice = command_scanner(client->command, COMMANDS_DATA, ARRAY_SIZE(COMMANDS_DATA));
+  if (choice > 0)
+    return fetch_driver(client, choice - 1);
   return choice;
 }
 
 static int8_t command_dvce(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'device_driver'.
 
-  Print_Header("DEVICE", "Navigate by enter one of the commands below.");
+  Print_Header("DEVICE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t result = 0, choice = 0;
-  choice = command_scanner(client->command, COMMANDS_DVCE, ARRAY_SIZE(COMMANDS_DVCE));
-  if (choice >= 0)
-    return device_driver(client->request, choice - 1);
+  int8_t choice = command_scanner(client->command, COMMANDS_DVCE, ARRAY_SIZE(COMMANDS_DVCE));
+  if (choice > 0)
+    return device_driver(client, choice - 1);
   return choice;
 }
 
-static int8_t command_msge(client_t *client) {
+static int8_t command_mesg(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'message_driver'.
 
-  Print_Header("MESSAGE", "Navigate by enter one of the commands below.");
+  Print_Header("MESSAGE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t result = 0, choice = 0;
-  choice = command_scanner(client->command, COMMANDS_MSGE, ARRAY_SIZE(COMMANDS_MSGE));
-  if (choice >= 0)
-    return message_driver(client->request, choice - 1);
+  int8_t choice = command_scanner(client->command, COMMANDS_MSGE, ARRAY_SIZE(COMMANDS_MSGE));
+  if (choice > 0)
+    return message_driver(client);
   return choice;
 }
 
@@ -136,19 +132,22 @@ static command_item command_items[] = {
 //item-list of functions being called upon based on index.
 
   {command_main}, {command_conn}, {command_data},
-  {command_dvce}, {command_msge},
+  {command_dvce}, {command_mesg},
 };
 
 int8_t request_driver(client_t *client) {
-//desc 
+//desc
+
   while (current_state > QUIT)
     current_state = command_items[current_state].func(client);
-
+    
   if (client->request[client->request_size - 1] != '\0') {
     printf("amagaaaad!\n");
     return FLEE;
   }
-  printf("request: %s\n", client->request);
+  printf("size efter process:\t%d\n", client->request_size);
+  printf("size enligt strings:\t%d\n", string_size(client->request, CBUFF));
+  printf("request canonical:\t%s\n", client->request);
 
   current_state = MAIN;
   return SUCC;
