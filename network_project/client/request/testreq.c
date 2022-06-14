@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include "utils/cstring.h"
-#include "utils/cerror.h"
-#include "utils/cconfig.h"
+#include "command/utils/cstring.h"
+#include "command/utils/cerror.h"
+#include "command/utils/cconfig.h"
 #include "request.h"
 
 static const char *GENERAL = \
@@ -13,8 +13,8 @@ static const char *GENERAL = \
 int main(void) {
   Print_Header("CLIENT", GENERAL);
 
-  char request[RBUFF];
-  char command[MBUFF] = {'\0'};
+  char request[RBUFF] = {'\0'};
+  char command[CBUFF] = {'\0'};
   uint32_t request_size = request_driver(request, command);
   printf("reqyesst_size: %d\n", request_size);
   return 0;

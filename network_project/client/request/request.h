@@ -2,7 +2,7 @@
 #define REQUEST_H_
 
 #include <stdint.h>
-#include "utils/cconfig.h"
+#include "command/utils/cconfig.h"
 
 typedef int8_t (*command_func)(char *command);
 

@@ -10,25 +10,24 @@ info info info
 //------------------------------------------------------------------------------------------------------------------------
 #define RCLO "1"
 #define RCSU "2"
-//------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------commit
 #define LOGN 0
 #define SIGU 1
 //------------------------------------------------------------------------------------------------------------------------
-#define FLEE -3
-#define QUIT -2
-#define NOPE -1
-
-#define MAIN 0
-#define DATA 1
-#define DVCE 2    
-#define MSGE 3
-#define BIND 4
+#define FLEE -2
+#define QUIT -1
 //------------------------------------------------------------------------------------------------------------------------
-#define RBUFF 4096      // Request Buffer       - max allowed request data size.
-#define MBUFF 512       // Message Buffer       - max allowed (request) message size.    // CBUFF
-#define DBUFF 32        // .... Buffer       - max allowed (request) (...) size.
+#define MAIN 0
+#define CONN 1
+#define DATA 2
+#define DVCE 3    
+#define MSGE 4
+#define BIND 5
+#define CMIT 6
+//------------------------------------------------------------------------------------------------------------------------
+#define RBUFF 4096
+#define CBUFF 512
 //--------------------------------------------------------------------------------------------------------------"-GRAPHICS"
-
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 #define Header_Bord "-----------------------------------------------------------------------------------------------------"
 #define Print_Header(item, info) printf(HEADER_FORM, Header_Bord, item, info, Header_Bord);

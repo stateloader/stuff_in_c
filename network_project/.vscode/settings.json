@@ -4,6 +4,11 @@
         "command.h": "c",
         "scan.h": "c",
         "clientconfigs.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "data.h": "c",
+        "connect.h": "c",
+        "device.h": "c",
+        "message.h": "c",
+        "request.h": "c"
     }
 }
