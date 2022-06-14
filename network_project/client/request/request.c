@@ -6,131 +6,108 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cutils/cconfig.h"
-#include "cutils/cstring.h"
-#include "scan.h"
-#include "connect.h"
+#include <stdint.h>
+#include "utils/cstring.h"
+#include "utils/scan.h"
+#include "commit/connect.h"
+#include "commit/data.h"
+#include "commit/device.h"
+#include "commit/message.h"
 #include "request.h"
 
-#include <stdint.h>
-
-static const char *REQUEST_CONN[] = {
-  "-login", "-signup", "-exit"
+static const char *COMMANDS_MAIN[] = {
+  "-connect, -read data", "-steer device", "-send message", "-exit"
 };
-static const char *REQUEST_MAIN[] = {
-  "-read data", "-steer device", "-make comment", "-logout"
+static const char *COMMANDS_CONN[] = {
+  "-login", "-signup", "-main"
 };
-static const char *REQUEST_DATA[] = {
-  "-temp", "-back"
+static const char *COMMANDS_DATA[] = {
+  "-read temp", "-read messages", "-main"
 };
-static const char *REQUEST_DVCE[] = {
-  "-red", "-blue", "-green", "-back"
+static const char *COMMANDS_DVCE[] = {
+  "-red", "-blue", "-green", "-main"
+};
+static const char *COMMANDS_MSGE[] = {
+  "-send", "-main"
 };
 
-static uint8_t state = MAIN;
-static uint32_t request_size = 0;
+static int8_t current_state = MAIN;
 
-static int8_t request_scanner(char *request, const char **options, int8_t array_size) {
-
+static void print_commands(const char **options, uint32_t array_size) {
   printf("\t\t");
-  for (uint8_t i = 0; i < array_size; i++)
+  for (uint32_t i = 0; i < array_size; i++)
     printf("%s\t", options[i]);
   printf("\n");
+  return;
+}
 
-  scan_driver(request, RBUFF, "submit");
+static int8_t command_scanner(char *command, const char **options, uint32_t array_size) {
+  print_commands(options, array_size);
+  
+  int8_t result = 0, choice = 0, match = 0;
+  scan_driver(command, RBUFF, "command");
 
-  for (int8_t cmp = 0; cmp < array_size; cmp++) {
-    if (string_comp(request, options[cmp], string_size(request, DBUFF)))
-      return cmp;
+  for (uint32_t ent = 0; ent < array_size; ent++) {
+    if (string_comp(command, options[ent], string_size(command, DBUFF))) {
+      choice = ent, match = 1;
+    }
+  } if (match && current_state == MAIN) {
+    result = (choice == array_size - 1) ? QUIT : choice;
+  } else if (match) {
+    result = (choice == array_size - 1) ? MAIN : choice;
+  } else {
+    printf("\n%s is not an opiton, try again.\n\n", command);
+    result = current_state;
   }
-  return - 1;
+  buffer_flush(command, MBUFF);
+  return result;
 }
 
-static int8_t request_conn(char *request) {
-  Print_Header("Connect", "Choose entry by enter one of the commands below.");
+static int8_t command_main(char *command) {
+  Print_Header("MAIN", "Navigate by enter one of the commands below.");
 
-  int8_t array_size = ARRAY_SIZE(REQUEST_CONN);
-  int8_t choice = request_scanner(request, REQUEST_CONN, array_size);
+  int8_t result = 0, choice = 0;
+  choice = command_scanner(command, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
 
-  if (choice == -1)
-    return CONN;
-  else if (choice == array_size -1)
-    return EXIT;
-  else
-    return connect_driver(request, choice);
 }
 
-static int8_t request_main(char *request) {
+static int8_t command_conn(char *command) {
+  Print_Header("CONNECT", "Navigate by enter one of the commands below.");
 
-  int8_t array_size = ARRAY_SIZE(REQUEST_MAIN);
-  int8_t choice = request_scanner(request, REQUEST_MAIN, array_size);
+  int8_t result = 0, choice = 0;
+  choice = command_scanner(command, COMMANDS_CONN, ARRAY_SIZE(COMMANDS_CONN));
 
-  if (choice == - 1)
-    return MAIN;
-  else if (choice == array_size -1)
-    return EXIT;
-  else
-    return choice + 1;
 }
 
-static int8_t request_data(char *request) {
+static int8_t command_data(char *command) {
+  Print_Header("DATA", "Fetch data");
 
-  int8_t array_size = ARRAY_SIZE(REQUEST_DATA);
-  int8_t choice = request_scanner(request, REQUEST_DATA, array_size);
-
-  if (choice == - 1 || choice == array_size - 1)
-    return MAIN;
-  return EXIT;
+  int8_t result = 0, choice = 0;
+  choice = command_scanner(command, COMMANDS_DATA, ARRAY_SIZE(COMMANDS_DATA));
 }
 
-static int8_t request_dvce(char *request) {
+static int8_t command_dvce(char *command) {
+  Print_Header("DEVICE", "Navigate by enter one of the commands below.");
 
-  int8_t array_size = ARRAY_SIZE(REQUEST_DVCE);
-  int8_t choice = request_scanner(request, REQUEST_DVCE, array_size);
-
-  if (choice == - 1 || choice == array_size - 1)
-    return MAIN;
-  return EXIT;
+  int8_t result = 0, choice = 0;
+  choice = command_scanner(command, COMMANDS_DVCE, ARRAY_SIZE(COMMANDS_DVCE));
 }
 
-static int8_t request_msge(char *request) {
+static int8_t command_msge(char *command) {
+  Print_Header("MESSAGE", "Navigate by enter one of the commands below.");
 
-  int8_t array_size = ARRAY_SIZE(REQUEST_DVCE);
-  int8_t choice = request_scanner(request, REQUEST_DVCE, array_size);
-
-  if (choice == - 1 || choice == array_size - 1)
-    return MAIN;
-  return EXIT;
+  int8_t result = 0, choice = 0;
+  choice = command_scanner(command, COMMANDS_MSGE, ARRAY_SIZE(COMMANDS_MSGE));
 }
 
-uint32_t request_driver(char *request, uint8_t *online) {
+static command_item command_items[] = {
+  {command_main}, {command_conn}, {command_data},
+  {command_dvce}, {command_msge},
+};
 
-  if (!*online) state = CONN;
-  while (state != EXIT) {
+uint32_t request_driver(char *request, char *command) {
 
-    memset(request, '\0', RBUFF);
-
-	  switch(state) {
-    case CONN:
-	    state = request_conn(request);
-	    break;
-	  case MAIN:
-	    state = request_main(request);
-	    break;
-	  case DATA:
-	    state = request_data(request);
-	    break;
-	  case DVCE:
-	    state = request_dvce(request);
-      break;
-	  case MSGE:
-	    state = request_msge(request);
-	    break;
-	  default:
-	    printf("something isn't right.\n");
-	    return FLEE;
-	  }
-  }
-
-  return request_size;
+  while (current_state != QUIT)
+    current_state = command_items[current_state].func(command);
+  return 7;
 }

@@ -444,3 +444,57 @@ int8_t string_ccat(char *dest, char *str1, char *str2, uint8_t endbyte) {
 
   return SUCC;
 }
+
+uint32_t request_driver(char *request, uint8_t *online) {
+
+  //if (!*online) state = CONN;
+  while (state != EXIT) {
+
+    memset(request, '\0', RBUFF);
+
+	  switch(state) {
+    case CONN:
+	    state = request_conn(request);
+	    break;
+	  case MAIN:
+	    state = request_main(request);
+	    break;
+	  case DATA:
+	    state = request_data(request);
+	    break;
+	  case DVCE:
+	    state = request_dvce(request);
+      break;
+	  case MSGE:
+	    state = request_msge(request);
+	    break;
+	  default:
+	    printf("something isn't right.\n");
+	    return FLEE;
+	  }
+  }
+
+  return request_size;
+}
+
+/*
+static int8_t command_conn(char *command) {
+  Print_Header("Connect", "Choose entry by enter one of the commands below.");
+
+  int8_t array_size = ARRAY_SIZE(REQUEST_CONN);
+  int8_t choice = request_scanner(command, REQUEST_CONN, array_size);
+
+  if (choice == -1)
+    return CONN;
+  else if (choice == array_size -1)
+    return EXIT;
+  else
+    return connect_driver(command, choice);
+}
+*/
+
+/*
+static const char *REQUEST_CONN[3] = {
+  "-login", "-signup", "-exit"
+};
+*/

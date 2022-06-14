@@ -5,7 +5,6 @@
                                                                                                 MACRO KEYS, REQUEST_MODULE
 info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#define FLEE -1
 #define FAIL 0
 #define SUCC 1
 //------------------------------------------------------------------------------------------------------------------------
@@ -15,15 +14,18 @@ info info info
 #define LOGN 0
 #define SIGU 1
 //------------------------------------------------------------------------------------------------------------------------
-#define CONN 0
-#define MAIN 1
-#define DATA 2
-#define DVCE 3    
-#define MSGE 4
-#define EXIT 5
+#define FLEE -3
+#define QUIT -2
+#define NOPE -1
+
+#define MAIN 0
+#define DATA 1
+#define DVCE 2    
+#define MSGE 3
+#define BIND 4
 //------------------------------------------------------------------------------------------------------------------------
 #define RBUFF 4096      // Request Buffer       - max allowed request data size.
-#define MBUFF 512       // Message Buffer       - max allowed (request) message size.
+#define MBUFF 512       // Message Buffer       - max allowed (request) message size.    // CBUFF
 #define DBUFF 32        // .... Buffer       - max allowed (request) (...) size.
 //--------------------------------------------------------------------------------------------------------------"-GRAPHICS"
 

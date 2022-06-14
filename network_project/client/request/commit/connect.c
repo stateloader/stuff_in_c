@@ -4,9 +4,9 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
-#include "cutils/cconfig.h"
-#include "cutils/cerror.h"
-#include "cutils/cstring.h"
+#include "utils/cconfig.h"
+#include "utils/cerror.h"
+#include "utils/cstring.h"
 #include "scan.h"
 #include "connect.h"
 
@@ -43,9 +43,8 @@ static int8_t create_connect_package(char *request, char *username, char *passwo
   strncat(request, "|", ccat_buff);
   strncat(request, rcode, ccat_buff);
 
-  return EXIT;
+  return 0;
 }
-
 int8_t connect_driver(char *request, int8_t choice) {
   
   int8_t result = 0;

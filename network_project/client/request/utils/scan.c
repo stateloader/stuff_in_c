@@ -7,9 +7,8 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cutils/cconfig.h"
-#include "cutils/cerror.h"
-#include "cutils/cstring.h"
+#include "cerror.h"
+#include "cstring.h"
 #include "scan.h"
 
 static uint32_t size_scan = 0;

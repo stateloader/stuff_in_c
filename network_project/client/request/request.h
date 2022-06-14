@@ -2,8 +2,14 @@
 #define REQUEST_H_
 
 #include <stdint.h>
-#include "cutils/cconfig.h"
+#include "utils/cconfig.h"
 
-uint32_t request_driver(char *request, uint8_t *online);
+typedef int8_t (*command_func)(char *command);
+
+typedef struct CommandItem {
+  command_func func;
+} command_item;
+
+uint32_t request_driver(char *request, char *command);
   
 #endif

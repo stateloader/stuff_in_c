@@ -11,6 +11,11 @@ info info info info info info
 #include "cconfig.h"
 #include "cstring.h"
 
+void buffer_flush(char *buffer, uint32_t buffer_size) {
+  for (uint32_t i = 0; i <= buffer_size; i++)
+    buffer[i] = '\0';
+}
+
 uint32_t string_size(char *string, uint32_t buffer_size)  {
   for (size_t i = 0; i < buffer_size - 1; i++) {
     if (string[i] == '\0') 
