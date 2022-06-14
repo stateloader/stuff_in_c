@@ -28,4 +28,7 @@ info info info info info info
 
 int8_t String_Check(uint8_t check, char *func, char *strg, uint32_t size_strg, uint32_t size_buff);
 
+
+#define check_term(str, len) (str[len - 1] == '\0')
+
 #endif

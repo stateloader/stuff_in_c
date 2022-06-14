@@ -9,61 +9,46 @@ info info info info info info
 #include "utils/scan.h"
 #include "connect.h"
 
-static int8_t user_login(char *username, char *password) {
+static void userdata(client_t *client) {
+  
   Print_Header("LOGIN", "Enter your username and password.");
   
-  int8_t scan = 0;
-  scan += scan_driver(username, CBUFF, "enter username");
-  scan += scan_driver(password, CBUFF, "enter password");
-
-  return scan;
+  client->username_size = scan_driver(client->username, CBUFF, "enter username");
+  client->username[client->username_size - 1] = '|';
+  
+  client->password_size = scan_driver(client->password, CBUFF, "enter password");
+  client->password[client->password_size - 1] = '|';
+  
+  client->request_size = (client->username_size + client->password_size + 2);
 }
 
-static int8_t user_signup(char *username, char *password) {
-  Print_Header("SIGNUP", "Choose username and password. Must be at least one character each.");
+static int8_t connect_package(client_t *client) {
   
-  int8_t scan = 0;
-  scan += scan_driver(username, CBUFF, "choose username");
-  scan += scan_driver(password, CBUFF, "choose password");
+  strncat(client->request, client->username, client->request_size);
+  strncat(client->request, client->password, client->request_size);
 
-  return scan;
-}
+  client->request[client->request_size - 2] = 0b00000001;
 
-static int8_t create_connect_package(char *request, char *username, char *password, char *rcode) {
-
-  uint32_t ccat_buff = (string_size(username, CBUFF) + string_size(password, CBUFF)) + 1;
+  uint8_t check_bit = 0;
+  uint8_t reqmask = client->request[client->request_size - 2];
   
-  strncat(request, username, ccat_buff);
-  strncat(request, "|", ccat_buff);
-  strncat(request, password, ccat_buff);
-  strncat(request, "|", ccat_buff);
-  strncat(request, rcode, ccat_buff);
-
-  return 0;
-}
-int8_t connect_driver(char *request, int8_t choice) {
-  
-  int8_t result = 0;
-
-  char username[CBUFF] = {'\0'};
-  char password[CBUFF] = {'\0'};
-
-  switch(choice) {
-  case LOGN:
-    if (user_login(username, password) == 2)
-      result = create_connect_package(request, username, password, RCLO);
+  while (check_bit < 8) {
+    if (reqmask & 0x01)
+      printf("1\n");
     else
-      result = FLEE;
-    break;
-  case SIGU:
-    if (user_signup(username, password) == 2)
-      result = create_connect_package(request, username, password, RCSU);
-    else
-      result = FLEE;
-    break;
-  default:
-    printf("something went horrible.\n");
-    exit(EXIT_FAILURE);
+      printf("0\n");
+    check_bit++;
+    reqmask = reqmask >> 1;
   }
-  return result;
+  printf("string: client->request: %s\n", client->request);
+  return QUIT;
+}
+
+int8_t connect_driver(client_t *client, int8_t choice) {
+  
+  userdata(client);
+  if (choice == LOGN)
+    return connect_package(client);
+  else
+    return connect_package(client);
 }

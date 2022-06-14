@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "utils/cconfig.h"
-int8_t connect_driver(char *command, int8_t choice);
+#include "../client.h"
+int8_t connect_driver(client_t *client, int8_t choice);
 
 #endif

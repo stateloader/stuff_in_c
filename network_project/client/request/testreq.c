@@ -2,6 +2,7 @@
 #include "command/utils/cstring.h"
 #include "command/utils/cerror.h"
 #include "command/utils/cconfig.h"
+#include "client.h"
 #include "request.h"
 
 static const char *GENERAL = \
@@ -11,11 +12,13 @@ static const char *GENERAL = \
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n";
 
 int main(void) {
+  
   Print_Header("CLIENT", GENERAL);
+  
+  client_t client = {.status = 0x00};
 
-  char request[RBUFF] = {'\0'};
-  char command[CBUFF] = {'\0'};
-  uint32_t request_size = request_driver(request, command);
-  printf("reqyesst_size: %d\n", request_size);
-  return 0;
+  if (request_driver(&client) == FLEE)
+    exit(EXIT_FAILURE);
+
+  exit(EXIT_SUCCESS);
 }
