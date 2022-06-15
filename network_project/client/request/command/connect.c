@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                            CONNECT MODULE
+                                                                                                                   CONNECT
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -11,38 +11,39 @@ info info info info info info
 
 static int8_t connect_reader(client_t *client) {
 //desc
-  Print_Header("LOGIN", "Enter your username and password.");
-  
-  client->username_size = scan_driver(client->username, CBUFF, "username");
-  client->username[client->username_size - 1] = '|';
-  
-  client->password_size = scan_driver(client->password, CBUFF, "password");
-  client->password[client->password_size - 1] = '|';
+  Render_Header("LOGIN", "Enter your username and password.");
 
-  client->request_size = (client->username_size + client->password_size + 2);
+  client->size_user = scan_driver(client->user, CBUFF, "username");
+  client->user[client->size_user - 1] = '|';
 
-  return SUCC;
+  client->size_pass = scan_driver(client->pass, CBUFF, "password");
+  client->pass[client->size_pass - 1] = '|';
+
+  client->size_rqst = (client->size_user + client->size_pass + 2);
+
+  return connect_reader_check(client);
 }
 
-static int8_t connect_request(client_t *client, int8_t choice) {
+static int8_t connect_binder(client_t *client, int8_t choice) {
 //desc
-  strncat(client->request, client->username, client->request_size);
-  strncat(client->request, client->password, client->request_size);
+  strncat(client->rqst, client->user, client->size_rqst);
+  strncat(client->rqst, client->pass, client->size_rqst);
 
-  client->username[client->username_size - 1] = '\0';
-  client->password[client->password_size - 1] = '\0';
+  client->user[client->size_user - 1] = '\0';
+  client->pass[client->size_pass - 1] = '\0';
 
   if (choice == LOGN)
-    client->request[client->request_size - 2] = RULO;
+    client->rqst[client->size_rqst - 2] = RULO;//                                             Request User Login Bit
   else
-    client->request[client->request_size - 2] = RUSU;
-    
-  uint8_t reqmask = client->request[client->request_size - 2];
-  PrintByte(reqmask);
-  return QUIT;
+    client->rqst[client->size_rqst - 2] = RUSU;//                                            Request User Signup Bit
+  
+  return connect_binder_check(client);
 }
 
 int8_t connect_driver(client_t *client, int8_t choice) {
-  connect_reader(client);
-  return connect_request(client, choice); 
+
+  if (connect_reader(client) < 0)
+    return FLEE;
+  else
+    return connect_binder(client, choice);
 }

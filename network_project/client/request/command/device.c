@@ -11,11 +11,11 @@ info info info info info info
 
 int8_t device_driver(client_t *client, int8_t choice) {
   if (choice == DRED)
-    client->request[0] = RADR;
+    client->rqst[0] = RADR;
   else if (choice == DBLU)
-    client->request[0] = RADB;
+    client->rqst[0] = RADB;
   else
-    client->request[0] = RADG;
-  client->request_size = 2;
-  return QUIT;
+    client->rqst[0] = RADG;
+  client->size_rqst = 2;
+  return DONE;
 }

@@ -13,12 +13,16 @@ static const char *GENERAL = \
 
 int main(void) {
   
-  Print_Header("CLIENT", GENERAL);
+  Render_Header("CLIENT", GENERAL);
   
+  int8_t result = 0;
   client_t client = {.online = 0};
-
-  if (request_driver(&client) == FLEE)
+  
+  result = request_driver(&client);
+  if (result == FLEE)
     exit(EXIT_FAILURE);
 
+  uint8_t reqmask = client.rqst[client.size_rqst - 2];
+  PrintByte(reqmask);
   exit(EXIT_SUCCESS);
 }

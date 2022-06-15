@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                               SCAN MODULE
+                                                                                                                      SCAN
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -7,6 +7,7 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cconfig.h"
 #include "cstring.h"
 #include "scanner.h"
 
@@ -15,9 +16,11 @@ static int32_t size_scan = 0;
 static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
-    if (!check_ascii(scan[i])) {
-      printf("\n\t\t%s\n\n", "only English ('ascii') characters allowed. try again!");
+    if (!byte_asci(scan[i])) {
+      System_Message("Only ASCII ('English') characters allowed. try again!")
 		  return SCAN_INPUT;
+    } else if (byte_delm(scan[i])) {
+      System_Message("Pipe charachter ('|') is for losers, use another one.")
     }
   }
   return SCAN_COMPL;
@@ -25,7 +28,7 @@ static int8_t scan_check(char *scan) {
 
 static int8_t scan_input(char *scan, int32_t size_buffer, char *message) {
   
-  printf("\n%s: ", message);
+  printf("%s: ", message);
   buffer_flush(scan, size_buffer);
 
   fgets(scan, size_buffer - 1, stdin);

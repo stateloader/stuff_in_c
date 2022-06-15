@@ -16,7 +16,7 @@ Attempt in creating some kind of command-driven interface.
 #include "request.h"
 
 static const char *COMMANDS_MAIN[] = {
-  "-connect", "-read data", "-steer device", "-send message", "-exit"
+  "-connect", "-read data", "-steer device", "-send message", "-quit"
 };
 static const char *COMMANDS_CONN[] = {
   "-main", "-login", "-signup"
@@ -37,11 +37,9 @@ static int8_t current_state = MAIN;
 static void print_commands(const char **options, int8_t array_size) {
 //Prints unique oftions (given current state).
 
-  printf("\t\t");
   for (int8_t i = 0; i < array_size; i++)
-    printf("%s\t", options[i]);
+    printf("\t\t%s\n", options[i]);
   printf("\n");
-  return;
 }
 
 static int8_t command_scanner(char *command, const char **options, int8_t array_size) {
@@ -57,11 +55,11 @@ static int8_t command_scanner(char *command, const char **options, int8_t array_
       choice = ent, match = 1;
     }
   } if (match && current_state == MAIN) {
-    result = (choice == array_size - 1) ? QUIT : choice + 1;
+    result = (choice == array_size - 1) ? DONE : choice + 1;
   } else if (match  && current_state != MAIN) {
     result = choice;
   } else {
-    printf("\n%s is not an option, try again.\n\n", command);
+    System_Message("Not an option, try again!");
     result = current_state;
   }
 
@@ -80,16 +78,22 @@ static int8_t command_scanner(char *command, const char **options, int8_t array_
 static int8_t command_main(client_t *client) {
 //return result from 'command_scanner'.
 
-  Print_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-  return command_scanner(client->command, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
+  Render_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  
+  int8_t choice = command_scanner(client->cmnd, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
+  if (choice > 1 && client->online == 0) {
+    System_Message("Login or create an account before using this service.");
+    return 0;
+  }
+  return choice;
 }
 
 static int8_t command_conn(client_t *client) {
 //return choce from 'command_scanner', if legit return the result from 'connect_driver'.
 
-  Print_Header("CONNECT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("CONNECT", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t choice = command_scanner(client->command, COMMANDS_CONN, ARRAY_SIZE(COMMANDS_CONN));
+  int8_t choice = command_scanner(client->cmnd, COMMANDS_CONN, ARRAY_SIZE(COMMANDS_CONN));
   if (choice > 0)
     return connect_driver(client, choice - 1);
   return choice;
@@ -98,9 +102,9 @@ static int8_t command_conn(client_t *client) {
 static int8_t command_data(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'data_driver'.
 
-  Print_Header("DATA", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-
-  int8_t choice = command_scanner(client->command, COMMANDS_DATA, ARRAY_SIZE(COMMANDS_DATA));
+  Render_Header("DATA", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  
+  int8_t choice = command_scanner(client->cmnd, COMMANDS_DATA, ARRAY_SIZE(COMMANDS_DATA));
   if (choice > 0)
     return fetch_driver(client, choice - 1);
   return choice;
@@ -109,9 +113,9 @@ static int8_t command_data(client_t *client) {
 static int8_t command_dvce(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'device_driver'.
 
-  Print_Header("DEVICE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("DEVICE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t choice = command_scanner(client->command, COMMANDS_DVCE, ARRAY_SIZE(COMMANDS_DVCE));
+  int8_t choice = command_scanner(client->cmnd, COMMANDS_DVCE, ARRAY_SIZE(COMMANDS_DVCE));
   if (choice > 0)
     return device_driver(client, choice - 1);
   return choice;
@@ -120,9 +124,9 @@ static int8_t command_dvce(client_t *client) {
 static int8_t command_mesg(client_t *client) {
 //return choice from 'command_scanner', if legit return the result from 'message_driver'.
 
-  Print_Header("MESSAGE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("MESSAGE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t choice = command_scanner(client->command, COMMANDS_MSGE, ARRAY_SIZE(COMMANDS_MSGE));
+  int8_t choice = command_scanner(client->cmnd, COMMANDS_MSGE, ARRAY_SIZE(COMMANDS_MSGE));
   if (choice > 0)
     return message_driver(client);
   return choice;
@@ -137,10 +141,14 @@ static command_item command_items[] = {
 
 int8_t request_driver(client_t *client) {
 //desc
-
-  while (current_state > QUIT)
+  while (current_state > DONE)
     current_state = command_items[current_state].func(client);
-    
+  
+  current_state = MAIN;
+  return SUCC;
+}
+
+/*
   if (client->request[client->request_size - 1] != '\0') {
     printf("amagaaaad!\n");
     return FLEE;
@@ -148,7 +156,4 @@ int8_t request_driver(client_t *client) {
   printf("size efter process:\t%d\n", client->request_size);
   printf("size enligt strings:\t%d\n", string_size(client->request, CBUFF));
   printf("request canonical:\t%s\n", client->request);
-
-  current_state = MAIN;
-  return SUCC;
-}
+*/

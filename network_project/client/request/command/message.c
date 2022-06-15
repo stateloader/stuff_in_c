@@ -14,10 +14,10 @@ static char mesg[CBUFF] = {'\0'};
 
 static int8_t message_reader(client_t *client) {
 
-  Print_Header("SEND", "Enter (namn för nu), topic and message.");
+  Render_Header("SEND", "Enter (namn för nu), topic and message.");
 
-  client->username_size = scan_driver(client->username, CBUFF, "testname");
-  client->username[client->username_size - 1] = '|';
+  client->size_user = scan_driver(client->user, CBUFF, "testname");
+  client->user[client->size_user - 1] = '|';
 
   int32_t size_topc = scan_driver(topc, CBUFF, "topic");
   topc[size_topc - 1] = '|';
@@ -25,33 +25,28 @@ static int8_t message_reader(client_t *client) {
   int32_t size_mesg = scan_driver(mesg, CBUFF, "message");
   mesg[size_mesg - 1] = '|';
 
-  client->request_size = (size_topc + size_mesg + client->username_size + 2);
+  client->size_rqst = (size_topc + size_mesg + client->size_user + 2);
 
-  return SUCC;
+  return DONE;
 }
+static int8_t message_binder(client_t *client) {
 
-static int8_t message_request(client_t *client) {
+  strncat(client->rqst, client->user, client->size_rqst);
+  strncat(client->rqst, topc, client->size_rqst);
+  strncat(client->rqst, mesg, client->size_rqst);
 
-  strncat(client->request, client->username, client->request_size);
-  strncat(client->request, topc, client->request_size);
-  strncat(client->request, mesg, client->request_size);
+  client->rqst[client->size_rqst - 2] = RWMG;
+  client->user[client->size_user - 1] = '\0';
 
-  client->request[client->request_size - 2] = RWMG;
-
-
-  client->username[client->username_size - 1] = '\0';
   buffer_flush(topc, CBUFF);
   buffer_flush(topc, CBUFF);
 
-  uint8_t reqmask = client->request[client->request_size - 2];
-  PrintByte(reqmask);
-
-  return QUIT;
+  return DONE;
 }
 
 int8_t message_driver(client_t *client) {
   
   message_reader(client);
-  return message_request(client);
-  return QUIT;
+  return message_binder(client);
+  return DONE;
 }
