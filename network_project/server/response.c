@@ -9,11 +9,14 @@ info info info info info info
 #include <stdlib.h>
 #include <stdint.h>
 #include <sys/socket.h>
+#include "database/dbconfig.h"
 #include "response.h"
 
 static void incoming(int client_socket, char *request) {
 
-  recv(client_socket, request, MAX_BUFFER, 0);
+  int32_t insize = recv(client_socket, request, MAX_BUFFER, 0);
+  char byte = request[insize - 2];
+  PrintByte(byte);
   printf("client request: %s\n", request);
 }
 

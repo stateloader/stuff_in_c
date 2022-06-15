@@ -10,25 +10,23 @@ info info info info info info
 #include "cconfig.h"
 #include "cstring.h"
 
-void buffer_flush(char *buffer, int32_t buffer_size) {
-  for (int32_t i = 0; i <= buffer_size; i++)
+void buffer_flush(char *buffer, int32_t size_buffer) {
+  for (int32_t i = 0; i <= size_buffer; i++)
     buffer[i] = '\0';
 }
 
-int32_t string_size(char *string, int32_t buffer_size)  {
-  for (int32_t i = 0; i < buffer_size - 1; i++) {
+int32_t string_size(char *string, int32_t size_buffer)  {
+  for (int32_t i = 0; i < size_buffer - 1; i++) {
     if (string[i] == '\0') 
       return (i + 1);
   }
   return 0;
 }
 
-int32_t string_copy(uint8_t *dest, char *from) {
-  int32_t size_from = string_size(from, CBUFF - 1);
-  for (int32_t i = 0; i < size_from; i++) {
-    uint8_t byte = (uint8_t)from[i];
-    dest[i] = byte;
-  }
+int32_t string_copy(char *dest, char *from, int32_t size_buffer) {
+  int32_t size_from = string_size(from, size_buffer);
+  for (int32_t i = 0; i < size_from; i++)
+    dest[i] = from[i];
   return size_from;
 }
 

@@ -26,6 +26,7 @@ static int8_t connect_reader(client_t *client) {
 
 static int8_t connect_binder(client_t *client, int8_t choice) {
 //desc
+
   strncat(client->rqst, client->user, client->size_rqst);
   strncat(client->rqst, client->pass, client->size_rqst);
 

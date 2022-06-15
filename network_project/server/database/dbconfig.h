@@ -16,7 +16,6 @@ info info info
 #define PSMPL "resources/sample.dat"    // Path sample          - relative path to .dat-file storing sampledata.
 #define PMSGE "resources/message.dat"   // Path message         - relative path to .dat-file storing messagedata.
 #define PDVCE "resources/device.dat"    // Path device          - relative path to .dat-file storing devicedata.
-
 /*---------------------------------------------------------------------------------------------------------BYTE: "REQUEST"
 
 bit                     |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
@@ -53,7 +52,23 @@ constant                |  RWBIT  |    -    |    -    |    -    |    -    |   MM
 #define STEMP 0
 #define SDTME 1
 //-------------------------------------------------------------------------------------------------------------------OTHER
-
+#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 
 #endif
+
+
+
+
+
+/*---------------------------------------------------------------------------------------------------------Request Endbyte
+Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
+Constant                            |  RWBIT  |  RTDT2  |  RTDT1  |  RTDT0  |  RMSGE  |   RDVCE  |   RDATA   |   RCONN   |
+                                    --------------------------------------------------------------------------------------
+MCONN   Request Connection          Set flags server to init connection stuff (i.e user login/signup).
+MDATA   Request Data                Set flags server to init data/fetch (from database) stuff.
+MDVCE   Request Device              Set flags server to init interaction with device stuff.
+MMSGE   Request Message             Set flags server to init message stuff.
+RTDT(N) Request To Do This          Bit 4 to 6 used for flagging michallenous to the server.
+RWBIT   Request Read/Write          Set flags server it's a writing (to database) errant, cleared reading from it.
+------------------------------------------------------------------------------------------------------------------------*/

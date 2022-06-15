@@ -7,12 +7,12 @@ Attempt in creating some kind of command-driven interface.
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "command/utils/cstring.h"
-#include "command/utils/scanner.h"
-#include "command/connect.h"
-#include "command/fetcher.h"
-#include "command/device.h"
-#include "command/message.h"
+#include "reqdrivers/utils/cstring.h"
+#include "reqdrivers/utils/scanner.h"
+#include "reqdrivers/connect.h"
+#include "reqdrivers/fetcher.h"
+#include "reqdrivers/device.h"
+#include "reqdrivers/message.h"
 #include "request.h"
 
 static const char *COMMANDS_MAIN[] = {
@@ -147,13 +147,3 @@ int8_t request_driver(client_t *client) {
   current_state = MAIN;
   return SUCC;
 }
-
-/*
-  if (client->request[client->request_size - 1] != '\0') {
-    printf("amagaaaad!\n");
-    return FLEE;
-  }
-  printf("size efter process:\t%d\n", client->request_size);
-  printf("size enligt strings:\t%d\n", string_size(client->request, CBUFF));
-  printf("request canonical:\t%s\n", client->request);
-*/

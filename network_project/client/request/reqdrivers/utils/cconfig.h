@@ -43,6 +43,7 @@ RWBIT   Request Read/Write          Set flags server it's a writing (to database
 //------------------------------------------------------------------------------------------------------------------------
 #define RBUFF 4096
 #define CBUFF 512
+#define TBUFF 21
 //--------------------------------------------------------------------------------------------------------------"Graphics"
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
@@ -59,7 +60,7 @@ RWBIT   Request Read/Write          Set flags server it's a writing (to database
 #define check_size(scn, buf) (scn < buf - 1) 
 #define check_term(scn, len) (scn[len - 1] == '\0')
 
-#define PrintByte(val) {for (int i = 7; 0 <= i; i--) {printf("%c", (val & (1 << i)) ? '1' : '0');} printf("\n");}
+#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 //-------------------------------------------------------------------------------------------------------------------other
 #define DELIM '|'
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))

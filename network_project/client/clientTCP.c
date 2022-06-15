@@ -3,27 +3,47 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
+#include <stdlib.h>
+
 #include "request/request.h"
+#include "request/client.h"
 #include "socket.h"
 
+static const char *GENERAL = \
+  "Jacke Packe Koda Satan\n\n"
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n"\
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n"\
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n";
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
-  uint8_t online = 0;
+  Render_Header("CLIENT", GENERAL);
 
-  char request[MAX_BUFFER] = {0};
-  char response[MAX_BUFFER] = {0};
+  client_t client = {.online = 0};
+  if (request_driver(&client) != FLEE) {
+    System_Message("Success request_driver");
+    char byte = client.rqst[client.size_rqst - 2];
+    PrintByte(byte);
+    System_Message(client.rqst);
+  } else {
+    System_Message("Error in request_driver, FLEE");
+    exit(EXIT_FAILURE);
+  }
 
+ exit(EXIT_SUCCESS);
+}
+
+/*
   int client_socket = socket_create();
-
   socket_connect(client_socket, "127.0.0.1", 90190);
 
-  socket_send(client_socket, request, request_driver(request, &online));
-
-  socket_recieve(client_socket, response, MAX_BUFFER);
-
-  printf("Server Response : %s\n\n",response);
-
+  if (request_driver(&client) != FLEE) {
+    socket_send(client_socket, client.rqst, client.size_rqst);
+    socket_recieve(client_socket, client.resp, RBUFF);
+  } else {
+    close(client_socket);
+    exit(EXIT_FAILURE);
+  }
   close(client_socket);
-  return 0;
-}
+  exit(EXIT_SUCCESS);
+  */

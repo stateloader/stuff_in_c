@@ -11,10 +11,10 @@ info info info info info info
 #include "socket.h"
 #include "response.h"
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
   int server_socket = 0;
-  int client_length = 0;
+ // int client_length = 0;
   int client_socket = 0;
 
   struct sockaddr_in server_address;
