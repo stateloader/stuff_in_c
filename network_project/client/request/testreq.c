@@ -14,15 +14,10 @@ static const char *GENERAL = \
 int main(void) {
   
   Render_Header("CLIENT", GENERAL);
-  
-  int8_t result = 0;
-  client_t client = {.online = 0};
-  
-  result = request_driver(&client);
-  if (result == FLEE)
-    exit(EXIT_FAILURE);
 
-  uint8_t reqmask = client.rqst[client.size_rqst - 2];
-  PrintByte(reqmask);
+  client_t client = {.online = 0};
+  if (request_driver(&client) == FLEE)
+    exit(EXIT_FAILURE);
+  System_Print_String(client.rqst, "efter message process");
   exit(EXIT_SUCCESS);
 }

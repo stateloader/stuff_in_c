@@ -6,15 +6,13 @@
 
 typedef struct Client  {
   uint8_t online;
-  int32_t size_user;
-  int32_t size_pass;
-  int32_t size_rqst;
-  int32_t size_resp;
+  int32_t size_user, size_pass;
+  int32_t size_rqst, size_resp;
   char user[CBUFF];
   char pass[CBUFF];
-  char cmnd[CBUFF];
   char rqst[CBUFF];
   char resp[CBUFF];
+  char cmnd[CBUFF];
 } client_t;
 
 #endif

@@ -51,6 +51,9 @@ RWBIT   Request Read/Write          Set flags server it's a writing (to database
 
 #define SYSTEM_FORM "\n\t\t%s\n\n"
 #define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+
+#define TESTSTRFORM "\nstring -- %s -- %s\n\n"
+#define System_Print_String(str, inf) printf(TESTSTRFORM, str, inf)
 //-------------------------------------------------------------------------------------------------------------some checks
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 

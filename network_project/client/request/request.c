@@ -81,10 +81,10 @@ static int8_t command_main(client_t *client) {
   Render_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
   
   int8_t choice = command_scanner(client->cmnd, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
-  if (choice > 1 && client->online == 0) {
-    System_Message("Login or create an account before using this service.");
-    return 0;
-  }
+  //if (choice > 1 && client->online == 0) {
+  //  System_Message("Login or create an account before using this service.");
+    //return 0;
+  //}
   return choice;
 }
 

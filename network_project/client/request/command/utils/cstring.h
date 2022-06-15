@@ -6,6 +6,6 @@
 
 void buffer_flush(char *string, int32_t buffer_size);
 int32_t string_size(char *string, int32_t buffer_size);
+int32_t string_copy(uint8_t *dest, char *from);
 int8_t string_comp(char *str1, const char *str2, int32_t comp_length);
-
 #endif
