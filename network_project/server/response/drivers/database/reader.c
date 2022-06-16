@@ -3,14 +3,15 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "../serverutils/serror.h"
-#include "../serverutils/sstring.h"
+#include "../sstring.h"
 #include "reader.h"
-
+int8_t read_driver(read_t *reader) {
+  return SUCC;
+}
 /*-----------------------------------------------------------------------------------------------read routine logic part 0
 before a table being crated (...) info info info
 -------------------------------------------------------------------------------------------------------------------------*/
-
+/*
 static route_item route_items[] = {
 //custom datatype for mapping specific data given (...) [vilken model, därmed databas, ärendet rör etc].
   {MCLNT, CCLNT, PCLNT},
@@ -31,40 +32,40 @@ static void decode_request(read_t *reader) {
     reqmask = reqmask >> 1;
   }
 }
-/*-----------------------------------------------------------------------------------------------read routine logic part 1
+-----------------------------------------------------------------------------------------------read routine logic part 1
 info info info
--------------------------------------------------------------------------------------------------------------------------*/
-static uint8_t open_file(read_t *reader) {
+------------------------------------------------------------------------------------------------------------------------
+static int8_t open_file(read_t *reader) {
 //open file.
 
-  uint8_t result = (reader->file = fopen(reader->item.file_path, "r")) != NULL ? SUCC : FAIL;
+  int8_t result = (reader->file = fopen(reader->item.file_path, "r")) != NULL ? SUCC : FAIL;
   return result;
 }
 
 static uint8_t alloc_filebuff(read_t *reader) {
 //alloc memory of size FBUFF.
 
-  uint8_t result = (reader->file_buffer = calloc(FBUFF, sizeof(char))) != NULL ? SUCC : FAIL;
+  int8_t result = (reader->file_buffer = calloc(FBUFF, sizeof(char))) != NULL ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t read_filedata(read_t *reader) {
+static int8_t read_filedata(read_t *reader) {
 //read file-content to file_buffer. fread-func returns "actual size" of file wich beeing stored in file_size.
 
   reader->file_size = fread(reader->file_buffer, sizeof(char), FBUFF, reader->file);
 
-  uint8_t result = (reader->file_size > 0) ? SUCC : FAIL;
+  int8_t result = (reader->file_size > 0) ? SUCC : FAIL;
   return result;
 }
 
-static uint8_t fetch_tablerows(read_t *reader) {
+static int8_t fetch_tablerows(read_t *reader) {
 //every struct-model/entry/row (semantics really fails me on this one) has N-size of members and every member has data.
 //while stored in file, every member is separated by a delimiter (pipe character '|', constant DELIM in this source-code).
 
 //for now, my solution for fetching correct amount of entries/rows of a given model from a given source-file is to count
 //delimiters and just devide it with N number of DELIM in every model/entry/row.
 
-  for (uint32_t i = 0; i < reader->file_size; i++)
+  for (int32_t i = 0; i < reader->file_size; i++)
     reader->rows += (reader->file_buffer[i] == DELIM) ? 1 : 0;
 
   if (reader->rows % reader->item.membr != 0)
@@ -72,26 +73,26 @@ static uint8_t fetch_tablerows(read_t *reader) {
   reader->rows = (reader->rows / reader->item.membr);
   return SUCC;
 }
-/*-----------------------------------------------------------------------------------------------read routine logic part 2
+-------------------------------------------------------------------------------------------------read routine logic part 2
 info info info
-------------------------------------------------------------------------------------------------------------------------*/
-static void fetch_cmod_id(uint32_t rows, cmod_t *table) {
-  for (uint32_t i = 0; i < rows; i++) {
+--------------------------------------------------------------------------------------------------------------------------
+static void fetch_cmod_id(int32_t rows, cmod_t *table) {
+  for (int32_t i = 0; i < rows; i++) {
     cmod_t rows = {.id = i};
     table[i] = rows;
   }
 }
 
-static void fetch_smod_id(uint32_t rows, smod_t *table) {
-  for (uint32_t i = 0; i < rows; i++) {
+static void fetch_smod_id(int32_t rows, smod_t *table) {
+  for (int32_t i = 0; i < rows; i++) {
     smod_t rows = {.id = i};
     table[i] = rows;
   }
 }
 
-static uint8_t alloc_tablerows(read_t *reader) {
+static int8_t alloc_tablerows(read_t *reader) {
 
-  uint8_t result = 0;
+  int8_t result = 0;
 
   switch(reader->item.model) {
   case MCLNT:
@@ -105,16 +106,16 @@ static uint8_t alloc_tablerows(read_t *reader) {
   }
   return result;
 }
-/*-----------------------------------------------------------------------------------------------read routine logic part 2
+-------------------------------------------------------------------------------------------------read routine logic part 2
 info info info
-------------------------------------------------------------------------------------------------------------------------*/
+--------------------------------------------------------------------------------------------------------------------------
 
-static uint8_t create_client_table(read_t *reader) {
+static int8_t create_client_table(read_t *reader) {
 
-  uint8_t member = 0;
-  uint32_t index = 0, row = 0;
+  int8_t member = 0;
+  int32_t index = 0, row = 0;
 
-  for (uint32_t i = 0; i < reader->file_size; i++) {
+  for (int32_t i = 0; i < reader->file_size; i++) {
     char byte = reader->file_buffer[i];
 
     switch(member) {
@@ -149,10 +150,10 @@ static uint8_t create_client_table(read_t *reader) {
   return SUCC;
 }
 
-static uint8_t create_sample_table(read_t *reader) {
+static int8_t create_sample_table(read_t *reader) {
 
-  uint8_t state = STEMP;
-  uint32_t index = 0, row = 0;
+  int8_t state = STEMP;
+  int32_t index = 0, row = 0;
 
   for (uint32_t i = 0; i < reader->file_size; i++) {
     char byte = reader->file_buffer[i];
@@ -186,7 +187,7 @@ static uint8_t create_sample_table(read_t *reader) {
   return SUCC;
 }
 
-static uint8_t create_table(read_t *reader) {
+static int8_t create_table(read_t *reader) {
 
   switch(reader->item.model) {
   case MCLNT:
@@ -202,17 +203,17 @@ static uint8_t create_table(read_t *reader) {
 }
 
 static read_item read_items[] = {
-  {"failed to open file", open_file},
-  {"failed to create filebuffer\n", alloc_filebuff},
-  {"failed to read file",read_filedata},
-  {"failed to fetch amnt rows\n", fetch_tablerows},
-  {"failed to memalloc", alloc_tablerows},
-  {"failed copy data_rows\n", create_table}
+  {open_file},
+  {alloc_filebuff},
+  {read_filedata},
+  {fetch_tablerows},
+  {alloc_tablerows},
+  {create_table}
 };
 
-static uint8_t reader_routine(read_t *reader) {
+static int8_t reader_routine(read_t *reader) {
 
-  for (uint32_t i = 0; i < ARRAY_SIZE(read_items); i++) {
+  for (int32_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (!read_items[i].func(reader)) {
       System_Error_Message(read_items[i].error_message);
       return FAIL;
@@ -220,13 +221,6 @@ static uint8_t reader_routine(read_t *reader) {
   }
   return SUCC;
 }
-
-uint8_t database_reader(read_t *reader) {
-  
-  decode_request(reader);
-  return reader_routine(reader);
-}
-
 void reader_free(read_t *reader) {
 
   if (reader->file_buffer)
@@ -237,5 +231,7 @@ void reader_free(read_t *reader) {
     free(reader->table_sample);
   if (reader->file)
     fclose(reader->file);
+
 }
+*/
 //-------------------------------------------------------------------------------------------------------------------------

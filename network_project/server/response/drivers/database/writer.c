@@ -3,10 +3,12 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "../serverutils/serror.h"
-#include "../serverutils/sstring.h"
 #include "writer.h"
 
+int8_t write_driver(write_t *write) {
+ return SUCC;
+}
+/*
 static data_item data_items[] = {
   {MCLNT, PCLNT},
   {MSMPL, PSMPL},
@@ -59,3 +61,4 @@ uint8_t database_writer(write_t *writer) {
     return FAIL;
   }
 }
+*/

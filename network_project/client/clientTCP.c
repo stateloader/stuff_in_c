@@ -7,7 +7,6 @@ info info info info info info
 
 #include "request/request.h"
 #include "request/client.h"
-#include "socket.h"
 
 static const char *GENERAL = \
   "Jacke Packe Koda Satan\n\n"

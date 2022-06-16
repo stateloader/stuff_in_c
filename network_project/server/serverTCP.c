@@ -7,12 +7,15 @@ info info info info info info
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <string.h>
-#include "socket.h"
-#include "response.h"
+#include "response/server.h"
+#include "response/response.h"
 
 int main(void) {
+  return 0;
+}
 
+
+/*
   int server_socket = 0;
  // int client_length = 0;
   int client_socket = 0;
@@ -20,8 +23,8 @@ int main(void) {
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;
 
-  char request[MAX_BUFFER] = {0};
-  char response[MAX_BUFFER] = {0};
+  char request[SBUFF] = {0};
+  char response[FBUFF] = {0};
 
   socket_create(&server_socket);
   socket_bind(server_socket, &server_address, "127.0.0.1", 90190);
@@ -34,4 +37,4 @@ int main(void) {
     close(client_socket);
   }
   return 0;
-}
+  */
