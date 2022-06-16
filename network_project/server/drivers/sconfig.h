@@ -46,7 +46,21 @@ RWBIT   Request Read/Write          Get flags server it's a writing (to database
 #define SPASS 1
 #define STEMP 0
 #define SDTME 1
+//--------------------------------------------------------------------------------------------------------------"Graphics"
+#define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
+
+#define Header_Bord "----------------------------------------------------------------------------------------------------"
+#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
+
+#define SYSTEM_FORM "\n\t\t%s\n\n"
+#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+//-------------------------------------------------------------------------------------------------------------some checks
+#define check_delm(str, len) (str[len - 1] == DELIM)
+#define check_size(scn, buf) (scn < buf - 1) 
+#define check_term(scn, len) (scn[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
+#define TESTSTRFORM "\nstring -- %s -- %s\n\n"
+#define System_Print_String(str, inf) printf(TESTSTRFORM, str, inf)
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);

@@ -7,7 +7,7 @@ description to be
 #define READER_H_
 
 #include <stdint.h>
-#include "../sconfig.h"
+#include "sconfig.h"
 
 typedef struct UModel { 
   int32_t id;

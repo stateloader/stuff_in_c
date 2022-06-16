@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                            REQUEST MODULE
+                                                                                                                   REQUEST
 --------------------------------------------------------------------------------------------------------------------------
 Attempt in creating some kind of command-driven interface. 
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -81,10 +81,10 @@ static int8_t command_main(client_t *client) {
   Render_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
   
   int8_t choice = command_scanner(client->cmnd, COMMANDS_MAIN, ARRAY_SIZE(COMMANDS_MAIN));
-  //if (choice > 1 && client->online == 0) {
-  //  System_Message("Login or create an account before using this service.");
-    //return 0;
-  //}
+  if (choice > 1 && client->online == 0) {
+    System_Message("Login or create an account before using this service.");
+    return 0;
+  }
   return choice;
 }
 
@@ -140,7 +140,10 @@ static command_item command_items[] = {
 };
 
 int8_t request_driver(client_t *client) {
-//desc
+
+  client->size_user = scan_driver(client->user, CBUFF, "testname");
+  client->size_pass = scan_driver(client->pass, CBUFF, "testpass");
+  client->online = 1;
   while (current_state > DONE)
     current_state = command_items[current_state].func(client);
   

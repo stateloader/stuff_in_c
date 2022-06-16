@@ -1,5 +1,6 @@
 make:
-	gcc -o serverTCP *c -Wall -Wextra -g
+	gcc -o serverTCP *c drivers/*c -Wall -Wextra -g
+
 clean:
-	rm -f $(obj) serverTCP
-#response/*c response/drivers/*c response/drivers/database/*c
+	rm -f $(obj) clientTCP
+#socket.c request/*c request/reqdrivers/*c request/reqdrivers/utils/*c

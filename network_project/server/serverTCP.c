@@ -1,40 +1,35 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                SERVER TCP
+                                                                                                                    SERVER
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
+#include "socket.h"
+#include "drivers/recieved.h"
+#include "drivers/response.h"
+#include "drivers/server.h"
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include "response/server.h"
-#include "response/response.h"
+static const char *GENERAL = \
+  "Jacke Packe SERVER\n\n"
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n"\
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n"\
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n";
 
 int main(void) {
-  return 0;
-}
-
-
-/*
-  int server_socket = 0;
- // int client_length = 0;
-  int client_socket = 0;
+  Render_Header("SERVER", GENERAL);
+  server_t server = {.rqst_endbyte = 0x00};
 
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;
 
-  char request[SBUFF] = {0};
-  char response[FBUFF] = {0};
-
-  socket_create(&server_socket);
-  socket_bind(server_socket, &server_address, "127.0.0.1", 90190);
-  socket_listen(server_socket);
+  socket_create(&server.session.sock_serv);
+  socket_bind(server.session.sock_serv, &server_address, "127.0.0.1", 90190);
+  socket_listen(server.session.sock_serv);
 
   while(1) {
-
-		socket_accept(server_socket, &client_socket, &client_address);
-    response_driver(client_socket, request, response);
-    close(client_socket);
+		socket_accept(server.session.sock_serv, &server.session.sock_clnt, &client_address);
+    recieved_driver(&server);
+    response_driver(&server);
+    close(server.session.sock_clnt);
   }
-  return 0;
-  */
+  exit(EXIT_SUCCESS);
+}

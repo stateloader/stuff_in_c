@@ -1,10 +1,10 @@
 #ifndef SOCKET_H_
 #define SOCKET_H_
 
-#include <stdio.h>
-#include <stddef.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
 #define MAX_CLIENT 16
 

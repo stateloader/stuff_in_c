@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                            MESSAGE MODULE
+                                                                                                                   MESSAGE
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -56,8 +56,6 @@ static int8_t message_binder(client_t *client) {
 }
 
 int8_t message_driver(client_t *client) {
-
-  client->size_user = scan_driver(client->user, CBUFF, "test name");
 
   if (message_reader(client) < 0)
     return FLEE;
