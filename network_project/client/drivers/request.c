@@ -7,12 +7,12 @@ Attempt in creating some kind of command-driven interface.
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include "reqdrivers/utils/cstring.h"
-#include "reqdrivers/utils/scanner.h"
-#include "reqdrivers/connect.h"
-#include "reqdrivers/fetcher.h"
-#include "reqdrivers/device.h"
-#include "reqdrivers/message.h"
+#include "cstring.h"
+#include "scanner.h"
+#include "connect.h"
+#include "fetcher.h"
+#include "device.h"
+#include "message.h"
 #include "request.h"
 
 static const char *COMMANDS_MAIN[] = {

@@ -1,17 +1,21 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                   FETCHER
+                                                                                                                    DEVICE
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "utils/cstring.h"
-#include "utils/scanner.h"
-#include "fetcher.h"
+#include <string.h>
+#include <stdio.h>
+#include "cstring.h"
+#include "scanner.h"
+#include "device.h"
 
-int8_t fetch_driver(client_t *client, int8_t choice) {
-  if (choice == TEMP)
-    client->rqst[0] = RDTP;
+int8_t device_driver(client_t *client, int8_t choice) {
+  if (choice == DRED)
+    client->rqst[0] = RADR;
+  else if (choice == DBLU)
+    client->rqst[0] = RADB;
   else
-    client->rqst[0] = RDMG;
+    client->rqst[0] = RADG;
   client->size_rqst = 2;
   return DONE;
 }

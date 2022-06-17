@@ -5,8 +5,8 @@ info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
-#include "utils/cstring.h"
-#include "utils/scanner.h"
+#include "cstring.h"
+#include "scanner.h"
 #include "connect.h"
 
 static int8_t connect_reader(client_t *client) {

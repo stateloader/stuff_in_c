@@ -2,7 +2,7 @@
 #define CLIENT_H_
 
 #include <stdint.h>
-#include "reqdrivers/utils/cconfig.h"
+#include "cconfig.h"
 
 typedef struct Message {
   int32_t size_datm;

@@ -5,8 +5,8 @@ info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
 #include "socket.h"
-#include "request/request.h"
-#include "request/client.h"
+#include "drivers/request.h"
+#include "drivers/client.h"
 
 static const char *GENERAL = \
   "Jacke Packe CLIENT\n\n"

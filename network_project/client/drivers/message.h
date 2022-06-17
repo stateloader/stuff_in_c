@@ -2,8 +2,8 @@
 #define MESSAGE_H_
 
 #include <stdint.h>
-#include "utils/cconfig.h"
-#include "../client.h"
+#include "cconfig.h"
+#include "client.h"
 
 int8_t message_driver(client_t *client);
 

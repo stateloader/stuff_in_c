@@ -5,8 +5,8 @@ info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
-#include "utils/cstring.h"
-#include "utils/scanner.h"
+#include "cstring.h"
+#include "scanner.h"
 #include "message.h"
 
 static void fetch_datetime(client_t *client) {

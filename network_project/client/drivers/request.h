@@ -2,7 +2,7 @@
 #define REQUEST_H_
 
 #include <stdint.h>
-#include "reqdrivers/utils/cconfig.h"
+#include "cconfig.h"
 #include "client.h"
 
 typedef int8_t (*command_func)(client_t *client);
