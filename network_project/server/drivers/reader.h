@@ -8,34 +8,15 @@ description to be
 
 #include <stdint.h>
 #include "sconfig.h"
+#include "saker/models.h"
 
-typedef struct UserModel { 
-  int32_t id;
-  char user[SBUFF];
-  char pass[SBUFF];
-} umod_t;
-
-typedef struct SampModel {
-  int32_t id;
-  char temp[SBUFF];
-  char datm[TBUFF];
-} smod_t;
-
-typedef struct DvceModel {
-  int32_t id;
-  int8_t led;
-} dmod_t;
-
-typedef struct MesgModel {
-  int32_t id;
-  char user[SBUFF];
-  char datm[TBUFF];
-  char topc[SBUFF];
-  char mesg[SBUFF];
-} mmod_t;
+typedef struct ReaderRouteItem{
+  const char *wpackage;
+  const char *filepath; 
+} rrim_t;
 
 typedef struct Reader {
-  int8_t status;
+  uint8_t route;
   int32_t rows_tbusr;
   int32_t rows_tsmpl;
   int32_t rows_tdvce;

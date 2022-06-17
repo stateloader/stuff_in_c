@@ -8,6 +8,8 @@ info fasda
 int8_t write_driver(write_t *write) {
  return SUCC;
 }
+
+
 /*
 static data_item data_items[] = {
   {MCLNT, PCLNT},

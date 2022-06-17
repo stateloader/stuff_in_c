@@ -5,46 +5,45 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define SUCC 1
+#define FLEE -2
+#define NACT -1
 #define FAIL 0
+#define SUCC 1
 /*---------------------------------------------------------------------------------------------------------Request Endbyte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |  RWBIT  |  RTDT2  |  RTDT1  |  RTDT0  |  RMSGE  |   RDVCE  |   RDATA   |   RCONN   |
+Constant                            |  RWBIT  |  RACT2  |  RACT1  |  RACT0  |  RMSGE  |   RDVCE  |   RDATA   |   RCONN   |
                                     --------------------------------------------------------------------------------------
-MCONN   Request Connection          Get flags server to init connection stuff (i.e user login/signup).
-MDATA   Request Data                Get flags server to init data/fetch (from database) stuff.
-MDVCE   Request Device              Get flags server to init interaction with device stuff.
-MMSGE   Request Message             Get flags server to init message stuff.
-RTDTN   Request To Do This (N)      Bit 4 to 6 used for flagging stuff to the server.
-RWBIT   Request Read/Write          Get flags server it's a writing (to database) errant, cleared reading from it.
-------------------------------------------------------------------------------------------------------------------------*/
-#define RULO 0b00000001 //          Request User Login
-#define RUSU 0b10000001 //          Request User Signup
-#define RDTP 0b00010010 //          Request Fetch Temperature
-#define RDMG 0b00100010 //          Request Fetch Messages
-#define RADR 0b10010100 //          Request Activate Device Red (LED)
-#define RADB 0b10100100 //          Request Activate Device Blue (LED)
-#define RADG 0b11000100 //          Request Activate Device Green (LED)
-#define RWMG 0b10011000 //          Request Write Message
-//------------------------------------------------------------------------------------------------------------------------
-#define INITR 0         //          Init Database Read
-#define INITW 1         //          Init Database Write
+MCONN   Request Connection          Client requests connection business.
+MDATA   Request Data                Client requests to fetch data.
+MDVCE   Request Device              Client requests interaction with the device.
+MMSGE   Request Message             Client requests to write a message. 
+RACTN   Request Action (N)          Client request "Action" (with <bit>) Emaxple: RDVCE - turn on red led).
+RWBIT   Request Read/Write          Tells server if request craves either write or read from database.
+                                    ------------------------------------------------------------------------------------*/
+#define RCONN 0
+#define RDATA 1
+#define RDVCE 2
+#define RMSGE 3
+
+#define RTDT0 4
+#define RTDT1 5
+#define RTDT2 6
+#define RWBIT 7
+
+#define LNIBB 4
+#define HNIBB 8
+
 //------------------------------------------------------------------------------------------------------------------------
 #define DELIM '|'       //          Delimiter
-#define DCLNT 2         //          Delimiters Client
-#define DSMPL 2         //          Delimiters Sample
-#define DMSGE 4         //          Delimiters Message
-#define DDVCE 3         //          Delimiters Device
+#define DCLNT 3         //          Delimiters Client
+#define DSMPL 3         //          Delimiters Sample
+#define DDVCE 4         //          Delimiters Device
+#define DMSGE 5         //          Delimiters Message
 //------------------------------------------------------------------------------------------------------------------------
 #define FBUFF 4096      //          desc
 #define RBUFF 4096      //          desc
 #define SBUFF 512       //          desc
 #define TBUFF 21        //          desc
-//------------------------------------------------------------------------------------------------------------------------
-#define SUSER 0
-#define SPASS 1
-#define STEMP 0
-#define SDTME 1
 //--------------------------------------------------------------------------------------------------------------"Graphics"
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
@@ -64,7 +63,7 @@ RWBIT   Request Read/Write          Get flags server it's a writing (to database
 //-------------------------------------------------------------------------------------------------------------------other
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
-
+#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 #endif
 
 
@@ -74,4 +73,16 @@ RWBIT   Request Read/Write          Get flags server it's a writing (to database
 #define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 #define Print_Strg(str, not) printf("TEST---STRING: %s ---NOTE %s\n", str, not);
 #define Print_Byte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
+*/
+
+
+/*
+#define RULON 0b00000001 //         Recieved User Login
+#define RUSUP 0b10000001 //         Recieved User Signup
+#define RDTMP 0b00010010 //         Recieved Fetch Temperature
+#define RDMSG 0b00100010 //         Recieved Fetch Messages
+#define RARED 0b10010100 //         Recieved Activate Device Red (LED)
+#define RABLU 0b10100100 //         Recieved Activate Device Blue (LED)
+#define RAGRN 0b11000100 //         Recieved Activate Device Green (LED)
+#define RWMSG 0b10011000 //         Recieved Write Message
 */
