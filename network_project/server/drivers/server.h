@@ -2,6 +2,8 @@
 #define SERVER_H_
 
 #include "sconfig.h"
+#include "reader.h"
+#include "writer.h"
 
 //----------------------------------------------------------------------------------------------------------------------*/
 
@@ -16,7 +18,8 @@ typedef struct Server {
   int32_t size_resp;
   char recv[FBUFF];
   char resp[FBUFF];
-  void *table;
+  read_t reader;
+  write_t writer;
   sess_t session;         // cent_t client
 } server_t;
 

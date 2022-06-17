@@ -9,6 +9,7 @@
 #define NACT -1
 #define FAIL 0
 #define SUCC 1
+
 /*---------------------------------------------------------------------------------------------------------Request Endbyte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 Constant                            |  RWBIT  |  RACT2  |  RACT1  |  RACT0  |  RMSGE  |   RDVCE  |   RDATA   |   RCONN   |
@@ -40,10 +41,10 @@ RWBIT   Request Read/Write          Tells server if request craves either write 
 #define DDVCE 4         //          Delimiters Device
 #define DMSGE 5         //          Delimiters Message
 //------------------------------------------------------------------------------------------------------------------------
-#define FBUFF 4096      //          desc
-#define RBUFF 4096      //          desc
-#define SBUFF 512       //          desc
-#define TBUFF 21        //          desc
+#define FBUFF 4096      //          File Buffer
+#define SBUFF 512       //          Scan Buffer
+#define PBUFF 64        //          Path Buffer
+#define TBUFF 24        //          Time (DateTime) Buffer
 //--------------------------------------------------------------------------------------------------------------"Graphics"
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
@@ -58,6 +59,8 @@ RWBIT   Request Read/Write          Tells server if request craves either write 
 #define check_size(scn, buf) (scn < buf - 1) 
 #define check_term(scn, len) (scn[len - 1] == '\0')
 #define check_tedl(str, len) (str[len - 3] == '|')
+#define check_cnum(nm0, nm1) (nm0 == nm1)
+#define check_endf(str, len) (str[len - 2] == '|' && str[len - 1] == '\0')
 //--------------------------------------------------------------------------------------------------------------------bits
 #define fetch_endb(byt, str, len) (byt = str[len - 2])
 #define parse_rewr(msk) (msk & (1 << 7))
