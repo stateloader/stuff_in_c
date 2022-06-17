@@ -17,6 +17,35 @@ static const char *GENERAL = \
 int main(void) {
 
   Render_Header("CLIENT", GENERAL);
+  client_t client = {.online = 0};
+
+  if (request_driver(&client) != FLEE) {
+    System_Message("ingen flee");
+    System_Message(client.rqst);
+  } else {
+    System_Message("blev en FLEE");
+    exit(EXIT_FAILURE);
+  }
+  exit(EXIT_SUCCESS);
+}
+
+/*
+  bara requestdriver ----------
+
+  Render_Header("CLIENT", GENERAL);
+  client_t client = {.online = 0};
+
+  if (request_driver(&client) != FLEE) {
+    printf("ja jag e har\n");
+    printf("tillbaka: %s\n", client.resp);
+  } else {
+    exit(EXIT_FAILURE);
+  }
+  exit(EXIT_SUCCESS);
+ 
+  med serverconn. -----------
+
+  Render_Header("CLIENT", GENERAL);
   int client_socket = socket_create();
   socket_connect(client_socket, "127.0.0.1", 90190);
 
@@ -33,4 +62,4 @@ int main(void) {
   }
   close(client_socket);
   exit(EXIT_SUCCESS);
-}
+  */

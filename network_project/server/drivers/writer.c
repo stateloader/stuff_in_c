@@ -16,6 +16,6 @@ int8_t write_driver(write_t *writer) {
 
   int32_t size_fwrite = fwrite(writer->appd, sizeof(char), writer->size_appd, writer->file);
   fclose(writer->file);
-  
-  return append_checker(size_fwrite, writer),
+
+  return append_checker(size_fwrite, writer);
 }

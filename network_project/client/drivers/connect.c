@@ -34,9 +34,9 @@ static int8_t connect_binder(client_t *client, int8_t choice) {
   client->pass[client->size_pass - 1] = '\0';
 
   if (choice == LOGN)
-    client->rqst[client->size_rqst - 2] = RULO;//                                             Request User Login Bit
+    client->rqst[client->size_rqst - 2] = RULON;//                                             Request User Login Bit
   else
-    client->rqst[client->size_rqst - 2] = RUSU;//                                            Request User Signup Bit
+    client->rqst[client->size_rqst - 2] = RUSUP;//                                            Request User Signup Bit
   
   return connect_binder_check(client);
 }

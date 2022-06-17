@@ -10,17 +10,9 @@ description to be
 #include "sconfig.h"
 #include "saker/models.h"
 
-typedef struct ReaderRouteItem{
-  const char *wpackage;
-  const char *filepath; 
-} rrim_t;
-
 typedef struct Reader {
-  uint8_t route;
-  int32_t rows_tbusr;
-  int32_t rows_tsmpl;
-  int32_t rows_tdvce;
-  int32_t rows_tmesg;
+  int8_t model, action;
+  int32_t rows_table;
   umod_t *table_user;
   smod_t *table_samp;
   dmod_t *table_dvce;

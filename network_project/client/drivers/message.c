@@ -44,7 +44,7 @@ static int8_t message_binder(client_t *client) {
   strncat(client->rqst, client->mesg.topc, client->size_rqst);
   strncat(client->rqst, client->mesg.mesg, client->size_rqst);
 
-  client->rqst[client->size_rqst - 2] = RWMG;
+  client->rqst[client->size_rqst - 2] = RWMSG;
   client->rqst[client->size_rqst - 1] = '\0';
   client->user[client->size_user - 1] = '\0';
 

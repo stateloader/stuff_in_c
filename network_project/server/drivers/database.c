@@ -13,6 +13,12 @@ static char *FILEPATHS[] = {
 
 static int8_t database_read(server_t *server) {
   System_Message("Inside database_read.");
+  
+  server->reader.model = decode_model_check(server->endbyte);
+  if (server->reader.model < 0)
+    return FAIL;
+  
+  System_Message(server->recv);
   return SUCC;
 }
 

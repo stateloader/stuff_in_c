@@ -144,8 +144,11 @@ int8_t request_driver(client_t *client) {
   client->size_user = scan_driver(client->user, CBUFF, "testname");
   client->size_pass = scan_driver(client->pass, CBUFF, "testpass");
   client->online = 1;
-  while (current_state > DONE)
+  while (current_state > DONE) {
     current_state = command_items[current_state].func(client);
+    if (current_state == FLEE)
+      return current_state;
+  }
   
   current_state = MAIN;
   return SUCC;

@@ -14,10 +14,11 @@ typedef struct Session {  //client
 
 typedef struct Server {
   uint8_t endbyte;
-  int32_t size_recv;
-  int32_t size_resp;
+  int8_t result;
   char recv[FBUFF];
   char resp[FBUFF];
+  int32_t size_recv;
+  int32_t size_resp;
   read_t reader;
   write_t writer;
   sess_t session;         // cent_t client

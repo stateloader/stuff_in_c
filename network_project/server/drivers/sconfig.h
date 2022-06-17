@@ -68,25 +68,5 @@ RWBIT   Request Read/Write          Tells server if request craves either write 
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
+
 #endif
-
-
-/*
-#define TESTSTRFORM "\nstring -- %s -- %s\n\n"
-#define System_Print_String(str, inf) printf(TESTSTRFORM, str, inf)
-#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
-#define Print_Strg(str, not) printf("TEST---STRING: %s ---NOTE %s\n", str, not);
-#define Print_Byte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
-*/
-
-
-/*
-#define RULON 0b00000001 //         Recieved User Login
-#define RUSUP 0b10000001 //         Recieved User Signup
-#define RDTMP 0b00010010 //         Recieved Fetch Temperature
-#define RDMSG 0b00100010 //         Recieved Fetch Messages
-#define RARED 0b10010100 //         Recieved Activate Device Red (LED)
-#define RABLU 0b10100100 //         Recieved Activate Device Blue (LED)
-#define RAGRN 0b11000100 //         Recieved Activate Device Green (LED)
-#define RWMSG 0b10011000 //         Recieved Write Message
-*/
