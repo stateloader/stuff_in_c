@@ -26,4 +26,5 @@ inline static int8_t check_action(uint8_t endbyte) {
   }
   return FLEE;
 }
+
 #endif

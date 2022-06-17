@@ -50,8 +50,9 @@ RWBIT   Request Read/Write          Tells server if request craves either write 
 #define Header_Bord "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
-#define SYSTEM_FORM "\n\t\t%s\n\n"
+#define SYSTEM_FORM "\t\t%s\n"
 #define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+//------------------------------------------------------------------------------------------------------------System calls
 //-------------------------------------------------------------------------------------------------------------some checks
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 
