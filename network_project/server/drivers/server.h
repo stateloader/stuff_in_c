@@ -7,21 +7,18 @@
 
 //----------------------------------------------------------------------------------------------------------------------*/
 
-typedef struct Session {  //client
+typedef struct Session {
   int32_t sock_clnt;
-  int32_t sock_serv;       //ner
-} sess_t;                // cent_t
+  int32_t sock_serv;
+} sess_t;
 
 typedef struct Server {
-  uint8_t endbyte;
-  int8_t result;
-  char recv[FBUFF];
-  char resp[FBUFF];
+  int8_t status;
   int32_t size_recv;
   int32_t size_resp;
-  read_t reader;
-  write_t writer;
-  sess_t session;         // cent_t client
+  char recv[FBUFF];
+  char resp[FBUFF];
+  sess_t session;
 } server_t;
 
 #endif

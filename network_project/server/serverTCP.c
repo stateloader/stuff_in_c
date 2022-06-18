@@ -17,7 +17,7 @@ static const char *GENERAL = \
 int main(void) {
   
   Render_Header("SERVER", GENERAL);
-  server_t server = {.endbyte = 0x00};
+  server_t server = {.status = 1};
 
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;

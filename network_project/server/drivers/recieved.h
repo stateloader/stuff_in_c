@@ -3,20 +3,21 @@
 
 #include <stdint.h>
 #include "sconfig.h"
+#include "database.h"
 #include "server.h"
 
 int8_t recieved_driver(server_t *server);
 
-inline static int8_t recieved_check(server_t *server) {
+inline static int8_t recieved_driver_check(data_t *database) {
 
-  if (!check_term(server->recv, server->size_recv)) {
-    System_Message("Recvied request isn't terminated");
+  if (!check_term(database->recv, database->size_recv)) {
+    System_Message("request isn't terminated");
     return FAIL;
-  } else if (!check_tedl(server->recv, server->size_recv)) {
-    System_Message("Third last byte isn't delimiter.");
+
+  } else if (!check_tedl(database->recv, database->size_recv)) {
+    System_Message("last delimiter missing.");
     return FAIL;
   }
-  fetch_endb(server->endbyte, server->recv, server->size_recv);
   return SUCC;
 }
 #endif

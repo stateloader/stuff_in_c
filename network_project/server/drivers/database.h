@@ -4,46 +4,37 @@
 #include <stdint.h>
 #include "sstring.h"
 #include "sconfig.h"
-#include "server.h"
 
-int8_t database_driver(server_t *server);
+#define decode_rwbit(rwb) (rwb & (1 << RWBIT))
 
-inline static int8_t decode_model_check(uint8_t endbyte) {
+typedef struct DataBase {
+  uint8_t status;
+  uint8_t reqbyte;
+  int8_t model;
+  int8_t trigg;
+  int8_t rwbit;
+  uint32_t size_recv;
+  uint32_t size_resp;
+  char recv[SBUFF];
+  char resp[FBUFF];
+} data_t;
 
-  System_Message("Inside check_model\n");
+int8_t database_driver(data_t *database);
+
+inline static int8_t decode_model(uint8_t reqbyte) {
+  System_Message("Inside decode_model\n");
   for (int8_t model = 0; model < LNIBB; model++) {
-    if (endbyte & (1 << model))
-      return model;
+    if (reqbyte & (1 << model)) return model;
   }
-  System_Message("seems there's no model assigned");
-  return FLEE;
+  System_Message("ERROR---seems there's no model assigned.");
+  return NBIT;
 }
 
-inline static int8_t decode_action_check(uint8_t endbyte) {
-
-  System_Message("Inside check_model\n");
-  for (int8_t action = LNIBB; action < (HNIBB - 1); action++) {
-    if (endbyte & (1 << action))
-      return action;
+inline static int8_t decode_trigg(uint8_t reqbyte) {
+  System_Message("Inside decode_trigg\n");
+  for (int8_t trigg = LNIBB; trigg < (HNIBB - 1); trigg++) {
+    if (reqbyte & (1 << trigg)) return trigg;
   }
-  System_Message("seems there's no action assigned");
-  return FAIL;
-}
-
-inline static int8_t database_writer_check(server_t *server) {
-
-  if (!check_cnum(server->writer.size_appd, server->size_recv)) {
-    System_Message("stringsizes doesent match.\n");
-    return FAIL;
-
-  } else if (!string_comp(server->writer.appd, server->recv, server->size_recv)) {
-    System_Message("recv-string and string to be appended doesn't compare");
-    return FAIL;
-
-  } else if (!check_endf(server->writer.appd, server->writer.size_appd)) {
-    System_Message("not delimiterneded");
-    return FAIL;
-  }
-  return SUCC;
+  return 0;
 }
 #endif

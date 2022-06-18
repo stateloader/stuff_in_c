@@ -17,15 +17,21 @@ static const char *GENERAL = \
 int main(void) {
 
   Render_Header("CLIENT", GENERAL);
+  int client_socket = socket_create();
+  socket_connect(client_socket, "127.0.0.1", 90190);
+
   client_t client = {.online = 0};
 
   if (request_driver(&client) != FLEE) {
-    System_Message("ingen flee");
-    System_Message(client.rqst);
+    printf("ja jag e har\n");
+    socket_send(client_socket, client.rqst, client.size_rqst);
+    socket_recieve(client_socket, client.resp, RBUFF);
+    printf("tillbaka: %s\n", client.resp);
   } else {
-    System_Message("blev en FLEE");
+    close(client_socket);
     exit(EXIT_FAILURE);
   }
+  close(client_socket);
   exit(EXIT_SUCCESS);
 }
 
