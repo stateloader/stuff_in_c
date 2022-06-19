@@ -21,16 +21,9 @@ typedef struct Writer {
 
 int8_t write_driver(write_t *writer);
 
-
-inline static int8_t fileopen_check(FILE *file) {
-  if (!file) {
-    System_Message("failed to open file");
-    return FAIL;
-  }
-  return SUCC;
-}
-
 inline static int8_t fileappd_check(int32_t size_writ, int32_t size_appd, FILE *file) {
+  System_Message("Inside fileappd_check");
+
   if (!check_cnum(size_writ, size_appd)) {
     System_Message("differend sizes written/appendsize");
     if (file) fclose(file);

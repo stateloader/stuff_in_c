@@ -7,7 +7,6 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cconfig.h"
 #include "cstring.h"
 
 void buffer_flush(char *buffer, int32_t size_buffer) {

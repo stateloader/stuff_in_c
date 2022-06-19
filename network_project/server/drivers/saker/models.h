@@ -4,6 +4,19 @@
 #include <stdint.h>
 #include "../sconfig.h"
 
+inline static int8_t fileopen_check(FILE *file) {
+  if (!file) {
+    System_Message("failed to open file");
+    return FAIL;
+  }
+  return SUCC;
+}
+/*
+typedef struct FileItem {
+  const uint8_t model;
+  const char *path;
+} file_item;
+
 typedef struct ConnModel {
   int8_t set;
   char user[SBUFF];
@@ -30,5 +43,5 @@ typedef struct MesgModel {
   char topc[SBUFF];
   char mesg[SBUFF];
 } mmod_t;
-
+*/
 #endif

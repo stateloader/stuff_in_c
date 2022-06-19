@@ -26,7 +26,7 @@ inline static int8_t decode_model(uint8_t reqbyte) {
   for (int8_t model = 0; model < LNIBB; model++) {
     if (reqbyte & (1 << model)) return model;
   }
-  System_Message("ERROR---seems there's no model assigned.");
+  System_Message("--seems there's no model assigned.");
   return NBIT;
 }
 
@@ -36,5 +36,13 @@ inline static int8_t decode_trigg(uint8_t reqbyte) {
     if (reqbyte & (1 << trigg)) return trigg;
   }
   return 0;
+}
+
+inline static int8_t database_reader_check(int32_t size_resp, int32_t size_file) {
+  if(check_cnum(size_resp, size_resp)) {
+    System_Message("--size_resp and size_file don't match.");
+    return FAIL;
+  }
+  return SUCC;
 }
 #endif

@@ -14,7 +14,8 @@
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 Constant                            |  RWBIT  |  RTRG2  |  RTRG1  |  RTRG0  |  RMSGE  |   RDVCE  |   RDATA   |   RCONN   |
                                     --------------------------------------------------------------------------------------
-                                    |    R/W  |            ACTION           |                   MODEL                    |
+                                    |   R/W   |            ACTION           |                   MODEL                    |
+                                    --------------------------------------------------------------------------------------
 
 MCONN   Request Connection          Client requests connection business.
 MDATA   Request Data                Client requests to fetch data.
@@ -31,6 +32,21 @@ RARED   0b10010100                  Request Activate Device Red (LED)
 RABLU   0b10100100                  Request Activate Device Blue (LED)
 RAGRN   0b11000100                  Request Activate Device Green (LED)
 RWMSG   0b10011000                  Request Write Message
+
+
+
+#define RUSUP 0b10000001 //         Request Write User (sign up)
+#define RULOG 0b00000001 //         Request Read Users (login)
+
+#define RDTMP 0b00010010 //         Request Read Temperature (only data at the moment)
+
+#define RARED 0b10010100 //         Request Activate Device Red (LED)
+#define RABLU 0b10100100 //         Request Activate Device Blue (LED)
+#define RAGRN 0b11000100 //         Request Activate Device Green (LED)
+
+#define RWMSG 0b10001000 //         Request Write Message
+#define RWMSG 0b00001000 //         Request Read Messages
+
                                     ------------------------------------------------------------------------------------*/
 #define RCONN 0
 #define RDATA 1

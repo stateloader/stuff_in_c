@@ -5,7 +5,8 @@ info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "writer.h"
 
-int8_t phase_fileappd(write_t *writer) {
+int8_t fileappd(write_t *writer) {
+  System_Message("Inside fileappd");
 
   writer->file = fopen(writer->item->path, "a");
   if (!fileopen_check(writer->file))
@@ -22,5 +23,5 @@ int8_t phase_fileappd(write_t *writer) {
 
 int8_t write_driver(write_t *writer) {
   System_Message("inside write_driver");
-  return phase_fileappd(writer);
+  return fileappd(writer);
 }

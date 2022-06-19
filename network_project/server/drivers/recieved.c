@@ -14,12 +14,14 @@ int8_t recieved_driver(server_t *server) {
   
   data_t database = {.status = 1};
   database.size_recv = string_copy(database.recv, server->recv, SBUFF);
+
   fetch_endb(database.reqbyte, database.recv, database.size_recv);
 
   if (!recieved_driver_check(&database))
     return FAIL;
-    
-  int8_t result = database_driver(&database);
 
-  return result;
+  else if (!database_driver(&database))
+    return FAIL;
+
+  return SUCC;
 }

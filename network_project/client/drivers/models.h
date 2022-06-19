@@ -1,11 +1,10 @@
 #ifndef MODELS_H_
 #define MODELS_H_
 
-#include <stdint.h>
-#include "../sconfig.h"
+#include "configs.h"
 
 typedef struct ConnModel {
-  int32_t id;
+  size id;
   int8_t set;
   char user[SBUFF];
   char pass[SBUFF];
