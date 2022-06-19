@@ -3,11 +3,6 @@
 
 #include "configs.h"
 
-typedef struct CmndItem {
-  const char *cmnd;
-  const uint8_t byte;
-} cmnd_item;
-
 typedef struct Command {
   uint8_t status;
   uint8_t main_byte;
