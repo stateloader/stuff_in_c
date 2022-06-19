@@ -23,12 +23,4 @@ typedef struct Client {
 
 int8_t client_driver(client_t *client);
 
-inline static void enter_password_check(uint8_t *status, uint8_t validation) {
-  if (validation) {
-    System_Message("Password correct. You may now have the time of your life.");
-  } else {
-    System_Message("Password incorrect. You may now not have the time of your life.");
-    *status = 0;
-  }
-}
 #endif
