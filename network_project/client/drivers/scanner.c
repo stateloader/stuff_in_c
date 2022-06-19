@@ -15,9 +15,11 @@ static int32_t size_scan = 0;
 static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
+
     if (!byte_asci(scan[i])) {
       System_Message("Only ASCII ('English') characters allowed. try again!");
 		  return SCAN_INPUT;
+
     } else if (byte_delm(scan[i])) {
       System_Message("Pipe charachter ('|') is for losers, use another one.");
       return SCAN_INPUT;
@@ -60,7 +62,10 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
       exit(EXIT_FAILURE);
     }
   }
-  if (!check_term(scan, size_scan))
-    return - 1;
+
+  if (!check_term(scan, size_scan)) {
+    System_Message("Failed to terminate userinput.");
+    return FAIL;
+  }
   return size_scan;
 }

@@ -15,14 +15,9 @@ typedef struct Command {
 int8_t command_driver(cmnd_t *cmnd);
 
 inline static int8_t command_driver_check(cmnd_t *cmnd) {
-  uint8_t sets = 0;
+  int8_t sets = 0;
   for (int8_t i = 0; i < 8; i++)
-    sets += (cmnd->exec_byte & (1 << i));
-  if (!sets) {
-    System_Message("Good bye");
-    return QUIT;
-  }
-  return SUCC;
+    sets += (cmnd->rqst_byte & (1 << i));
+  return sets;
 }
-
 #endif

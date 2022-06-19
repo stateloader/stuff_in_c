@@ -7,7 +7,7 @@ Constant                            |  MMENU  |    -    |    -    |    -    |   
 
 /*------------------------------------------------------------------------------------------------------------Command Exec
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |    -    |    -    |    -    |    -    |   LOPT2  |   LOPT1   |   LOPT0   |
+Constant                            |  RWBIT  |  EOPT2  |  EOPT1  |  EOPT0  |    -    |     -    |     -     |     -     |
                                     --------------------------------------------------------------------------------------
                                     |                                     LATE MENUES                                    |
 ------------------------------------------------------------------------------------------------------------------------*/
@@ -20,9 +20,11 @@ static const uint8_t TMESG = 0x00;
 static const uint8_t TDVCE = 0x01;
 static const uint8_t MMENU = 0x07;
 
-static const uint8_t EOPT0 = 0x00;
-static const uint8_t EOPT1 = 0x01;
-static const uint8_t EOPT2 = 0x02;
+static const uint8_t RWBIT = 0x07;
+
+static const uint8_t EOPT0 = 0x04;
+static const uint8_t EOPT1 = 0x05;
+static const uint8_t EOPT2 = 0x06;
 
 typedef void (*cmnd_func)(cmnd_t *cmnd);
 
@@ -38,28 +40,21 @@ static void command_quit(cmnd_t *cmnd) {
 
 static void request_canonical_mesg(cmnd_t *cmnd) {
 
-  cmnd->rqst_byte |= (1 << 0);
+  cmnd->rqst_byte |= (1 << TMESG);
 
-  if (cmnd->exec_byte & (1 << EOPT0))
-    cmnd->rqst_byte |= (0 << 7);
-  else
-    cmnd->rqst_byte |= (1 << 7);
-
+  if (cmnd->rqst_byte & (1 << EOPT0)) {
+    cmnd->rqst_byte |= (1 << RWBIT);
+    cmnd->rqst_byte &= ~(1 << EOPT0);
+  } else {
+    cmnd->rqst_byte |= (0 << RWBIT);
+    cmnd->rqst_byte &= ~(1 << EOPT1);
+  }
   command_quit(cmnd);
 }
 
 static void request_canonical_dvce(cmnd_t *cmnd) {
-  cmnd->task_byte &= ~(1 << MMENU);
 
-  cmnd->exec_byte |= (1 << 7);
-
-  if (cmnd->exec_byte & (1 << EOPT0))
-    cmnd->rqst_byte |= (1 << 4);
-  else if (cmnd->exec_byte & (1 << EOPT1))
-    cmnd->rqst_byte |= (1 << 5);
-  else
-    cmnd->rqst_byte |= (1 << 6);
-
+  cmnd->rqst_byte |= (1 << RWBIT) | (1 << TDVCE);
   command_quit(cmnd);
 }
 
@@ -87,7 +82,7 @@ static void command_dvce(cmnd_t *cmnd) {
 
   for (size_t i = 0; i < ARRAY_SIZE(dvce_items); i++) {
     if (string_comp(cmnd->command, dvce_items[i].cmnd, cmnd->size_cmnd)) {
-      cmnd->exec_byte |= (1 << dvce_items[i].byte);
+      cmnd->rqst_byte |= (1 << dvce_items[i].byte);
       dvce_items[i].func(cmnd);
     }
   }
@@ -101,7 +96,7 @@ static void command_mesg(cmnd_t *cmnd) {
 
   for (size_t i = 0; i < ARRAY_SIZE(mesg_items); i++) {
     if (string_comp(cmnd->command, mesg_items[i].cmnd, cmnd->size_cmnd)) {
-      cmnd->exec_byte |= (1 << mesg_items[i].byte);
+      cmnd->rqst_byte |= (1 << mesg_items[i].byte);
       mesg_items[i].func(cmnd);
     }
   }

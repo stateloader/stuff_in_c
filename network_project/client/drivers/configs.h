@@ -37,7 +37,7 @@ Constant                            |  RWBIT  |  EOPT2  |  EOPT1  |  EOPT0  |   
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 
 #define check_delm(str, len) (str[len - 1] == DELIM)
-#define check_rdfm(str, len) (str[len - 3] == DELIM)
+//#define check_rdfm(str, len) (str[len - 3] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 
 #define check_term(scn, len) (scn[len - 1] == '\0')
 //----------------------------------------------------------------------------------------------------------------Bit stuff
