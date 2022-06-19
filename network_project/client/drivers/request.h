@@ -3,8 +3,10 @@
 
 #include "configs.h"
 
+
 typedef struct Request {
   uint8_t status;
+  uint8_t rqst_byte;
   uint32_t size_rqst;
   uint8_t request[SBUFF];
 } rqst_t;
