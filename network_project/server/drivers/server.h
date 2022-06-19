@@ -2,6 +2,8 @@
 #define SERVER_H_
 
 #include "sconfig.h"
+#include "reader.h"
+#include "writer.h"
 
 //----------------------------------------------------------------------------------------------------------------------*/
 
@@ -11,13 +13,11 @@ typedef struct Session {
 } sess_t;
 
 typedef struct Server {
-  uint8_t endbyte;
-  uint8_t dborder;
+  int8_t status;
   int32_t size_recv;
   int32_t size_resp;
   char recv[FBUFF];
   char resp[FBUFF];
-  void *table;
   sess_t session;
 } server_t;
 

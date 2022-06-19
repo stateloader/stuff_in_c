@@ -15,8 +15,9 @@ static const char *GENERAL = \
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n";
 
 int main(void) {
+  
   Render_Header("SERVER", GENERAL);
-  server_t server = {.endbyte = 0x00};
+  server_t server = {.status = 1};
 
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;
@@ -27,9 +28,12 @@ int main(void) {
 
   while(1) {
 		socket_accept(server.session.sock_serv, &server.session.sock_clnt, &client_address);
-    recieved_driver(&server);
+    if (recieved_driver(&server) < 0)
+      System_Message("Failure recieved");
+    
     response_driver(&server);
     close(server.session.sock_clnt);
   }
+
   exit(EXIT_SUCCESS);
 }

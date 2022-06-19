@@ -7,7 +7,6 @@ info info info info info info
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cconfig.h"
 #include "cstring.h"
 #include "scanner.h"
 
@@ -17,10 +16,11 @@ static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
     if (!byte_asci(scan[i])) {
-      System_Message("Only ASCII ('English') characters allowed. try again!")
+      System_Message("Only ASCII ('English') characters allowed. try again!");
 		  return SCAN_INPUT;
     } else if (byte_delm(scan[i])) {
-      System_Message("Pipe charachter ('|') is for losers, use another one.")
+      System_Message("Pipe charachter ('|') is for losers, use another one.");
+      return SCAN_INPUT;
     }
   }
   return SCAN_COMPL;
