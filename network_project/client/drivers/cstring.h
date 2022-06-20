@@ -1,6 +1,9 @@
 #ifndef CSTRING_H_
 #define CSTRING_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "configs.h"
 
 void buffer_flush(char *string, int32_t size_buffer);

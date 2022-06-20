@@ -3,21 +3,16 @@
 
 #include "configs.h"
 
+#define _MAIN 0
+#define _MESG 1
+#define _DVCE 2
+#define _EXIT 3
+
 typedef struct Command {
   uint8_t status;
-  uint8_t task_byte;
-  uint8_t exec_byte;
-  uint8_t rqst_byte;
-  uint32_t size_cmnd;
-  char command[SBUFF];
+  int8_t protocol[3];
 } cmnd_t;
 
 int8_t command_driver(cmnd_t *cmnd);
 
-inline static int8_t command_driver_check(cmnd_t *cmnd) {
-  int8_t sets = 0;
-  for (int8_t i = 0; i < 8; i++)
-    sets += (cmnd->rqst_byte & (1 << i));
-  return sets;
-}
 #endif

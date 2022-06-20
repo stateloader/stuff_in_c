@@ -3,9 +3,10 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
+#include "cstring.h"
 #include "message.h"
 #include "request.h"
-
+/*
 static const uint8_t TMESG = 0x00;
 static const uint8_t TDVCE = 0x01;
 
@@ -31,10 +32,11 @@ static int8_t request_dvce(rqst_t *request) {
   System_Message("inside fomay_mesg");
   return SUCC;
 }
-
+*/
 int8_t request_driver(rqst_t *request) {
   System_Message("Inside request_driver");
-
+  return SUCC;
+/*
   if (request->rqst_byte & (1 << TMESG))
     return request_mesg(request);
 
@@ -43,4 +45,5 @@ int8_t request_driver(rqst_t *request) {
 
   else
     return FAIL;
+    */
 }
