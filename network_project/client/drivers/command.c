@@ -24,27 +24,49 @@ static int8_t FWRD = 0x00;
 static int8_t current_state = _MAIN; 
 
 typedef struct CmndItem {
-  const int8_t state;
+  const int8_t this_state;
+  const int8_t next_state;
   const char *cmnd;
 } cmnd_item;
 
 static cmnd_item main[] = {
-  {_MESG, "-message"}, {_DVCE, "-device"}, {_EXIT, "-exit"}
+  {_MAIN, _MESG, "-message"}, {_MAIN, _DVCE, "-device"}, {_MAIN, _EXIT, "-exit"}
 };
 static cmnd_item mesg[] = {
-  {_EXIT, "-send"}, {_EXIT, "-read"}, {_MAIN, "-back"}
+  {_MESG, _EXIT, "-send"}, {_MESG, _EXIT, "-read"}, {_MESG, _MAIN, "-back"}
 };
 static cmnd_item dvce[] = {
-  {_EXIT, "-red"}, {_EXIT, "-blue"}, {_EXIT, "-green"}, {_MAIN, "-back"}
+  {_DVCE, _EXIT, "-red"}, {_DVCE, _EXIT, "-blue"}, {_DVCE, _EXIT, "-green"}, {_DVCE, _MAIN, "-back"}
 };
 
 static void static_cleanup(void) {
-  TASK = 0x00, EXEC = 0x00, FWRD = 0x00;
+  TASK = 0x00, EXEC = 0x00, FWRD = 0x00, current_state = _MAIN;
 }
+
 static void render_options(cmnd_item *items, size_t size_array) {
   for (size_t i = 0; i < size_array; i++)
     printf("\t%s\n", items[i].cmnd);
 }
+static void write_protocol(cmnd_item item, int8_t index) {
+
+  switch(item.this_state) {
+  case _MAIN:
+    TASK &= ~(1 << TDVCE);
+    TASK &= ~(1 << TMESG);
+    TASK |= (1 << index);
+    break;
+  case _MESG:
+    EXEC |= (index << RWBIT);
+    break;
+  case _DVCE:
+    EXEC |= (1 << index) | (1 << RWBIT);
+    break;
+  default:
+    System_Message("Some mishaps in bit");
+  }
+  return;
+}
+
 static int8_t command_scan(cmnd_item *items, size_t size_array) {
   render_options(items, size_array);
 
@@ -53,31 +75,13 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
 
   for (size_t i = 0; i < size_array; i++) {
     if (string_comp(command, items[i].cmnd, cmnd_size)) {
-      return items[i].state;
+      if (i < size_array - 1)
+        write_protocol(items[i], i);
+      return items[i].next_state;
     }
   }
   System_Message("Not an option. try again");
   return current_state;
-}
-
-static int8_t command_main(cmnd_item *main, size_t size_array) {
-  Render_Header("MAIN", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-  return command_scan(main, size_array);
-}
-
-static int8_t command_mesg(cmnd_item *mesg, size_t size_array) {
-  Render_Header("Message", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-
-  TASK &= ~(1 << TDVCE), TASK |= (1 << TMESG);
-  return command_scan(mesg, size_array);
-}
-
-static int8_t command_dvce(cmnd_item *dvce, size_t size_array) {
-  Render_Header("Device", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
-  
-  TASK &= ~(1 << TMESG), TASK |= (1 << TDVCE);
-  PrintByte(TASK);
-  return command_scan(dvce, size_array);
 }
 
 int8_t command_driver(cmnd_t *cmnd) {
@@ -88,13 +92,16 @@ int8_t command_driver(cmnd_t *cmnd) {
 
     switch(current_state) {
     case _MAIN:
-      current_state = command_main(main, ARRAY_SIZE(main));
+      Render_Header("MAIN      |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      current_state = command_scan(main, ARRAY_SIZE(main));
       break;
     case _MESG:
-      current_state = command_mesg(mesg, ARRAY_SIZE(mesg));
+      Render_Header("MESSAGE   |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      current_state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
     case _DVCE:
-      current_state = command_dvce(dvce, ARRAY_SIZE(dvce));
+      Render_Header("DEVICE    |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      current_state = command_scan(dvce, ARRAY_SIZE(dvce));
       break;
     }
   }
@@ -103,19 +110,12 @@ int8_t command_driver(cmnd_t *cmnd) {
   cmnd->protocol[1] = EXEC;
   cmnd->protocol[2] = TASK;
 
+  printf("exec: ");
+  PrintByte(cmnd->protocol[1]);
+  printf("task: ");
+  PrintByte(cmnd->protocol[2]);
+
   static_cleanup();
 
   return SUCC;
 }
-
-/*
-static cmnd_item main[] = {
-  {_MESG, TMESG, "-message"}, {_DVCE, TDVCE, "-device"}, {_EXIT, CLEAR, "-exit"}
-};
-static cmnd_item mesg[] = {
-  {_EXIT, RWBIT, "-send"}, {_EXIT, RWBIT, "-read"}, {_MAIN, CLEAR, "-back"}
-};
-static cmnd_item dvce[] = {
-  {_EXIT, EXEC0, "-red"}, {_EXIT, EXEC1, "-blue"}, {_EXIT, EXEC0"-green"}, {_MAIN, CLEAR, "-back"}
-};
-*/
