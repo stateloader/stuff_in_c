@@ -7,7 +7,7 @@
 #include "response.h"
 
 typedef struct ClMeta {
-  uint8_t status;
+  int8_t status;
   int32_t socket_client;
   int32_t size_user;
   char user[SBUFF];

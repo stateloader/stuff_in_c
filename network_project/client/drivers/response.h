@@ -4,7 +4,7 @@
 #include "configs.h"
 
 typedef struct Response {
-  uint8_t status;
+  int8_t status;
   int32_t size_recv;
   char resv[FBUFF];
 } resp_t;

@@ -24,7 +24,7 @@ int32_t string_copy(char *dest, char *from, int32_t size_buffer) {
     dest[i] = from[i];
   return size_from;
 }
-
+/*
 
 int32_t string_ucpy(uint8_t *dest, char *from, int32_t size_buffer) {
   int32_t size_from = string_size(from, size_buffer);
@@ -32,7 +32,7 @@ int32_t string_ucpy(uint8_t *dest, char *from, int32_t size_buffer) {
     dest[i] = (uint8_t) from[i];
   return size_from;
 }
-
+*/
 int8_t string_comp(char *str1, const char *str2, int32_t comp_buff) {
 
   int32_t match = 0;

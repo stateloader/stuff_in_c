@@ -7,15 +7,17 @@
 #include "configs.h"
 
 typedef struct Request {
-  uint8_t status;
-  int8_t protocol[3];
+  int8_t status;
+  uint8_t protocol[3];
   int32_t size_user;
   int32_t size_rqst;
   char user[SBUFF];
   char rqst[SBUFF];
 } rqst_t;
 
-int8_t request_driver(rqst_t *request);
+void protocol_adder(rqst_t *request);
+void request_driver(rqst_t *request);
+
 
 inline static int8_t fetch_task(int8_t task) {
   if (task & (1 << TMESG))

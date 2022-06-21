@@ -8,32 +8,31 @@ info info info info info info
 #include "device.h"
 #include "request.h"
 
-int8_t request_driver(rqst_t *request) {
+void protocol_adder(rqst_t *request) {
+
+  request->rqst[request->size_rqst - (POFFS - 0)] = request->protocol[0];
+  request->rqst[request->size_rqst - (POFFS - 1)] = request->protocol[1];
+  request->rqst[request->size_rqst - (POFFS - 2)] = request->protocol[2];
+  request->rqst[request->size_rqst - (POFFS - 3)] = '\0';
+
+  if (!check_term(request->rqst, request->size_rqst)) {
+    System_Message("not nullterminated");
+    request->status = 0;
+  }
+}
+
+void request_driver(rqst_t *request) {
   System_Message("Inside request_driver");
 
-  dvce_t device = {.status = 1};
-  mesg_t message = {.status = 1};
-
   switch(fetch_task(request->protocol[2])) {
-
   case INIT_MESG:
-    message.size_user = string_copy(message.user, request->user, SBUFF);
-    message.exec = request->protocol[1];
-    message_driver(&message);
+    message_driver(request);
     break;
-
   case INIT_DVCE:
-    device.size_user = string_copy(device.user, request->user, SBUFF);
-    device.exec = request->protocol[1];
-    device_driver(&device);
+    device_driver(request);
     break;
-
   default:
     System_Message("No task detected");
-    return FAIL;
-
-    
-  }  
-  return SUCC;
-
+  }
+  return;
 }

@@ -2,6 +2,7 @@
 #define DEVICE_H_
 
 #include "configs.h"
+#include "request.h"
 
 typedef struct Device {
   int8_t status;
@@ -10,6 +11,6 @@ typedef struct Device {
   char user[SBUFF];
 } dvce_t;
 
-int8_t device_driver(dvce_t *device);
+int8_t device_driver(rqst_t *request);
 
 #endif

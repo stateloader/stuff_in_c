@@ -6,6 +6,7 @@ info info info info info info
 
 #include "device.h"
 
-int8_t device_driver(dvce_t *device) {
+int8_t device_driver(rqst_t *request) {
+  System_Message("Inside device driver");
   return SUCC;
 }

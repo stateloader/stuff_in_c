@@ -7,26 +7,26 @@ info fasda
 
 /*---------------------------------------------------------------------------------------------------------------Task Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
+Constant                            |  _MDEF  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 --------------------------------------------------------------------------------------------------------------Execute Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
+Constant                            |  _MDEF  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
 --------------------------------------------------------------------------------------------------------------Forward Byte
 -                                                             A "just in case" byte for later.
--                                   |    -    |    -    |    -    |    -    |    -    |     -    |     -     |     -     |                             
+-                                   |  _MDEF  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |                             
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "scanner.h"
 #include "cstring.h"
 #include "command.h"
 
-static int8_t TASK = 0x00;
-static int8_t EXEC = 0x00;
-static int8_t FWRD = 0x00;
+static uint8_t TASK = _MDEF;
+static uint8_t EXEC = _MDEF;
+static uint8_t FWRD = _MDEF;
 
 typedef struct CmndItem {
-  const int8_t this_state;
-  const int8_t next_state;
+  const uint8_t this_state;
+  const uint8_t next_state;
   const char *cmnd;
 } cmnd_item;
 
@@ -43,7 +43,10 @@ static cmnd_item dvce[] = {
 };
 
 static void static_cleanup(void) {
-  TASK = 0x00, EXEC = 0x00, FWRD = 0x00, current_state = _MAIN;
+  TASK = _MDEF;
+  EXEC = _MDEF;
+  FWRD = _MDEF;
+  current_state = _MAIN;
 }
 
 static void render_options(cmnd_item *items, size_t size_array) {
@@ -68,6 +71,8 @@ static void write_protocol(cmnd_item item, int8_t index) {
     System_Message("Some mishaps in bit");
     static_cleanup();
   }
+  PrintByte(TASK);
+  PrintByte(EXEC);
   return;
 }
 
@@ -88,7 +93,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return current_state;
 }
 
-int8_t command_driver(int8_t *protocol) {
+int8_t command_driver(uint8_t *protocol) {
 
   while (current_state != _EXIT) {
 

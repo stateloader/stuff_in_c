@@ -3,7 +3,7 @@
 
 #include "client.h"
 
-static void fetch_protocol(int8_t *dest, int8_t *from) {
+static void fetch_protocol(uint8_t *dest, uint8_t *from) {
   for (int8_t i = 0; i < 3; i++)
     dest[i] = from[i];
 } 
@@ -15,7 +15,7 @@ static void fetch_username(client_t *client) {
 
 int8_t client_driver(client_t *client) {
 
-  int8_t protocol[3] = {'\0'};
+  uint8_t protocol[3] = {'\0'};
   rqst_t request = {.status = 1};
 
   fetch_username(client);
