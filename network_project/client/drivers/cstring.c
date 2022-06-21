@@ -13,8 +13,7 @@ void buffer_flush(char *buffer, int32_t size_buffer) {
 
 int32_t string_size(char *string, int32_t size_buffer)  {
   for (int32_t i = 0; i < size_buffer - 1; i++) {
-    if (string[i] == '\0') 
-      return (i + 1);
+    if (string[i] == '\0') return (i + 1);
   }
   return 0;
 }

@@ -3,27 +3,29 @@
 
 #include "client.h"
 
-static void enter_username(client_t *client) {
+static void fetch_protocol(int8_t *dest, int8_t *from) {
+  for (int8_t i = 0; i < 3; i++)
+    dest[i] = from[i];
+} 
+
+static void fetch_username(client_t *client) {
   Render_Header("USERNAME", "Tell who you are!");
-  client->meta->size_user = scan_driver(client->meta->username, SBUFF, "username");
+  client->meta->size_user = scan_driver(client->meta->user, SBUFF, "username");
 }
 
 int8_t client_driver(client_t *client) {
 
-  enter_username(client);
+  int8_t protocol[3] = {'\0'};
+  rqst_t request = {.status = 1};
 
-  cmnd_t command = {.status = 1};
-  //rqst_t request = {.status = 1};
+  fetch_username(client);
 
-  if (!command_driver(&command))
-    return SUCC;
-/*
-  request.rqst_byte = command.rqst_byte;
+  if (!command_driver(protocol)) return FAIL;
 
-  if ((request.size_user = string_copy(request.user, client->meta->username, SBUFF)) < 1)
-    return KILL;
-  
+  fetch_protocol(request.protocol, protocol);
+
+  request.size_user = string_copy(request.user, client->meta->user, SBUFF);
   request_driver(&request);
-  */
+
   return SUCC;
 }

@@ -1,16 +1,19 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                                   COMMAND
+--------------------------------------------------------------------------------------------------------------------------
+info fasda
+------------------------------------------------------------------------------------------------------------------------*/
 
 
 /*---------------------------------------------------------------------------------------------------------------Task Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 Constant                            |    -    |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
-                                    --------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------Execute Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 Constant                            |    -    |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
-                                    --------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------------------Forward Byte
-Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |  FBIT6  |  FBIT5  |  FBIT4  |  FBIT3  |   FBIT2  |   FBIT1   |   FBIT0   |
+-                                                             A "just in case" byte for later.
+-                                   |    -    |    -    |    -    |    -    |    -    |     -    |     -     |     -     |                             
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "scanner.h"
@@ -21,19 +24,19 @@ static int8_t TASK = 0x00;
 static int8_t EXEC = 0x00;
 static int8_t FWRD = 0x00;
 
-static int8_t current_state = _MAIN; 
-
 typedef struct CmndItem {
   const int8_t this_state;
   const int8_t next_state;
   const char *cmnd;
 } cmnd_item;
 
+static int8_t current_state = _MAIN; 
+
 static cmnd_item main[] = {
   {_MAIN, _MESG, "-message"}, {_MAIN, _DVCE, "-device"}, {_MAIN, _EXIT, "-exit"}
 };
 static cmnd_item mesg[] = {
-  {_MESG, _EXIT, "-send"}, {_MESG, _EXIT, "-read"}, {_MESG, _MAIN, "-back"}
+  {_MESG, _EXIT, "-read"}, {_MESG, _EXIT, "-send"}, {_MESG, _MAIN, "-back"}
 };
 static cmnd_item dvce[] = {
   {_DVCE, _EXIT, "-red"}, {_DVCE, _EXIT, "-blue"}, {_DVCE, _EXIT, "-green"}, {_DVCE, _MAIN, "-back"}
@@ -63,6 +66,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
     break;
   default:
     System_Message("Some mishaps in bit");
+    static_cleanup();
   }
   return;
 }
@@ -84,9 +88,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return current_state;
 }
 
-int8_t command_driver(cmnd_t *cmnd) {
-
-  System_Message("Inside command driver");
+int8_t command_driver(int8_t *protocol) {
 
   while (current_state != _EXIT) {
 
@@ -106,14 +108,9 @@ int8_t command_driver(cmnd_t *cmnd) {
     }
   }
 
-  cmnd->protocol[0] = FWRD;
-  cmnd->protocol[1] = EXEC;
-  cmnd->protocol[2] = TASK;
-
-  printf("exec: ");
-  PrintByte(cmnd->protocol[1]);
-  printf("task: ");
-  PrintByte(cmnd->protocol[2]);
+  protocol[0] = FWRD;
+  protocol[1] = EXEC;
+  protocol[2] = TASK;
 
   static_cleanup();
 

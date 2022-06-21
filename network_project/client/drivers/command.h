@@ -8,11 +8,6 @@
 #define _DVCE 2
 #define _EXIT 3
 
-typedef struct Command {
-  uint8_t status;
-  int8_t protocol[3];
-} cmnd_t;
-
-int8_t command_driver(cmnd_t *cmnd);
+int8_t command_driver(int8_t *protocol);
 
 #endif
