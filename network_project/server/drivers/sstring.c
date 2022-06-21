@@ -7,7 +7,6 @@ info fasda
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sconfig.h"
 #include "sstring.h"
 
 void buffer_flush(char *buffer, int32_t size_buffer) {

@@ -6,9 +6,7 @@ description to be
 #ifndef READER_H_
 #define READER_H_
 
-#include <stdint.h>
-#include "sconfig.h"
-#include "saker/models.h"
+#include "configs.h"
 
 typedef struct ReadItem {
   const uint8_t model;

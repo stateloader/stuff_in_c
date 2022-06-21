@@ -6,7 +6,7 @@
 typedef struct Response {
   int8_t status;
   int32_t size_recv;
-  char resv[FBUFF];
+  char resp[FBUFF];
 } resp_t;
 
 int8_t response_driver(void *message);

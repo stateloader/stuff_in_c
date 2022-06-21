@@ -1,24 +1,20 @@
-#ifndef DBCONFIG_H_
-#define DBCONFIG_H_
+#ifndef CONFIGS_H_
+#define CONFIGS_H_
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <stdint.h>
-
-#define FLEE -2
-#define NBIT -1
-#define FAIL 0
-#define SUCC 1
 
 /*---------------------------------------------------------------------------------------------------------------Task Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
+Constant                            |  _MDEF  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 ------------------------------------------------------------------------------------------------------------------------*/              
-#define TMESG 0
-#define TDVCE 1
+#define TMESG 0      // Task Message
+#define TDVCE 1      // Task Device
 /*------------------------------------------------------------------------------------------------------------Execute Byte
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |    -    |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
+Constant                            |  _MDEF  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define EXEC0 0
 #define EXEC1 1
@@ -28,14 +24,11 @@ Constant                            |    -    |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define EXEC5 5
 #define RWBIT 6
 //------------------------------------------------------------------------------------------------------------------------
-#define LNIBB 4
-#define HNIBB 8
+#define POFFS 4
 //------------------------------------------------------------------------------------------------------------------------
-#define DELIM '|'       //          Delimiter
-#define DCLNT 3         //          Delimiters Client
-#define DSMPL 3         //          Delimiters Sample
-#define DDVCE 4         //          Delimiters Device
-#define DMSGE 5         //          Delimiters Message
+#define DELIM '|'
+#define FAIL 0
+#define SUCC 1
 //------------------------------------------------------------------------------------------------------------------------
 #define FBUFF 4096      //          File Buffer
 #define SBUFF 512       //          Scan Buffer

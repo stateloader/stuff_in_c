@@ -8,17 +8,13 @@ info fasda
 #include "database.h"
 
 static write_item write_items[] = {
-  {0x00, "drivers/saker/users.dat"},
-  {0x01, "drivers/saker/samples.dat"},
-  {0x02, "drivers/saker/device.dat"},
   {0x03, "drivers/saker/messages.dat"}
+  {0x02, "drivers/saker/device.dat"},
 };
 
 static read_item read_items[] = {
-  {0x00, "drivers/saker/users.dat"},
-  {0x01, "drivers/saker/samples.dat"},
-  {0x02, "drivers/saker/device.dat"},
   {0x03, "drivers/saker/messages.dat"}
+  {0x02, "drivers/saker/device.dat"},
 };
 
 static int8_t database_action(data_t *database) {
@@ -49,16 +45,7 @@ static int8_t database_writer(data_t *database) {
 static int8_t database_reader(data_t *database) {
 //desc
   System_Message("Inside database reader");
-/*
-  read_t reader = {.status = 1};
-  reader.item = &write_items[database->model];
   
-  if(!read_driver(&reader)) return FAIL;
-
-  database->size_resp = string_copy(database->resp, reader.file_data, FBUFF);
-
-  return database_reader_check(database->size_resp, reader.size_file);
-*/
   return SUCC;
 }
 

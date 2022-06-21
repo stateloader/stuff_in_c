@@ -6,7 +6,7 @@
 #include "command.h"
 #include "response.h"
 
-typedef struct ClMeta {
+typedef struct Meta {
   int8_t status;
   int32_t socket_client;
   int32_t size_user;
@@ -20,6 +20,6 @@ typedef struct Client {
   resp_t *response;
 } client_t;
 
-int8_t client_driver(client_t *client);
+void client_driver(client_t *client);
 
 #endif

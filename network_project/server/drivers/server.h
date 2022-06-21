@@ -1,16 +1,16 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include "sconfig.h"
+#include "configs.h"
 #include "reader.h"
 #include "writer.h"
 
 //----------------------------------------------------------------------------------------------------------------------*/
 
-typedef struct Session {
+typedef struct SrMeta{
   int32_t sock_clnt;
   int32_t sock_serv;
-} sess_t;
+} meta_t;
 
 typedef struct Server {
   int8_t status;
@@ -18,7 +18,7 @@ typedef struct Server {
   int32_t size_resp;
   char recv[FBUFF];
   char resp[FBUFF];
-  sess_t session;
+  meta_t session;
 } server_t;
 
 #endif

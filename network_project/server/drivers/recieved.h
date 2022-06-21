@@ -1,8 +1,7 @@
 #ifndef RECIEVED_H_
 #define RECIEVED_H_
 
-#include <stdint.h>
-#include "sconfig.h"
+#include "configs.h"
 #include "database.h"
 #include "server.h"
 

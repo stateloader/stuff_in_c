@@ -1,9 +1,7 @@
 #ifndef WRITER_H_
 #define WRITER_H_
 
-#include <stdint.h>
-#include "sconfig.h"
-#include "saker/models.h"
+#include "configs.h"
 
 typedef struct WriteItem {
   const uint8_t model;
