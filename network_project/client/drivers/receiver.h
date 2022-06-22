@@ -1,13 +1,13 @@
-#ifndef RESPONSE_H_
-#define RESPONSE_H_
+#ifndef RECEIVER_H_
+#define RECEIVER_H_
 
 #include "configs.h"
 
-typedef struct Response {
+typedef struct Receive {
   int8_t status;
   int32_t size_recv;
   char resp[FBUFF];
-} resp_t;
+} recv_t;
 
 int8_t response_driver(void *message);
 

@@ -4,8 +4,8 @@
 #include "configs.h"
 #include "socket.h"
 #include "request.h"
+#include "receiver.h"
 #include "command.h"
-#include "response.h"
 
 typedef struct Connection {
   int8_t status;
@@ -18,7 +18,7 @@ typedef struct Client {
   uint8_t status;
   conn_t *conn;
   rqst_t *request;
-  resp_t *response;
+  recv_t *receive;
 } client_t;
 
 void client_driver(client_t *client);

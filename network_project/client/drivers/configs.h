@@ -8,30 +8,37 @@ info info info
 #include <stddef.h>
 #include <stdint.h>
 #include <unistd.h>
-/*---------------------------------------------------------------------------------------------------------------Task Byte
+
+/*---------------------------------------------------------------------------------------------------------------TASK BYTE
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |  _MDEF  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
-------------------------------------------------------------------------------------------------------------------------*/              
-#define TMESG 0      // Task Message
-#define TDVCE 1      // Task Device
-/*------------------------------------------------------------------------------------------------------------Execute Byte
+Constant                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
+--------------------------------------------------------------------------------------------------------------EXECUTE BYTE
 Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |  _MDEF  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
-------------------------------------------------------------------------------------------------------------------------*/
-#define EXEC0 0
-#define EXEC1 1
-#define EXEC2 2
-#define EXEC3 3
-#define EXEC4 4
-#define EXEC5 5
-#define RWBIT 6
+Constant                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
+--------------------------------------------------------------------------------------------------------------FORWARD BYTE
+-                                                       A just-in-case-byte for/if later "inventions".
+-                                   |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
+------------------------------------------------------------------------------------------------------------------------*/           
+#define TMESG 0     //              Task Message        - Set means init message business
+#define TDVCE 1     //              Task Device         - Set means init device business
+
+#define EXEC0 0     //              Execute #0
+#define EXEC1 1     //              Execute #1           
+#define EXEC2 2     //              Execute #2           Execute Bit(N) (except RWBIT) with different local definitions 
+#define EXEC3 3     //              Execute #3           depending on TASK.   
+#define EXEC4 4     //              Execute #4
+#define EXEC5 5     //              Execute #5
+#define RWBIT 6     //              Read/Write          - Set means database write, opposite read.
+//-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
+#define TINDX 0     //              Task Byte Index     - Its position in the protocol-array.
+#define EINDX 1     //              Execution Byte Index- Its position in the protocol-array.
+#define FINDX 2     //              Forward Byte Index  - Its position in the protocol-array.
+#define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
 //------------------------------------------------------------------------------------------------------------------------
-#define POFFS 4
+#define DDVCE 4     //              Delimitera (members) Device-model
+#define DMSGE 4     //              Delimiters (members) Message-model
 //------------------------------------------------------------------------------------------------------------------------
-#define DDVCE 4         //          Delimiters Device
-#define DMSGE 4         //          Delimiters Message
-//------------------------------------------------------------------------------------------------------------------------
-#define DELIM '|'
+#define DELIM '|'   //              Delimiter used as placeholder between a given model's entries.
 #define FAIL 0
 #define SUCC 1
 //------------------------------------------------------------------------------------------------------------------------

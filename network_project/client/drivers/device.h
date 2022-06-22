@@ -6,7 +6,7 @@
 
 typedef struct Device {
   int8_t status;
-  int8_t exec;
+  uint8_t protocol[3];
   int32_t size_user;
   char user[SBUFF];
 } dvce_t;
