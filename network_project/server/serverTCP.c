@@ -3,10 +3,12 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "socket.h"
+#include "drivers/configs.h"
 #include "drivers/recieved.h"
 #include "drivers/response.h"
+#include "drivers/socket.h"
 #include "drivers/server.h"
+
 
 static const char *GENERAL = \
   "Jacke Packe SERVER\n\n"

@@ -23,15 +23,4 @@ typedef struct Reader {
 
 int8_t read_driver(read_t *reader);
 
-inline static int8_t fileread_check(int32_t size_file, FILE *file) {
-  System_Message("Inside fileread_check");
-
-  if (size_file == 0) {
-    System_Message("--file is empty");
-    if (file) fclose(file);
-    return FAIL;
-  }
-  if (file) fclose(file);
-  return SUCC;
-} 
 #endif

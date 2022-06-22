@@ -28,10 +28,8 @@ Constant                            |  _MDEF  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 //------------------------------------------------------------------------------------------------------------------------
 #define POFFS 4
 //------------------------------------------------------------------------------------------------------------------------
-#define DCLNT 3         //          Delimiters Client
-#define DSMPL 3         //          Delimiters Sample
 #define DDVCE 4         //          Delimiters Device
-#define DMSGE 5         //          Delimiters Message
+#define DMSGE 4         //          Delimiters Message
 //------------------------------------------------------------------------------------------------------------------------
 #define DELIM '|'
 #define FAIL 0
@@ -48,9 +46,6 @@ Constant                            |  _MDEF  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 
 #define SYSTEM_FORM "  %s\n"
 #define System_Message(sys) (printf(SYSTEM_FORM, sys))
-
-#define RESPONSE_FORM "  %s %s\n\n"
-#define Syst_Response(obj, str) (printf(RESPONSE_FORM, obj, str))
 //-------------------------------------------------------------------------------------------------------------some checks
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 

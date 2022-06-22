@@ -4,10 +4,9 @@
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include <string.h>
-#include <sys/socket.h>
-#include "sconfig.h"
+#include "configs.h"
 #include "sstring.h"
+#include "socket.h"
 #include "response.h"
 
 static char *response = "Hej pa andra sidan.\n";

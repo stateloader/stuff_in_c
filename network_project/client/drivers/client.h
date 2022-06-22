@@ -2,20 +2,21 @@
 #define CLIENT_H_
 
 #include "configs.h"
+#include "socket.h"
 #include "request.h"
 #include "command.h"
 #include "response.h"
 
-typedef struct Meta {
+typedef struct Connection {
   int8_t status;
   int32_t socket_client;
   int32_t size_user;
   char user[SBUFF];
-} meta_t;
+} conn_t;
 
 typedef struct Client {
   uint8_t status;
-  meta_t *meta;
+  conn_t *conn;
   rqst_t *request;
   resp_t *response;
 } client_t;
