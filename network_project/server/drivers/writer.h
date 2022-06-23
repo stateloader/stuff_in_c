@@ -2,22 +2,15 @@
 #define WRITER_H_
 
 #include "configs.h"
+#include "server.h"
+
+typedef void (*write_func)(server_t *server);
 
 typedef struct WriteItem {
   const uint8_t model;
-  const char *path;
+  write_func func;
 } write_item;
 
-typedef struct Writer {
-  uint8_t status;
-  write_item *item;
-  int32_t size_appd;
-  char appd[SBUFF];
-  char resp[SBUFF];
-  FILE *file;
-} write_t;
-
-int8_t write_driver(write_t *writer);
-
+void write_driver(server_t *server);
 
 #endif

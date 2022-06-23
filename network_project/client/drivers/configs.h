@@ -1,65 +1,71 @@
 /*----------------------------------------------------------------------------------------------------MACROS CLIENT MODULE
-info info info
+Macros implemented reg
 ------------------------------------------------------------------------------------------------------------------------*/
 #ifndef CCONFIG_H_
 #define CCONFIG_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <unistd.h>
 
 /*---------------------------------------------------------------------------------------------------------------TASK BYTE
-Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
+BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
+CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 --------------------------------------------------------------------------------------------------------------EXECUTE BYTE
-Bit                                 |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-Constant                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
+BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
+CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
--                                                       A just-in-case-byte for/if later "inventions".
--                                   |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
-------------------------------------------------------------------------------------------------------------------------*/           
-#define TMESG 0     //              Task Message        - Set means init message business
-#define TDVCE 1     //              Task Device         - Set means init device business
+                                    |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
+------------------------------------------------------------------------------------------------------------------------*/         
+#define TMESG 0     //              Task Message        - Set equals 'init message business' (to the server)
+#define TDVCE 1     //              Task Device         - Set equals 'init device business' (to the server)
 
-#define EXEC0 0     //              Execute #0
+#define EXEC0 0     //              Execute #0             ---
 #define EXEC1 1     //              Execute #1           
-#define EXEC2 2     //              Execute #2           Execute Bit(N) (except RWBIT) with different local definitions 
-#define EXEC3 3     //              Execute #3           depending on TASK.   
-#define EXEC4 4     //              Execute #4
-#define EXEC5 5     //              Execute #5
-#define RWBIT 6     //              Read/Write          - Set means database write, opposite read.
+#define EXEC2 2     //              Execute #2             Execute Bit(N) (except RWBIT) with different local definitions 
+#define EXEC3 3     //              Execute #3             depending on TASK BYTE.
+#define EXEC4 4     //              Execute #4             
+#define EXEC5 5     //              Execute #5             ---
+#define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals read
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
-#define TINDX 0     //              Task Byte Index     - Its position in the protocol-array.
-#define EINDX 1     //              Execution Byte Index- Its position in the protocol-array.
-#define FINDX 2     //              Forward Byte Index  - Its position in the protocol-array.
+#define TINDX 0     //              TASK BYTE           - Its position in the protocol-array
+#define EINDX 1     //              EXEC BYTE           - Its position in the protocol-array
+#define FINDX 2     //              FWRD BYTE           - Its position in the protocol-array
 #define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
+//---------------------------------------------------------------------------------------------------------------DELIMITER
+#define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
+#define DMSGE 4     //              Delimiters          - (menbers) Message-model
+#define DDVCE 4     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
-#define DDVCE 4     //              Delimitera (members) Device-model
-#define DMSGE 4     //              Delimiters (members) Message-model
-//------------------------------------------------------------------------------------------------------------------------
-#define DELIM '|'   //              Delimiter used as placeholder between a given model's entries.
-#define FAIL 0
-#define SUCC 1
-//------------------------------------------------------------------------------------------------------------------------
-#define FBUFF 4096
-#define SBUFF 512
-#define TBUFF 21
-//--------------------------------------------------------------------------------------------------------------"Graphics"
-#define HEADER_FORM "%s\n%s\n\t\t%s\n%s\n\n"
+#define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
+#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
+//---------------------------------------------------------------------------------------------------------STATUS VARIABLE
+#define STAT0 0     //              Inactive            - Given process is inactive.
+#define STAT1 1     //              Active              - Given process is active and doing its "thing".
+#define STATL -1    //              File Error          - Failed to open/close/read/write/whatever (file).
+#define STATS -2    //              String Error        - Something didn't worked out as expected during string-handeling. 
+#define STATF -3    //              Fatal Error         - Force quit everything and take cover (prob because of 'STATS').        
+//------------------------------------------------------------------------------------------------------------------BUFFER
+#define FBUFF 4096  //              File Buffer
+#define SBUFF 512   //              Scan Buffer
+#define PBUFF 64    //              Path Buffer
+#define TBUFF 24    //              DateTime Buffer
+//--------------------------------------------------------------------------------------------------------------"GRAPHICS"
+#define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
 #define Header_Bord "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
 #define SYSTEM_FORM "  %s\n"
-#define System_Message(sys) (printf(SYSTEM_FORM, sys))
-//-------------------------------------------------------------------------------------------------------------some checks
+#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+//-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 
 #define check_term(scn, len) (scn[len - 1] == '\0')
-//---------------------------------------------------------------------------------------------------------------Bit stuff
+//-------------------------------------------------------------------------------------------------------------------OTHER
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
-//-------------------------------------------------------------------------------------------------------------------other
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 
