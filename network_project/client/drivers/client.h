@@ -19,6 +19,7 @@ typedef struct Client {
   conn_t *conn;
   rqst_t *request;
   recv_t *receive;
+  void *table;
 } client_t;
 
 void client_driver(client_t *client);

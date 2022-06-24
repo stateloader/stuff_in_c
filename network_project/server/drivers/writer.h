@@ -19,7 +19,6 @@ inline static void check_file_open(server_t *server) {
     server->status = - 1;
   }
 }
-
 inline static void check_size_appd(server_t *server, int32_t size_write) {
   if (server->size_recv != size_write) {
     System_Message("recived and written of different sizes");

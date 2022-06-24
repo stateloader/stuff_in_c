@@ -16,9 +16,7 @@ static void phase_file_appd(server_t *server) {
   System_Message("inside phase file_append");
 
   server->size_recv -= POFFS;
-  int32_t size_write = fwrite(
-    server->recv, sizeof(char), server->size_recv, server->dbfile
-  );
+  int32_t size_write = fwrite(server->recv, sizeof(char), server->size_recv, server->dbfile);
   check_size_appd(server, size_write);
   fclose(server->dbfile);
 }
@@ -41,7 +39,6 @@ static write_item write_items[] = {
 void write_driver(server_t *server) {
   System_Message("inside filewriter");
  
- // int8_t task = server->protocol[TINDX];
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
     if (server->protocol[TINDX] & (1 << write_items[i].model))
       return write_items[i].func(server);

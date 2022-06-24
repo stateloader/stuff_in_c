@@ -10,7 +10,7 @@ Macros implemented reg
 #include <stdint.h>
 #include <unistd.h>
 
-/*---------------------------------------------------------------------------------------------------------------TASK BYTE
+/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 --------------------------------------------------------------------------------------------------------------EXECUTE BYTE
@@ -19,20 +19,20 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
                                     |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/         
-#define TMESG 0     //              Task Message        - Set equals 'init message business' (to the server)
-#define TDVCE 1     //              Task Device         - Set equals 'init device business' (to the server)
+#define TMESG 0     //              Table Message        - Set equals 'init message business' (to the server)
+#define TDVCE 1     //              Table Device         - Set equals 'init device business' (to the server)
 
 #define EXEC0 0     //              Execute #0             ---
 #define EXEC1 1     //              Execute #1           
 #define EXEC2 2     //              Execute #2             Execute Bit(N) (except RWBIT) with different local definitions 
-#define EXEC3 3     //              Execute #3             depending on TASK BYTE.
+#define EXEC3 3     //              Execute #3             depending on TABLE BYTE.
 #define EXEC4 4     //              Execute #4             
 #define EXEC5 5     //              Execute #5             ---
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals read
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
-#define TINDX 0     //              TASK BYTE           - Its position in the protocol-array
-#define EINDX 1     //              EXEC BYTE           - Its position in the protocol-array
-#define FINDX 2     //              FWRD BYTE           - Its position in the protocol-array
+#define TINDX 0     //              TABLE BYTE INDEX    - Its position in the protocol-array
+#define EINDX 1     //              EXEC BYTE INDEX     - Its position in the protocol-array
+#define FINDX 2     //              FWRD BYTE INDEX     - Its position in the protocol-array
 #define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
