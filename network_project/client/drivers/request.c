@@ -14,11 +14,11 @@ static rqst_item rqst_items[] = {
 };
 
 void request_driver(rqst_t *request) {
-  System_Message("Inside request_driver");
 
   for (size_t i = 0; i < ARRAY_SIZE(rqst_items); i++) {
     if (request->protocol[TINDX] & (1 << rqst_items[i].task))
-      rqst_items[i].func(request);
+      return rqst_items[i].func(request);
   }
+  System_Message("efterat");
   return;
 }

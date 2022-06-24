@@ -1,5 +1,5 @@
-#ifndef RECEIVER_H_
-#define RECEIVER_H_
+#ifndef RECEIVE_H_
+#define RECEIVE_H_
 
 #include "configs.h"
 
@@ -9,6 +9,6 @@ typedef struct Receive {
   char resp[FBUFF];
 } recv_t;
 
-int8_t response_driver(void *message);
+int8_t receive_driver(void *message);
 
 #endif

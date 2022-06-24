@@ -23,15 +23,6 @@ typedef struct RequestItem {
 } rqst_item;
 
 
-//void protocol_adder(rqst_t *request);
 void request_driver(rqst_t *request);
 
-/*
-inline static int8_t fetch_task(int8_t task) {
-  if (task & (1 << TMESG))
-    return INIT_MESG;
-  else
-    return INIT_DVCE;
-}
-*/
 #endif

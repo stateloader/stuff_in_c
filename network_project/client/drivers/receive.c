@@ -3,9 +3,9 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "receiver.h"
+#include "receive.h"
 
-int8_t reseive_driver(void *message) {
+int8_t receive_driver(void *message) {
   System_Message("Inside response driver");
   return SUCC;
 }

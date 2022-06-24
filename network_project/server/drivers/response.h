@@ -1,5 +1,5 @@
-#ifndef RESPONDER_H_
-#define RESPONDER_H_
+#ifndef RESPONSE_H_
+#define RESPONSE_H_
 
 #include "configs.h"
 #include "server.h"

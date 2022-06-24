@@ -13,7 +13,7 @@ static const char *GENERAL = \
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n";
 
 static conn_t socket_setup(char *address, int32_t port) {
-  Render_Header("USERNAME", "Enter a username adreess");
+  Render_Header("CONNECTION", "connecting to server. enter a username");
   
   conn_t conn = {.status = 1};
   conn.socket_client = socket_create();

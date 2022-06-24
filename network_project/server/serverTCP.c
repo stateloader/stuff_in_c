@@ -5,8 +5,8 @@ info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "drivers/configs.h"
 #include "drivers/socket.h"
-#include "drivers/responder.h"
-#include "drivers/receiver.h"
+#include "drivers/response.h"
+#include "drivers/receive.h"
 #include "drivers/server.h"
 
 int main(void) {

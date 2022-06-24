@@ -8,7 +8,7 @@ info info info info info info
 #include "scanner.h"
 #include "client.h"
 
-void request_commit(conn_t *conn, rqst_t *request) {
+static void request_commit(conn_t *conn, rqst_t *request) {
   int32_t result = send(conn->socket_client, request->rqst, request->size_rqst, 0);
   Print_Numb(result, "skickad");
   return;
