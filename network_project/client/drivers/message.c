@@ -15,7 +15,6 @@ static void protocol_adder(rqst_t *request) {
   request->rqst[request->size_rqst - 1] = '\0';
 }
 
-
 static void fetch_datetime(char *datetime) {
 //desc
   strncat(datetime, __DATE__, TBUFF);

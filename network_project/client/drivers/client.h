@@ -4,7 +4,7 @@
 #include "configs.h"
 #include "socket.h"
 #include "request.h"
-#include "receiver.h"
+#include "receive.h"
 #include "command.h"
 
 typedef struct Connection {

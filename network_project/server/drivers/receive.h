@@ -1,5 +1,5 @@
-#ifndef RECEIVER_H_
-#define RECEIVER_H_
+#ifndef RECEIVE_H_
+#define RECEIVE_H_
 
 #include "configs.h"
 #include "server.h"

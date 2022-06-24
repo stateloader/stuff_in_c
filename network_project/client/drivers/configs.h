@@ -40,13 +40,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define DDVCE 4     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
-#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
-//---------------------------------------------------------------------------------------------------------STATUS VARIABLE
-#define STAT0 0     //              Inactive            - Given process is inactive.
-#define STAT1 1     //              Active              - Given process is active and doing its "thing".
-#define STATL -1    //              File Error          - Failed to open/close/read/write/whatever (file).
-#define STATS -2    //              String Error        - Something didn't worked out as expected during string-handeling. 
-#define STATF -3    //              Fatal Error         - Force quit everything and take cover (prob because of 'STATS').        
+#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
 //------------------------------------------------------------------------------------------------------------------BUFFER
 #define FBUFF 4096  //              File Buffer
 #define SBUFF 512   //              Scan Buffer
@@ -58,7 +52,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define Header_Bord "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
-#define SYSTEM_FORM "  %s\n"
+#define SYSTEM_FORM "\t\t\tSystem: %s\n"
 #define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)

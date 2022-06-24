@@ -23,20 +23,13 @@ typedef struct CommandItem {
 static int8_t state = _MAIN; 
 
 static cmnd_item main[] = {
-  {_MAIN, _MESG, "-message"},
-  {_MAIN, _DVCE, "-device"},
-  {_MAIN, _EXIT, "-exit"}
+  {_MAIN, _MESG, "-message"}, {_MAIN, _DVCE, "-device"}, {_MAIN, _EXIT, "-exit"}
 };
 static cmnd_item mesg[] = {
-  {_MESG, _EXIT, "-read"},
-  {_MESG, _EXIT, "-send"},
-  {_MESG, _MAIN, "-back"}
+  {_MESG, _EXIT, "-read"}, {_MESG, _EXIT, "-send"}, {_MESG, _MAIN, "-back"}
 };
 static cmnd_item dvce[] = {
-  {_DVCE, _EXIT, "-red"},
-  {_DVCE, _EXIT, "-blue"},
-  {_DVCE, _EXIT, "-green"},
-  {_DVCE, _MAIN, "-back"}
+  {_DVCE, _EXIT, "-red"}, {_DVCE, _EXIT, "-blue"}, {_DVCE, _EXIT, "-green"}, {_DVCE, _MAIN, "-back"}
 };
 
 static void static_cleanup(void) {
@@ -48,7 +41,7 @@ static void static_cleanup(void) {
 
 static void render_options(cmnd_item *items, size_t size_array) {
   for (size_t i = 0; i < size_array; i++)
-    printf("\t%s\n", items[i].cmnd);
+    printf("\t\t\t%s\n", items[i].cmnd);
 }
 
 static void write_protocol(cmnd_item item, int8_t index) {
