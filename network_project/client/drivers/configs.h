@@ -36,7 +36,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
-#define DMSGE 4     //              Delimiters          - (menbers) Message-model
+#define DMSGE 5     //              Delimiters          - (members) Message-model
 #define DDVCE 4     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  

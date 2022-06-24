@@ -9,6 +9,11 @@ static void protocol_append(server_t *server) {
   server->protocol[TINDX] = server->recv[server->size_recv - 4];
   server->protocol[EINDX] = server->recv[server->size_recv - 3];
   server->protocol[FINDX] = server->recv[server->size_recv - 2];
+
+  PrintByte(server->protocol[TINDX]);
+  PrintByte(server->protocol[EINDX]);
+  PrintByte(server->protocol[FINDX]);
+
   return;
 }
 

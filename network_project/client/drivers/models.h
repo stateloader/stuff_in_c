@@ -3,14 +3,6 @@
 
 #include "configs.h"
 
-typedef struct DvceModel {
-  size_t id;
-  int8_t set;
-  int8_t led;
-  char user[SBUFF];
-  char datm[TBUFF];
-} dmod_t;
-
 typedef struct MesgModel {
   size_t id;
   int8_t set;
@@ -19,5 +11,13 @@ typedef struct MesgModel {
   char topc[SBUFF];
   char mesg[SBUFF];
 } mmod_t;
+
+typedef struct DvceModel {
+  size_t id;
+  int8_t set;
+  int8_t led;
+  char user[SBUFF];
+  char datm[TBUFF];
+} dmod_t;
 
 #endif

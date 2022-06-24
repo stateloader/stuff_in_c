@@ -14,7 +14,7 @@ static uint8_t TASK = _MDEF;
 static uint8_t EXEC = _MDEF;
 static uint8_t FWRD = _MDEF;
 
-typedef struct CmndItem {
+typedef struct CommandItem {
   const uint8_t this_state;
   const uint8_t next_state;
   const char *cmnd;

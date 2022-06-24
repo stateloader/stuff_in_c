@@ -40,7 +40,12 @@ static write_item write_items[] = {
 
 void write_driver(server_t *server) {
   System_Message("inside filewriter");
-  int8_t task = server->protocol[TINDX];
-  
-  write_items[0].func(server);
+ 
+ // int8_t task = server->protocol[TINDX];
+  for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
+    if (server->protocol[TINDX] & (1 << write_items[i].model))
+      write_items[i].func(server);
+    else
+      System_Message("TDVICE-fix");
+  }
 }
