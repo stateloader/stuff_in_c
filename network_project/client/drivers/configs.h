@@ -51,7 +51,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define FBUFF 4096  //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
-#define TBUFF 24    //              DateTime Buffer
+#define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
