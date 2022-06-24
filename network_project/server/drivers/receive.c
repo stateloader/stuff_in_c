@@ -13,7 +13,6 @@ static void protocol_append(server_t *server) {
   PrintByte(server->protocol[TINDX]);
   PrintByte(server->protocol[EINDX]);
   PrintByte(server->protocol[FINDX]);
-
   return;
 }
 

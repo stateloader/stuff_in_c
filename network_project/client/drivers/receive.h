@@ -6,9 +6,9 @@
 typedef struct Receive {
   int8_t status;
   int32_t size_recv;
-  char resp[FBUFF];
+  char recv[FBUFF];
 } recv_t;
 
-int8_t receive_driver(void *message);
+void receive_driver(int32_t client_socket, recv_t *receive);
 
 #endif
