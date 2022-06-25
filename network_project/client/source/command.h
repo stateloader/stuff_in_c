@@ -10,6 +10,6 @@
 #define _DVCE 2
 #define _EXIT 3
 
-void command_driver(uint8_t *protocol);
+int8_t command_driver(uint8_t *rqst_proto, uint8_t *recv_proto);
 
 #endif

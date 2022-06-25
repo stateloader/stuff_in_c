@@ -13,6 +13,8 @@ static void fetch_datetime(char *datetime) {
   return;
 }
 
-void device_driver(rqst_t *request) {
+int8_t device_driver(rqst_t *request) {
   System_Message("Inside device driver");
+  
+  return SUCC;
 }

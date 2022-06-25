@@ -92,14 +92,15 @@ static recv_item recv_items[] = {
   {TDVCE, DDVCE, table_setup_dvce}
 };
 
-void receive_driver(recv_t *receive) {
+int8_t receive_driver(recv_t *receive) {
 
   for (size_t i = 0; i < ARRAY_SIZE(recv_items); i++) {
     if (receive->protocol[TINDX] & (1 << recv_items[i].table)) {
       receive->entry_delim = recv_items[i].delim;
-      return recv_items[i].func(receive);
+      recv_items[i].func(receive);
     }
   }
   System_Message("Error while creating table");
-  receive->status = 0;
+  
+  return SUCC;
 }

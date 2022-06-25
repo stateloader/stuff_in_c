@@ -39,6 +39,13 @@ static void static_cleanup(void) {
   state = _MAIN;
 }
 
+static void append_protocol(uint8_t *rqst_proto, uint8_t *recv_proto) {
+  rqst_proto[TINDX] = TASK;
+  rqst_proto[EINDX] = EXEC;
+  recv_proto[TINDX] = TASK;
+  recv_proto[EINDX] = EXEC;
+}
+
 static void render_options(cmnd_item *items, size_t size_array) {
   for (size_t i = 0; i < size_array; i++)
     printf("\t\t\t%s\n", items[i].cmnd);
@@ -82,7 +89,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-void command_driver(uint8_t *protocol) {
+int8_t command_driver(uint8_t *rqst_proto, uint8_t *recv_proto) {
 
   while (state != _EXIT) {
 
@@ -101,10 +108,7 @@ void command_driver(uint8_t *protocol) {
       break;
     }
   }
-  
-  protocol[TINDX] = TASK;
-  protocol[EINDX] = EXEC;
-  protocol[FINDX] = FWRD;
-
+  append_protocol(rqst_proto, recv_proto);
   static_cleanup();
+  return SUCC;
 }

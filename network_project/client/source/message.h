@@ -1,7 +1,6 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include <string.h>
 #include "configs.h"
 #include "request.h"
 
@@ -16,6 +15,6 @@ typedef struct Message {
   char mesg[SBUFF];
 } mesg_t;
 
-void message_driver(rqst_t *request);
+int8_t message_driver(rqst_t *request);
 
 #endif

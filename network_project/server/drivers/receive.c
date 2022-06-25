@@ -31,5 +31,4 @@ void receive_driver(server_t *server) {
   server->size_recv = recv(server->conn.sock_clnt, server->recv, SBUFF, 0);
   protocol_append(server);
   protocol_rwbill(server);
-  printf("read message:\n\n %s\n", server->resp);
 }

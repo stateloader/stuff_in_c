@@ -62,12 +62,13 @@ static void message_read(rqst_t *request) {
   return;
 }
 
-void message_driver(rqst_t *request) {
+int8_t message_driver(rqst_t *request) {
 //desc
   mesg_t message = {.status = 1};
   if(request->protocol[EINDX] & (1 << RWBIT))
     message_write(request, &message);
   else
     message_read(request);
-  return;
+  
+  return SUCC;
 }

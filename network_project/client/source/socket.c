@@ -23,11 +23,3 @@ int32_t socket_connect(int32_t client_socket, char *address, int32_t port) {
 
   return connect(client_socket, (struct sockaddr *) &server_address, sizeof(struct sockaddr_in)); 
 }
-/*
-int32_t socket_send(int32_t client_socket, char *request, int32_t request_size) {
-  return send(client_socket, request, request_size, 0);
-}
-*/
-int32_t socket_recieve(int32_t client_socket, char *response, int32_t response_size) {
-  return recv(client_socket, response, response_size, 0);
-}

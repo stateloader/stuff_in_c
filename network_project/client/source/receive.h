@@ -6,7 +6,7 @@
 
 typedef struct Receive {
   int8_t status;
-  uint8_t *protocol;
+  uint8_t protocol[3];
   char recv[FBUFF];
   int32_t size_recv;
   size_t entry_delim;
@@ -24,6 +24,6 @@ typedef struct RecieveItem {
   recv_func func;
 } recv_item;
 
-void receive_driver(recv_t *receive);
+int8_t receive_driver(recv_t *receive);
 
 #endif

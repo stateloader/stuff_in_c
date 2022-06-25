@@ -16,6 +16,6 @@ typedef struct Device {
   char user[SBUFF];
 } dvce_t;
 
-void device_driver(rqst_t *request);
+int8_t device_driver(rqst_t *request);
 
 #endif

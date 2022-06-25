@@ -8,7 +8,7 @@
 
 typedef struct Request {
   int8_t status;
-  uint8_t *protocol;
+  uint8_t protocol[3];
   int32_t size_send;
   int32_t size_user;
   int32_t size_rqst;
@@ -24,6 +24,6 @@ typedef struct RequestItem {
 } rqst_item;
 
 
-void request_driver(rqst_t *request);
+int8_t request_driver(rqst_t *request);
 
 #endif
