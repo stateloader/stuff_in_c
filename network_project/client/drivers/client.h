@@ -16,10 +16,10 @@ typedef struct Connection {
 
 typedef struct Client {
   uint8_t status;
+  uint8_t protocol[3];
   conn_t *conn;
-  rqst_t *request;
-  recv_t *receive;
-  void *table;
+  rqst_t *rqst;
+  recv_t *recv;
 } client_t;
 
 void client_driver(client_t *client);

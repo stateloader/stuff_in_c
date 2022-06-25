@@ -54,6 +54,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 
 #define SYSTEM_FORM "\t\t\tSystem: %s\n"
 #define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(scn, buf) (scn < buf - 1) 

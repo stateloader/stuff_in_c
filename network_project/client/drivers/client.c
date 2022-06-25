@@ -8,20 +8,19 @@ info info info info info info
 #include "scanner.h"
 #include "client.h"
 
-static void request_commit(uint32_t socket_client, rqst_t *request) {
-  int32_t result = send(socket_client, request->rqst, request->size_rqst, 0);
-  Print_Numb(result, "skickad");
-  return;
-}
-
 void client_driver(client_t *client) {
 
-  rqst_t request = {.status = 1};
-  recv_t receive = {.status = 1};
-  request.size_user = string_copy(request.user, client->conn->user, SBUFF);
+  uint8_t protocol[3] = {'\0'};
+  command_driver(protocol);
 
-  command_driver(request.protocol);
+  rqst_t request = {.status = 1,.protocol = protocol};
+  recv_t receive = {.status = 1,.protocol = protocol};
+
+  request.size_user = string_copy(request.user, client->conn->user, SBUFF);
   request_driver(&request);
-  request_commit(client->conn->socket_client, &request);
-  receive_driver(client->conn->socket_client, &receive);
+
+  request.size_send = send(client->conn->socket_client, request.rqst, request.size_rqst, 0);  
+  receive.size_recv = recv(client->conn->socket_client, receive.recv, FBUFF, 0);
+
+  receive_driver(&receive);
 }

@@ -8,6 +8,7 @@ info info info info info info
 #include "device.h"
 #include "request.h"
 
+
 static rqst_item rqst_items[] = {
   {TMESG, message_driver},
   {TDVCE, device_driver}

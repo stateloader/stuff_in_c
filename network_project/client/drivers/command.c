@@ -82,7 +82,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t command_driver(uint8_t *protocol) {
+void command_driver(uint8_t *protocol) {
 
   while (state != _EXIT) {
 
@@ -107,6 +107,4 @@ int8_t command_driver(uint8_t *protocol) {
   protocol[FINDX] = FWRD;
 
   static_cleanup();
-
-  return SUCC;
 }

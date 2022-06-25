@@ -8,7 +8,8 @@
 
 typedef struct Request {
   int8_t status;
-  uint8_t protocol[3];
+  uint8_t *protocol;
+  int32_t size_send;
   int32_t size_user;
   int32_t size_rqst;
   char user[SBUFF];
