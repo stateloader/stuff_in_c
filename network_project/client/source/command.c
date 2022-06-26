@@ -42,8 +42,12 @@ static void static_cleanup(void) {
 static void append_protocol(uint8_t *rqst_proto, uint8_t *recv_proto) {
   rqst_proto[TINDX] = TASK;
   rqst_proto[EINDX] = EXEC;
+  rqst_proto[FINDX] = FWRD;
   recv_proto[TINDX] = TASK;
   recv_proto[EINDX] = EXEC;
+  recv_proto[EINDX] = FWRD;
+
+  static_cleanup();
 }
 
 static void render_options(cmnd_item *items, size_t size_array) {
@@ -109,6 +113,5 @@ int8_t command_driver(uint8_t *rqst_proto, uint8_t *recv_proto) {
     }
   }
   append_protocol(rqst_proto, recv_proto);
-  static_cleanup();
-  return SUCC;
+  return check_exit(rqst_proto[TINDX]);
 }

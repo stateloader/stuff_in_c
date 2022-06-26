@@ -4,19 +4,22 @@
 #include "configs.h"
 #include "models.h"
 
-typedef struct Receive {
-  int8_t status;
-  uint8_t protocol[3];
-  char recv[FBUFF];
-  int32_t size_recv;
+typedef struct TableMeta {
   size_t entry_delim;
   int32_t count_delm;
   int32_t count_rows;
+} meta_t;
+
+typedef struct Receiver {
+  uint8_t protocol[3];
+  int32_t size_recv;
+  char recv[FBUFF];
   mmod_t *table_mesg;
   dmod_t *table_dvce;
+  meta_t meta;
 } recv_t;
 
-typedef void (*recv_func)(recv_t *receive);
+typedef int8_t (*recv_func)(recv_t *receive);
 
 typedef struct RecieveItem {
   const uint8_t table;

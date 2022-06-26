@@ -26,6 +26,7 @@ int32_t string_copy(char *dest, char *from, int32_t size_buffer) {
   int32_t size_from = string_size(from, size_buffer);
   for (int32_t i = 0; i < size_from; i++)
     dest[i] = from[i];
+  dest[size_from - 1] = '\0';
   return size_from;
 }
 

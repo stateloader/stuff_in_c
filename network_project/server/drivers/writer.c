@@ -3,6 +3,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
+#include "sstring.h"
 #include "writer.h"
 
 static void phase_file_open(server_t *server, const char *path) {
@@ -30,6 +31,7 @@ static void write_mesg(server_t *server) {
 
 static void write_dvce(server_t *server) {
   System_Message("inside write dvce");
+  System_Message("contact atmega etc...");
 }
 
 static write_item write_items[] = {

@@ -22,8 +22,7 @@ static conn_t socket_setup(char *address, int32_t port) {
 int main(void) {
 
   conn_t conn = socket_setup("127.0.0.1", 90190);
-
-  client_t client = {.status = 1,.conn = &conn};
+  client_t client = {.conn = &conn};
   
   client_driver(&client);
   

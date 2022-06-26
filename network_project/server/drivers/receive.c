@@ -16,10 +16,10 @@ static void protocol_rwbill(server_t *server) {
   System_Message("inside protocol rwbill");
 
   if (server->protocol[EINDX] & (1 << RWBIT)) {
-    System_Message("writing to Database");
+    System_Message("writing to database");
     write_driver(server);
   } else {
-    System_Message("reading from Database");
+    System_Message("reading from database");
     read_driver(server);
   }
   return;

@@ -18,7 +18,8 @@ int8_t request_driver(rqst_t *request) {
 
   for (size_t i = 0; i < ARRAY_SIZE(rqst_items); i++) {
     if (request->protocol[TINDX] & (1 << rqst_items[i].task))
-      rqst_items[i].func(request);
+      return rqst_items[i].func(request);
   }
-  return SUCC;
+  System_Message("couldn't read request-call");
+  return FAIL;
 }

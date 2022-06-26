@@ -5,7 +5,6 @@
 #include "request.h"
 
 typedef struct Message {
-  int8_t status;
   int32_t size_user;
   int32_t size_topc;
   int32_t size_mesg;

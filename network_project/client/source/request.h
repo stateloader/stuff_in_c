@@ -7,7 +7,6 @@
 #include "configs.h"
 
 typedef struct Request {
-  int8_t status;
   uint8_t protocol[3];
   int32_t size_send;
   int32_t size_user;
@@ -16,7 +15,7 @@ typedef struct Request {
   char rqst[SBUFF];
 } rqst_t;
 
-typedef void (*rqst_func)(rqst_t *request);
+typedef int8_t (*rqst_func)(rqst_t *request);
 
 typedef struct RequestItem {
   const uint8_t task;

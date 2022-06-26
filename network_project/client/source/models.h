@@ -4,20 +4,16 @@
 #include "configs.h"
 
 typedef struct MesgModel {
-  size_t id;
-  int8_t set;
-  char user[SBUFF];
-  char datm[TBUFF];
-  char topc[SBUFF];
-  char mesg[SBUFF];
+  int8_t user[SBUFF];
+  int8_t datm[TBUFF];
+  int8_t topc[SBUFF];
+  int8_t mesg[SBUFF];
 } mmod_t;
 
 typedef struct DvceModel {
-  size_t id;
-  int8_t set;
   int8_t led;
-  char user[SBUFF];
-  char datm[TBUFF];
+  int8_t user[SBUFF];
+  int8_t datm[TBUFF];
 } dmod_t;
 
 #endif
