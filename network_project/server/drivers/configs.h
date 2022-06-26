@@ -28,7 +28,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define EXEC3 3     //              Execute #3             depending on TABLE BYTE.
 #define EXEC4 4     //              Execute #4             
 #define EXEC5 5     //              Execute #5             ---
-#define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals read
+#define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
 #define TINDX 0     //              TABLE BYTE INDEX    - Its position in the protocol-array
 #define EINDX 1     //              EXEC BYTE INDEX     - Its position in the protocol-array
@@ -36,16 +36,18 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
-#define DMSGE 4     //              Delimiters          - (menbers) Message-model
+#define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 4     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
+#define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
+#define EXIT -1     //              EXIT                - User wants to exit the program.
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
-#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.    
+#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
 //------------------------------------------------------------------------------------------------------------------BUFFER
 #define FBUFF 4096  //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
-#define TBUFF 24    //              DateTime Buffer
+#define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
 #define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 

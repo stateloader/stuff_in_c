@@ -10,9 +10,9 @@ typedef struct Request {
   uint8_t protocol[3];
   int32_t size_send;
   int32_t size_user;
-  int32_t size_rqst;
+  int32_t size_pack;
   char user[SBUFF];
-  char rqst[SBUFF];
+  char pack[SBUFF];
 } rqst_t;
 
 typedef int8_t (*rqst_func)(rqst_t *request);

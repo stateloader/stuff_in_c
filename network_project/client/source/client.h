@@ -22,7 +22,7 @@ typedef struct Client {
 int8_t client_driver(client_t *client);
 
 static inline int8_t check_send(rqst_t *request) {
-  if (request->size_send != request->size_rqst) {
+  if (request->size_send != request->size_pack) {
     System_Message("failed to send request");
     return FAIL;
   }

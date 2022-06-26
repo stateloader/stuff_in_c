@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 An "engine" of some sort during 'user-menu:ing' I came up with while playing around with function-pointers. Members of
 'cmnd_item' helps (a lot) in guinding the user to the correct state depending on her/his commands. A neat caviat in this
-solution is how bits being set (or cleared) simultaneously in the process which later being added to the request-protocol. 
+solution is how bits being set (or cleared) simultaneously in the process which later being added to the request-protocol.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "scanner.h"
@@ -20,7 +20,7 @@ typedef struct CommandItem {
   const char *cmnd;
 } cmnd_item;
 
-static int8_t state = _MAIN; 
+static int8_t state = _MAIN;
 
 static cmnd_item main[] = {
   {_MAIN, _MESG, "-message"}, {_MAIN, _DVCE, "-device"}, {_MAIN, _EXIT, "-exit"}

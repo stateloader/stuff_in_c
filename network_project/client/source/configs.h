@@ -19,17 +19,17 @@ BIT(N)                              |    7    |    6    |    5    |    4    |   
 CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
                                     |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
-------------------------------------------------------------------------------------------------------------------------*/         
+------------------------------------------------------------------------------------------------------------------------*/
 #define TMESG 0     //              Table Message        - Set equals 'init message business' (to the server)
 #define TDVCE 1     //              Table Device         - Set equals 'init device business' (to the server)
 
 #define EXEC0 0     //              Execute #0             ---
-#define EXEC1 1     //              Execute #1           
-#define EXEC2 2     //              Execute #2             Execute Bit(N) (except RWBIT) with different local definitions 
+#define EXEC1 1     //              Execute #1
+#define EXEC2 2     //              Execute #2             Execute Bit(N) (except RWBIT) with different local definitions
 #define EXEC3 3     //              Execute #3             depending on TABLE BYTE.
-#define EXEC4 4     //              Execute #4             
+#define EXEC4 4     //              Execute #4
 #define EXEC5 5     //              Execute #5             ---
-#define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals read
+#define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
 #define TINDX 0     //              TABLE BYTE INDEX    - Its position in the protocol-array
 #define EINDX 1     //              EXEC BYTE INDEX     - Its position in the protocol-array
@@ -40,9 +40,10 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 4     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
-#define QUIT -1
-#define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
-#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.  
+#define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
+#define EXIT -1     //              EXIT                - User wants to exit the program.
+#define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
+#define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
 #define FBUFF 4096  //              File Buffer
 #define SBUFF 512   //              Scan Buffer
@@ -59,8 +60,8 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
-#define check_size(scn, buf) (scn < buf - 1) 
-#define check_term(scn, len) (scn[len - 1] == '\0')
+#define check_size(str, buf) (str < buf - 1)
+#define check_term(str, len) (str[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))

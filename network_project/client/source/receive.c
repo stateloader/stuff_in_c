@@ -21,7 +21,7 @@ static int8_t distributor_mesg(recv_t *receive) {
   for (int32_t i = 0; i < receive->size_recv; i++) {   // if  i == size_resc - 1 "ok"
     char byte = receive->recv[i];
 
-    switch(mem) { 
+    switch(mem) {
     case 0:
     if (byte != DELIM) {
       receive->table_mesg[row].user[idx] = byte;
@@ -61,10 +61,9 @@ static int8_t distributor_mesg(recv_t *receive) {
     break;
     default:
     System_Message("oh noes");
-    return QUIT;
+    return EXIT;
     }
   }
-
   return SUCC;
 }
 

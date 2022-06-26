@@ -4,6 +4,6 @@
 #include "configs.h"
 #include "server.h"
 
-void receive_driver(server_t *server);
+int8_t receive_driver(server_t *server);
 
 #endif

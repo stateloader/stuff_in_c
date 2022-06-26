@@ -18,7 +18,7 @@ static inline int8_t check_exit(uint8_t protocol) {
     match += (protocol & (1 << i));
   if (!match) {
     System_Message("Bye bye!");
-    return QUIT;
+    return EXIT;
   }
   return SUCC;
 }

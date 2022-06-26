@@ -4,6 +4,6 @@
 #include "configs.h"
 #include "server.h"
 
-void response_driver(server_t *server);
+int8_t response_driver(server_t *server);
 
 #endif

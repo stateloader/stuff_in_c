@@ -29,14 +29,14 @@ static int8_t scan_check(char *scan) {
 }
 
 static int8_t scan_input(char *scan, int32_t size_buffer, char *message) {
-  
+
   printf("%s: ", message);
   buffer_flush(scan, size_buffer);
 
   fgets(scan, size_buffer - 1, stdin);
   size_scan = string_size(scan, size_buffer) - 1;
   scan[size_scan  - 1] = '\0';
-  
+
   if (!check_size(size_scan, size_buffer)) {
     printf("input to large.\n");
     buffer_flush(scan, size_buffer);

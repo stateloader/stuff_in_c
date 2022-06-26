@@ -7,9 +7,9 @@
 
 #define MAX_CLIENT 16
 
-void socket_create(int *server_socket);
-void socket_bind(int server_socket, struct sockaddr_in *server_address, char *address, int port);
-void socket_listen(int server_socket);
-void socket_accept(int server_socket, int *client_socket, struct sockaddr_in *client_address);
+int8_t socket_create(int *server_socket);
+int8_t socket_bind(int server_socket, struct sockaddr_in *server_address, char *address, int port);
+int8_t socket_listen(int server_socket);
+int8_t socket_accept(int server_socket, int *client_socket, struct sockaddr_in *client_address);
 
 #endif
