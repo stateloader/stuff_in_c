@@ -22,7 +22,6 @@ typedef struct RequestItem {
   rqst_func func;
 } rqst_item;
 
-
 int8_t request_driver(rqst_t *request);
 
 #endif
