@@ -12,7 +12,7 @@ info info info info info info
 int main(void) {
   Render_Header("SERVER", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
 
-  server_t server = {0};
+  server_t server = {.status = 1};
 
   struct sockaddr_in server_address;
   struct sockaddr_in client_address;

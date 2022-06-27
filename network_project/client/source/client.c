@@ -10,7 +10,6 @@ Info info info.
 
 static uint8_t send_request_package(int32_t socket_client, rqst_t *request) {
 //desc
-
   request->size_send = send(socket_client, request->pack, request->size_pack, 0);
   return SUCC;
 }
@@ -30,8 +29,7 @@ int8_t client_driver(client_t *client) {
 //desc
 
   int8_t result = 0;
-  rqst_t request = {0};
-  recv_t receive = {0};
+  rqst_t request = {0}; recv_t receive = {0};
 
   result = command_driver(request.protocol, receive.protocol);
   if (result < 0) return result;
