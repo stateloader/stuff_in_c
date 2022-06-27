@@ -7,6 +7,10 @@
 #include "receive.h"
 #include "command.h"
 
+typedef enum ClientRoutine {
+  ROUT_CMND, ROUT_RQST, ROUT_SEND, ROUT_RECV, ROUT_FWRD, ROUT_DONE
+} rout_t;
+
 typedef struct Connection {
   int8_t status;
   int32_t socket_client;

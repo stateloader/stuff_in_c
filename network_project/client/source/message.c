@@ -41,6 +41,8 @@ static int8_t message_binder(rqst_t *request, mesg_t *message) {
   strncat(request->pack, message->topc, request->size_pack);
   strncat(request->pack, message->mesg, request->size_pack);
 
+  System_Message(request->pack);
+
   return protocol_append(request);
 }
 
