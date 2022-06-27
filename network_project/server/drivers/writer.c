@@ -27,7 +27,7 @@ static int8_t phase_file_appd(server_t *server) {
 static int8_t write_mesg(server_t *server) {
   System_Message("inside write mesg");
 
-  phase_file_open(server, "drivers/database/message.dat");
+  phase_file_open(server, "drivers/database/messagelog.dat");
   phase_file_appd(server);
   
   return SUCC;
@@ -35,17 +35,20 @@ static int8_t write_mesg(server_t *server) {
 
 static int8_t write_dvce(server_t *server) {
   System_Message("inside write dvce");
-  System_Message("contact atmega etc...");
 
+  phase_file_open(server, "drivers/database/devicelog.dat");
+  phase_file_appd(server);
+
+  System_Message("contact atmega etc...");
+  
   return SUCC;
 }
 
 static write_item write_items[] = {
-  {TMESG, write_mesg},
-  {TDVCE, write_dvce}
+  {TMESG, write_mesg}, {TDVCE, write_dvce}
 };
 
-int8_t  write_driver(server_t *server) {
+int8_t database_writer(server_t *server) {
   System_Message("inside filewriter");
  
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {

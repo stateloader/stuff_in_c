@@ -47,7 +47,7 @@ static read_item read_items[] = {
   {TMESG, read_mesg}, {TDVCE, read_dvce}
 };
 
-int8_t read_driver(server_t *server) {
+int8_t database_reader(server_t *server) {
   System_Message("Inside read_driver");
  
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {

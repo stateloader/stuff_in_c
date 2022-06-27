@@ -11,7 +11,7 @@ typedef struct WriteItem {
   write_func func;
 } write_item;
 
-int8_t write_driver(server_t *server);
+int8_t database_writer(server_t *server);
 
 inline static int8_t check_file_open(server_t *server) {
   if (!server->dbfile) {
