@@ -10,9 +10,9 @@ solution is how bits being set (or cleared) simultaneously in the process which 
 #include "cstring.h"
 #include "command.h"
 
-static uint8_t TASK = _MDEF;
-static uint8_t EXEC = _MDEF;
-static uint8_t FWRD = _MDEF;
+static uint8_t TASK = 0x80;
+static uint8_t EXEC = 0x80;
+static uint8_t FWRD = 0x80;
 
 typedef struct CommandItem {
   const uint8_t this_state;
@@ -33,21 +33,8 @@ static cmnd_item dvce[] = {
 };
 
 static void static_cleanup(void) {
-  TASK = _MDEF;
-  EXEC = _MDEF;
-  FWRD = _MDEF;
+  TASK = 0x80, EXEC = 0x80, FWRD = 0x80;
   state = _MAIN;
-}
-
-static void append_protocol(uint8_t *rqst_proto, uint8_t *recv_proto) {
-  rqst_proto[TINDX] = TASK;
-  rqst_proto[EINDX] = EXEC;
-  rqst_proto[FINDX] = FWRD;
-  recv_proto[TINDX] = TASK;
-  recv_proto[EINDX] = EXEC;
-  recv_proto[EINDX] = FWRD;
-
-  static_cleanup();
 }
 
 static void render_options(cmnd_item *items, size_t size_array) {
@@ -93,7 +80,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t command_driver(uint8_t *rqst_proto, uint8_t *recv_proto) {
+int8_t command_driver(uint8_t *protocol) {
 
   while (state != _EXIT) {
 
@@ -112,6 +99,11 @@ int8_t command_driver(uint8_t *rqst_proto, uint8_t *recv_proto) {
       break;
     }
   }
-  append_protocol(rqst_proto, recv_proto);
-  return check_exit(rqst_proto[TINDX]);
+
+  protocol[TINDX] = TASK;
+  protocol[EINDX] = EXEC;
+  protocol[FINDX] = FWRD;
+  
+  static_cleanup();
+  return SUCC;
 }
