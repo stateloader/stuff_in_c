@@ -67,4 +67,8 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 
+//--------------------------------------------------------------------------------------------------------------THROUGHOUTS
+void datetime_append(char *datetime);
+void protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
+
 #endif

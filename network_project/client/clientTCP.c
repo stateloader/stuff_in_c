@@ -8,22 +8,19 @@ info info info info info info
 #include "source/client.h"
 
 
-static conn_t socket_setup(char *address, int32_t port) {
+static client_t socket_setup(char *address, int32_t port) {
   Render_Header("CONNECTION", "connecting to server");
   
-  conn_t conn = {.status = 1};
-
-  conn.socket_client = socket_create();
-  conn.status = socket_connect(conn.socket_client, address, port);
-  conn.size_user = scan_driver(conn.user, SBUFF, "username");
-  return conn;
+  client_t client = {0};
+  client.socket_client = socket_create();
+  client.socket_status = socket_connect(client.socket_client, address, port);
+  client.size_user = scan_driver(client.user, SBUFF, "username");
+  return client;
 }
 
 int main(void) {
 
-  conn_t conn = socket_setup("127.0.0.1", 90190);
-  client_t client = {.conn = &conn};
-  
+  client_t client = socket_setup("127.0.0.1", 90190);  
   client_driver(&client);
   
   exit(EXIT_SUCCESS);

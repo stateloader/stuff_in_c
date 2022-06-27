@@ -11,7 +11,7 @@ typedef struct TableMeta {
 } meta_t;
 
 typedef struct Receiver {
-  uint8_t protocol[3];
+  uint8_t *protocol;
   int32_t size_recv;
   char recv[FBUFF];
   mmod_t *table_mesg;
