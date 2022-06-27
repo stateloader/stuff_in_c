@@ -2,7 +2,7 @@
 #define SERVER_H_
 
 #include "configs.h"
-#include "socket.h"
+//#include "socket.h"
 
 typedef struct Connection {
   int8_t status;
@@ -13,9 +13,9 @@ typedef struct Connection {
 typedef struct Server {
   int8_t status;
   uint8_t protocol[3];
-  int32_t size_recv;
+  int32_t size_pack;
   int32_t size_resp;
-  char recv[SBUFF];
+  char pack[SBUFF];
   char resp[SBUFF];
   FILE *dbfile;
   conn_t conn;

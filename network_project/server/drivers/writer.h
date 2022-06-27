@@ -21,7 +21,7 @@ inline static int8_t check_file_open(server_t *server) {
   return SUCC;
 }
 inline static int8_t check_size_appd(server_t *server, int32_t size_write) {
-  if (server->size_recv != size_write) {
+  if (server->size_pack != size_write) {
     System_Message("recived and written of different sizes");
     return FAIL;
   }

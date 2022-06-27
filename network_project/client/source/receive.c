@@ -3,7 +3,6 @@
 --------------------------------------------------------------------------------------------------------------------------
 info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "socket.h"
 #include "models.h"
 #include "receive.h"
 //----------------------------------------------------------------------------------------------------CREATE MESSAGE TABLE
@@ -18,7 +17,7 @@ static int8_t distributor_mesg(recv_t *receive) {
 
   int32_t mem = 0, idx = 0, row = 0;
 
-  for (int32_t i = 0; i < receive->size_recv; i++) {   // if  i == size_resc - 1 "ok"
+  for (int32_t i = 0; i < receive->size_recv; i++) {
     char byte = receive->recv[i];
 
     switch(mem) {
@@ -29,7 +28,6 @@ static int8_t distributor_mesg(recv_t *receive) {
     } else {
       receive->table_mesg[row].user[idx] = '\0';
       mem++, idx = 0;
-      System_Message( receive->table_mesg[row].user);
     }
     break;
     case 1:
@@ -86,7 +84,7 @@ static recv_item recv_items[] = {
 };
 
 int8_t receive_driver(recv_t *receive) {
-  
+  printf("write rwsponse:\n%s\n", receive->recv);
   /*
   for (size_t i = 0; i < ARRAY_SIZE(recv_items); i++) {
     if (receive->protocol[TINDX] & (1 << recv_items[i].table)) {
@@ -95,6 +93,5 @@ int8_t receive_driver(recv_t *receive) {
     }
   }
   */
-  System_Message(receive->recv);
   return SUCC;
 }

@@ -19,9 +19,7 @@ static int8_t device_binder(rqst_t *request, dvce_t *device) {
   strncat(request->pack, device->datm, request->size_pack);
   strncat(request->pack, device->push, request->size_pack);
 
-  protocol_append(request->pack, request->size_pack, request->protocol);
-
-  return SUCC;
+  return protocol_append(request->pack, request->size_pack, request->protocol);
 }
 
 static int8_t device_writer(rqst_t *request, dvce_t *device) {
@@ -38,10 +36,9 @@ static int8_t device_writer(rqst_t *request, dvce_t *device) {
 }
 
 static int8_t device_reader(rqst_t *request) {
+
   request->size_pack = POFFS;
-  protocol_append(request->pack, request->size_pack, request->protocol);
-  
-  return SUCC;
+  return protocol_append(request->pack, request->size_pack, request->protocol);
 }
 
 int8_t device_driver(rqst_t *request) {

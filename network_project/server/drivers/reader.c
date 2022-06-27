@@ -30,7 +30,7 @@ static int8_t phase_file_read(server_t *server) {
 static int8_t read_mesg(server_t *server) {
   System_Message("inside dread mesg");
 
-  phase_file_open(server, "drivers/database/message.dat");
+  phase_file_open(server, "drivers/database/messagelog.dat");
   phase_file_read(server);
   return SUCC;
 }
@@ -38,7 +38,7 @@ static int8_t read_mesg(server_t *server) {
 static int8_t read_dvce(server_t *server) {
   System_Message("inside read dvce");
 
-  phase_file_open(server, "drivers/database/device.dat");
+  phase_file_open(server, "drivers/database/devicelog.dat");
   phase_file_read(server);
   return SUCC;
 }

@@ -20,7 +20,7 @@ int main(void) {
   socket_create(&server.conn.sock_serv);
   socket_bind(server.conn.sock_serv, &server_address, "127.0.0.1", 90190);
   socket_listen(server.conn.sock_serv);
-
+  
   while(server.status) {
 		socket_accept(server.conn.sock_serv, &server.conn.sock_clnt, &client_address);
     receive_driver(&server);

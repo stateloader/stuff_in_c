@@ -1,8 +1,8 @@
 /*----------------------------------------------------------------------------------------------------MACROS CLIENT MODULE
 Macros implemented reg
 ------------------------------------------------------------------------------------------------------------------------*/
-#ifndef CCONFIG_H_
-#define CCONFIG_H_
+#ifndef CONFIG_H_
+#define CONFIG_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,7 +34,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define TINDX 0     //              TABLE BYTE INDEX    - Its position in the protocol-array
 #define EINDX 1     //              EXEC BYTE INDEX     - Its position in the protocol-array
 #define FINDX 2     //              FWRD BYTE INDEX     - Its position in the protocol-array
-#define POFFS 4     //              Protocol Offset     - size added to the request storing 3 protocol bytes and '\0'
+#define POFFS 4     //              Protocol Offset     - size added to the package storing the protocol-bytes and '\0'
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
@@ -63,12 +63,14 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define check_size(str, buf) (str < buf - 1)
 #define check_term(str, len) (str[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
-#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
+
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
-#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 
 //--------------------------------------------------------------------------------------------------------------THROUGHOUTS
-void datetime_append(char *datetime);
-void protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
+int8_t datetime_append(char *datetime);
+int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
 
 #endif
+
+//#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
+//#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}

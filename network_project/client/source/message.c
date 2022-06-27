@@ -22,9 +22,7 @@ static int8_t message_binder(rqst_t *request, mesg_t *message) {
   strncat(request->pack, message->topc, request->size_pack);
   strncat(request->pack, message->mesg, request->size_pack);
 
-  protocol_append(request->pack, request->size_pack, request->protocol);
-
-  return SUCC;
+  return protocol_append(request->pack, request->size_pack, request->protocol);
 }
 
 static int8_t message_writer(rqst_t *request, mesg_t *message) {
@@ -38,8 +36,7 @@ static int8_t message_writer(rqst_t *request, mesg_t *message) {
 static int8_t message_reader(rqst_t *request) {
 
   request->size_pack = POFFS;
-  protocol_append(request->pack, request->size_pack, request->protocol);
-  return SUCC;
+  return protocol_append(request->pack, request->size_pack, request->protocol);
 }
 
 int8_t message_driver(rqst_t *request) {

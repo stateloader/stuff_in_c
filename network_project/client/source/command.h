@@ -10,4 +10,16 @@
 
 int8_t command_driver(uint8_t *protocol);
 
+inline static int8_t command_driver_check(uint8_t *protocol) {
+
+  int8_t match = 0;
+  for (int8_t i = 0; i < 7; i++)
+    match += (protocol[TINDX] & (1 << i)) ? 1 : 0;
+  if (match == 0) {
+    System_Message("Bye Bye!");
+    return EXIT;
+  }
+  return SUCC;
+}
+
 #endif

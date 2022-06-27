@@ -105,5 +105,6 @@ int8_t command_driver(uint8_t *protocol) {
   protocol[FINDX] = FWRD;
   
   static_cleanup();
-  return SUCC;
+  
+  return command_driver_check(protocol);
 }
