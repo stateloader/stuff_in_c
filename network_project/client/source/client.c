@@ -62,7 +62,7 @@ int8_t client_driver(client_t *client) {
         routine = ROUT_FWRD;
       break;
     case ROUT_FWRD:
-      request.protocol = protocol;
+      receive.protocol = protocol;
       result = receive_driver(&receive);
       if (result != SUCC)
         routine = ROUT_DONE;

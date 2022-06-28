@@ -5,15 +5,22 @@ info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "models.h"
 #include "receive.h"
-//----------------------------------------------------------------------------------------------------CREATE MESSAGE TABLE
+
 static int8_t count_rows(recv_t *receive) {
+//desc
   for (int32_t i = 0; i < receive->size_recv; i++)
     receive->meta.count_delm += (receive->recv[i] == DELIM) ? 1 : 0;
   receive->meta.count_rows = (receive->meta.count_delm / receive->meta.entry_delim);
   return SUCC;
 }
 
-static int8_t distributor_mesg(recv_t *receive) {
+static int8_t create_table_mesg(recv_t *receive) {
+/*First I made a generic, recursive solution of some sort but it turned out to be (way) to messy.
+ *Instead, every table, current or later added, going to be hardcoded after the principle below.
+ */
+
+  count_rows(receive);
+  receive->table_mesg = malloc(sizeof(mmod_t) * receive->meta.count_rows);
 
   int32_t mem = 0, idx = 0, row = 0;
 
@@ -62,36 +69,39 @@ static int8_t distributor_mesg(recv_t *receive) {
     return EXIT;
     }
   }
+
+  if (receive->table_mesg) free(receive->table_mesg);
   return SUCC;
 }
 
-static int8_t link_table_mesg(recv_t *receive) {
+static int8_t create_table_dvce(recv_t *receive) {
+/*Going to make a table of device-activity in time.*/
 
-  count_rows(receive);
-  receive->table_mesg = malloc(sizeof(mmod_t) * receive->meta.count_rows);
-  return distributor_mesg(receive);
-}
-//----------------------------------------------------------------------------------------------------CREATE DEVICE TABLE
-static int8_t link_table_dvce(recv_t *receive) {
-
-  System_Message("Inside construct dvce");
+  System_Message("Not in place yet");
   return SUCC;
 }
 
 static recv_item recv_items[] = {
-  {TMESG, DMSGE, link_table_mesg},
-  {TDVCE, DDVCE, link_table_dvce}
+  {TMESG, DMSGE, create_table_mesg}, {TDVCE, DDVCE, create_table_dvce}
 };
 
-int8_t receive_driver(recv_t *receive) {
-  printf("write rwsponse:\n%s\n", receive->recv);
-  /*
+static int8_t init_table(recv_t * receive) {
+
   for (size_t i = 0; i < ARRAY_SIZE(recv_items); i++) {
     if (receive->protocol[TINDX] & (1 << recv_items[i].table)) {
       receive->meta.entry_delim = recv_items[i].delim;
       return recv_items[i].func(receive);
     }
   }
-  */
+  System_Message("failure, init table");
+  return FAIL;
+}
+
+int8_t receive_driver(recv_t *receive) {
+  if (receive->protocol[EINDX] & (1 << RWBIT)) {
+    System_Message(receive->recv);
+  } else {
+    return init_table(receive);
+  }
   return SUCC;
 }
