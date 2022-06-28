@@ -16,32 +16,31 @@ static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
 
-    if (!byte_asci(scan[i])) {
-      System_Message("Only ASCII ('English') characters allowed. try again!");
+    if (!check_byte_asci(scan[i])) {
+      Message_Info("Only ASCII ('English') characters allowed.");
 		  return SCAN_INPUT;
 
-    } else if (byte_delm(scan[i])) {
-      System_Message("Pipe charachter ('|') is for losers, use another one.");
+    } else if (check_byte_delm(scan[i])) {
+      Message_Info("Pipe charachter ('|') is for losers. Use another one.");
+      return SCAN_INPUT;
+
+    } else if (check_scan_minl(size_scan, 2)) {
+      Message_Info("Enter at least two characters.");
       return SCAN_INPUT;
     }
   }
   return SCAN_COMPL;
 }
 
-static int8_t scan_input(char *scan, int32_t size_buffer, char *message) {
+static int8_t scan_input(char *scan, int32_t size_buffer, char *prompt) {
 
-  printf("%s: ", message);
+  printf("%s: ", prompt);
   buffer_flush(scan, size_buffer);
 
   fgets(scan, size_buffer - 1, stdin);
   size_scan = string_size(scan, size_buffer) - 1;
   scan[size_scan  - 1] = '\0';
 
-  if (!check_size(size_scan, size_buffer)) {
-    printf("input to large.\n");
-    buffer_flush(scan, size_buffer);
-    return SCAN_INPUT;
-  }
   return BYTE_CHECK;
 }
 
@@ -64,7 +63,7 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
   }
 
   if (!check_term(scan, size_scan)) {
-    System_Message("Failed to terminate userinput.");
+    Message_Info("Failed to terminate userinput.");
     return FAIL;
   }
   return size_scan;

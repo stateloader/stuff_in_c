@@ -8,7 +8,8 @@
 #include "command.h"
 
 typedef enum ClientRoutine {
-  ROUT_CMND, ROUT_RQST, ROUT_SEND, ROUT_RECV, ROUT_FWRD, ROUT_DONE
+  ROUT_CMND, ROUT_RQST, ROUT_SEND,
+  ROUT_RECV, ROUT_FWRD, ROUT_DONE
 } rout_t;
 
 typedef struct Client {
@@ -19,13 +20,5 @@ typedef struct Client {
 } client_t;
 
 int8_t client_driver(client_t *client);
-/*
-static inline int8_t check_send(rqst_t *request) {
-  if (request->size_send != request->size_pack) {
-    System_Message("failed to send request");
-    return FAIL;
-  }
-  return SUCC;
-}
-*/
+
 #endif

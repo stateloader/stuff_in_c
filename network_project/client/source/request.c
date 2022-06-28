@@ -20,6 +20,6 @@ int8_t request_driver(rqst_t *request) {
     if (request->protocol[TINDX] & (1 << rqst_items[i].task))
       return rqst_items[i].func(request);
   }
-  System_Message("couldn't read request-call");
+  Message_Info("couldn't read request-call");
   return FAIL;
 }

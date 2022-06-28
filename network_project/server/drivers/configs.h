@@ -14,27 +14,27 @@ info info info
 /*--------------------------------------------------------------------------------------------------------------TABLE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
---------------------------------------------------------------------------------------------------------------EXECUTE BYTE
+------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  EXEC3  |   EXEC2  |   EXEC1   |   EXEC0   |
+CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
                                     |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
-#define TMESG 0     //              Table Message        - Set equals 'init message business' (to the server)
-#define TDVCE 1     //              Table Device         - Set equals 'init device business' (to the server)
+#define TMESG 0     //              Table Message       - Set equals 'init message business' (to the server)
+#define TDVCE 1     //              Table Device        - Set equals 'init device business' (to the server)
 
-#define EXEC0 0     //              Execute #0             ---
-#define EXEC1 1     //              Execute #1
-#define EXEC2 2     //              Execute #2             Execute Bit(N) (except RWBIT) with different local definitions
-#define EXEC3 3     //              Execute #3             depending on TABLE BYTE.
-#define EXEC4 4     //              Execute #4
-#define EXEC5 5     //              Execute #5             ---
+#define ATTR0 0     //              Attribute #0        ----
+#define ATTR1 1     //              Attribute #0        
+#define ATTR2 2     //              Attribute #0         Attribute Bit(N) (except RWBIT) with different local definitions
+#define ATTR3 3     //              Attribute #0         depending on TABLE BYTE.
+#define ATTR4 4     //              Attribute #0        
+#define ATTR5 5     //              Attribute #0        ----
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
-#define TINDX 0     //              TABLE BYTE INDEX    - Its position in the protocol-array
-#define EINDX 1     //              EXEC BYTE INDEX     - Its position in the protocol-array
-#define FINDX 2     //              FWRD BYTE INDEX     - Its position in the protocol-array
-#define POFFS 4     //              Protocol Offset     - size added to the package storing the protocol-bytes and '\0'
+#define TINDX 0     //              TABLE BYTE IDX      - (in protocol array)
+#define AINDX 1     //              ATTRIBUTE BYTE IDX  - (in protocol array)
+#define FINDX 2     //              FORWARD BYTE IDX    - (in protocol array)
+#define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
@@ -56,7 +56,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
 #define SYSTEM_FORM "\t\t\tSystem: %s\n"
-#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+#define Message_Info(sysmesg) printf(SYSTEM_FORM, sysmesg);
 
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)

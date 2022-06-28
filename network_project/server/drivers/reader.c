@@ -7,18 +7,18 @@ info fasda
 #include "reader.h"
 
 static int8_t phase_file_open(server_t *server, const char *path) {
-  System_Message("inside phase file_open");
+  Message_Info("inside phase file_open");
 
   server->dbfile = fopen(path, "r");
   if (!server->dbfile) {
-    System_Message("attans ej readable");
+    Message_Info("attans ej readable");
     return FAIL;
   }
   return SUCC;
 }
 
 static int8_t phase_file_read(server_t *server) {
-  System_Message("inside phase file_read");
+  Message_Info("inside phase file_read");
 
   server->size_resp = fread(server->resp, sizeof(char), FBUFF, server->dbfile);
   fclose(server->dbfile);
@@ -28,17 +28,17 @@ static int8_t phase_file_read(server_t *server) {
 //------------------------------------------------------------------------------------------------------------------------
 
 static int8_t read_mesg(server_t *server) {
-  System_Message("inside dread mesg");
+  Message_Info("inside read mesg");
 
-  phase_file_open(server, "drivers/database/messagelog.dat");
+  phase_file_open(server, "drivers/database/mesglog.dat");
   phase_file_read(server);
   return SUCC;
 }
 
 static int8_t read_dvce(server_t *server) {
-  System_Message("inside read dvce");
+  Message_Info("inside read dvce");
 
-  phase_file_open(server, "drivers/database/devicelog.dat");
+  phase_file_open(server, "drivers/database/dvcelog.dat");
   phase_file_read(server);
   return SUCC;
 }
@@ -48,12 +48,12 @@ static read_item read_items[] = {
 };
 
 int8_t database_reader(server_t *server) {
-  System_Message("Inside read_driver");
+  Message_Info("Inside read_driver");
  
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (server->protocol[TINDX] & (1 << read_items[i].table))
       return read_items[i].func(server);
   }
-  System_Message("Oh crap (read_driver)");
+  Message_Info("Oh crap (read_driver)");
   return FAIL;
 }

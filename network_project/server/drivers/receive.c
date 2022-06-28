@@ -4,19 +4,19 @@
 #include "reader.h"
 
 static int8_t database_action(server_t *server) {
-  System_Message("inside database_action");
+  Message_Info("inside database_action");
 
-  if (server->protocol[EINDX] & (1 << RWBIT)) {
-    System_Message("writing to database");
+  if (server->protocol[AINDX] & (1 << RWBIT)) {
+    Message_Info("writing to database");
     return database_writer(server);
   } else {
-    System_Message("reading from database");
+    Message_Info("reading from database");
     return database_reader(server);
   }
 }
 
 int8_t receive_driver(server_t *server) {
-  System_Message("inside receive driver");
+  Message_Info("inside receive driver");
 
   int8_t result = 0;
   server->size_pack = recv(server->conn.sock_clnt, server->pack, SBUFF, 0);
