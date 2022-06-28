@@ -35,7 +35,7 @@ static int8_t response_writer(server_t *server, char *response) {
 static int8_t write_mesg(server_t *server) {
   Message_Info("inside write mesg");
 
-  phase_file_open(server, "drivers/database/messagelog.dat");
+  phase_file_open(server, "drivers/database/mesglog.dat");
   phase_file_appd(server);
   response_writer(server, "your message was successfully recieved.");
   
@@ -45,7 +45,7 @@ static int8_t write_mesg(server_t *server) {
 static int8_t write_dvce(server_t *server) {
   Message_Info("inside write dvce");
 
-  phase_file_open(server, "drivers/database/devicelog.dat");
+  phase_file_open(server, "drivers/database/dvcelog.dat");
   phase_file_appd(server);
   response_writer(server, "device led now glows in <whatever>");
   

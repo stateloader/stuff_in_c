@@ -38,7 +38,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
-#define DDVCE 4     //              Delimiters          - (members) Device-model
+#define DDVCE 3     //              Delimiters          - (members) Device-model
 //------------------------------------------------------------------------------------------------------------------------
 #define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
 #define EXIT -1     //              EXIT                - User wants to exit the program.

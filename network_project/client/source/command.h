@@ -6,7 +6,8 @@
 #define _MAIN 0
 #define _MESG 1
 #define _DVCE 2
-#define _EXIT 3
+#define _DLED 3
+#define _EXIT 4
 
 int8_t command_driver(uint8_t *protocol);
 

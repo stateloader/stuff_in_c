@@ -27,16 +27,24 @@ static cmnd_item main[] = {
   {_MAIN, _DVCE, "-device"},
   {_MAIN, _EXIT, "-exit"}
 };
+
 static cmnd_item mesg[] = {
   {_MESG, _EXIT, "-read"},
   {_MESG, _EXIT, "-send"},
   {_MESG, _MAIN, "-back"}
 };
+
 static cmnd_item dvce[] = {
-  {_DVCE, _EXIT, "-red"},
-  {_DVCE, _EXIT, "-blue"},
-  {_DVCE, _EXIT, "-green"},
+  {_DVCE, _EXIT, "-read"},
+  {_DVCE, _DLED, "-init"},
   {_DVCE, _MAIN, "-back"}
+};
+
+static cmnd_item dled[] = {
+  {_DLED, _EXIT, "-red"},
+  {_DLED, _EXIT, "-blue"},
+  {_DLED, _EXIT, "-green"},
+  {_DLED, _MAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
 The static variables TABLE, ATTRB and FORWD are used as blueprints during the command-session. Like the protocol-array
@@ -65,7 +73,10 @@ static void write_protocol(cmnd_item item, int8_t index) {
     ATTRB |= (index << RWBIT);
   break;
   case _DVCE:
-    ATTRB |= (1 << index) | (1 << RWBIT);
+    ATTRB |= (index << RWBIT);
+  break;
+  case _DLED:
+    ATTRB |= (1 << index);
   break;
   default:
     Message_Info("Something went south while writing protocol.");
@@ -74,7 +85,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
   return;
 }
 
-static void render_options(cmnd_item *items, size_t size_array) {
+static void render_options(cmnd_item *items, size_t size_array) {                       // göra define
 /*Renders options based on amount of members in current 'command-item'*/
 
   for (size_t i = 0; i < size_array; i++)
@@ -104,16 +115,20 @@ int8_t command_driver(uint8_t *protocol) {
   while (state != _EXIT) {
     switch(state) {
     case _MAIN:
-      Render_Header("MAIN      |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(main, ARRAY_SIZE(main));
       break;
     case _MESG:
-      Render_Header("MESSAGE   |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("MESSAGE    ", "Message ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
     case _DVCE:
-      Render_Header("DEVICE    |", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("DEVICE     ", "Device ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dvce, ARRAY_SIZE(dvce));
+      break;
+    case _DLED:
+      Render_Header("INIT       ", "Ledinit ipsum dolor sit amet, consectetur adipiscing elit");
+      state = command_scan(dled, ARRAY_SIZE(dled));
       break;
     }
   }

@@ -14,6 +14,7 @@ typedef struct Receiver {
   uint8_t *protocol;
   int32_t size_recv;
   char recv[FBUFF];
+  void *table;
   mmod_t *table_mesg;
   dmod_t *table_dvce;
   meta_t meta;
