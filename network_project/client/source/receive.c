@@ -98,7 +98,7 @@ static int8_t init_table(recv_t * receive) {
 }
 
 int8_t receive_driver(recv_t *receive) {
-  if (receive->protocol[EINDX] & (1 << RWBIT)) {
+  if (receive->protocol[AINDX] & (1 << RWBIT)) {
     Message_Info(receive->recv);
   } else {
     return init_table(receive);

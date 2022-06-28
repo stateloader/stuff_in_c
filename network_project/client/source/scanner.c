@@ -12,7 +12,7 @@ info info info info info info
 
 static int32_t size_scan = 0;
 
-static int8_t scan_check(char *scan, int32_t size_buffer) {
+static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
 
@@ -55,7 +55,7 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
       state = scan_input(scan, size_buffer, message);
       break;
     case BYTE_CHECK:
-      state = scan_check(scan, size_buffer);
+      state = scan_check(scan);
     break;
     default:
       exit(EXIT_FAILURE);

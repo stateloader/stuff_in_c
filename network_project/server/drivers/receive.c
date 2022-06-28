@@ -6,7 +6,7 @@
 static int8_t database_action(server_t *server) {
   Message_Info("inside database_action");
 
-  if (server->protocol[EINDX] & (1 << RWBIT)) {
+  if (server->protocol[AINDX] & (1 << RWBIT)) {
     Message_Info("writing to database");
     return database_writer(server);
   } else {
