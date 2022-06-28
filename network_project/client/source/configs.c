@@ -13,7 +13,7 @@ int8_t datetime_append(char *datetime) {
   datetime[TBUFF - 1] = DELIM;
 
   if (!check_delm(datetime, TBUFF)) {
-    System_Message("datetime missing delimiter.");
+    Message_Info("datetime missing delimiter.");
     return FAIL;
   }
   return SUCC;
@@ -27,7 +27,7 @@ int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol) {
   package[size_pack - 1] = '\0';
 
   if (!check_term(package, size_pack)) {
-    System_Message("package not nullterminated.");
+    Message_Info("package not nullterminated.");
     return FAIL;
   }
   return SUCC;

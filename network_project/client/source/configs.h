@@ -50,20 +50,20 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
-#define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
+#define HEADER_FORM "\n%s\t\t%s\n%s\n\n"
+#define Header_Border "----------------------------------------------------------------------------------------------------"
+#define Render_Header(itm, inf) printf(HEADER_FORM, itm, inf, Header_Border);
 
-#define Header_Bord "----------------------------------------------------------------------------------------------------"
-#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
+#define FORM_INFO "\t\t\tSystem: %s\n"
+#define Message_Info(inf) printf(FORM_INFO, inf);
 
-#define SYSTEM_FORM "\t\t\tSystem: %s\n"
-#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
-
+#define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n\t\t\t%s\n"
+#define Message_Flee(inf, exp, tip) printf(FORM_FLEE, inf, exp, tip)
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)
 #define check_term(str, len) (str[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
-
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 //--------------------------------------------------------------------------------------------------------------THROUGHOUTS

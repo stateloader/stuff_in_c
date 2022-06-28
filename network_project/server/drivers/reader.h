@@ -20,7 +20,7 @@ int8_t database_reader(server_t *server);
 
 inline static int8_t check_size_read(server_t *server, int32_t size_read) {
   if (server->size_pack != size_read) {
-    System_Message("recived and written of different sizes");
+    Message_Info("recived and written of different sizes");
     return FAIL;
   }
   return SUCC;

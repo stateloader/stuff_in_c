@@ -57,7 +57,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
     EXEC |= (1 << index) | (1 << RWBIT);
     break;
   default:
-    System_Message("Some mishaps in bit");
+    Message_Info("Some mishaps in bit");
     static_cleanup();
   }
   return;
@@ -76,7 +76,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
       return items[i].next_state;
     }
   }
-  System_Message("Not an option. try again");
+  Message_Info("Not an option. try again");
   return state;
 }
 

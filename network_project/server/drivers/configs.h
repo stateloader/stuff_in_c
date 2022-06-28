@@ -56,7 +56,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  EXEC5  |  EXEC4  |  E
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
 #define SYSTEM_FORM "\t\t\tSystem: %s\n"
-#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+#define Message_Info(sysmesg) printf(SYSTEM_FORM, sysmesg);
 
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)

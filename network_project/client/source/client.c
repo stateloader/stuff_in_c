@@ -70,7 +70,7 @@ int8_t client_driver(client_t *client) {
         routine = ROUT_DONE;
       break;
     default:
-      System_Message("client routine fail");
+      Message_Info("client routine fail");
       exit(EXIT_FAILURE);
     }
   }

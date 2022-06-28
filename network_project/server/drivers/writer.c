@@ -8,14 +8,14 @@ info fasda
 #include "writer.h"
 
 static int8_t phase_file_open(server_t *server, const char *path) {
-  System_Message("inside phase file_open");
+  Message_Info("inside phase file_open");
 
   server->dbfile = fopen(path, "a");
   return check_file_open(server);
 }
 
 static int8_t phase_file_appd(server_t *server) {
-  System_Message("inside phase file_append");
+  Message_Info("inside phase file_append");
 
   server->size_pack -= POFFS;
   int32_t size_write = fwrite(server->pack, sizeof(char), server->size_pack, server->dbfile);
@@ -26,14 +26,14 @@ static int8_t phase_file_appd(server_t *server) {
 }
 
 static int8_t response_writer(server_t *server, char *response) {
-  System_Message("inside phase file_append");
+  Message_Info("inside phase file_append");
   server->size_resp = string_copy(server->resp, response, SBUFF);
   return SUCC;
 
 }
 //------------------------------------------------------------------------------------------------------------------------
 static int8_t write_mesg(server_t *server) {
-  System_Message("inside write mesg");
+  Message_Info("inside write mesg");
 
   phase_file_open(server, "drivers/database/messagelog.dat");
   phase_file_appd(server);
@@ -43,13 +43,13 @@ static int8_t write_mesg(server_t *server) {
 }
 
 static int8_t write_dvce(server_t *server) {
-  System_Message("inside write dvce");
+  Message_Info("inside write dvce");
 
   phase_file_open(server, "drivers/database/devicelog.dat");
   phase_file_appd(server);
   response_writer(server, "device led now glows in <whatever>");
   
-  System_Message("contact atmega etc...");
+  Message_Info("contact atmega etc...");
   
   return SUCC;
 }
@@ -59,7 +59,7 @@ static write_item write_items[] = {
 };
 
 int8_t database_writer(server_t *server) {
-  System_Message("inside filewriter");
+  Message_Info("inside filewriter");
  
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
     if (server->protocol[TINDX] & (1 << write_items[i].model))

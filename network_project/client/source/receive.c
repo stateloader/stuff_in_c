@@ -65,7 +65,7 @@ static int8_t create_table_mesg(recv_t *receive) {
     }
     break;
     default:
-    System_Message("oh noes");
+    Message_Info("oh noes");
     return EXIT;
     }
   }
@@ -77,7 +77,7 @@ static int8_t create_table_mesg(recv_t *receive) {
 static int8_t create_table_dvce(recv_t *receive) {
 /*Going to make a table of device-activity in time.*/
 
-  System_Message("Not in place yet");
+  Message_Info("Not in place yet");
   return SUCC;
 }
 
@@ -93,13 +93,13 @@ static int8_t init_table(recv_t * receive) {
       return recv_items[i].func(receive);
     }
   }
-  System_Message("failure, init table");
+  Message_Info("failure, init table");
   return FAIL;
 }
 
 int8_t receive_driver(recv_t *receive) {
   if (receive->protocol[EINDX] & (1 << RWBIT)) {
-    System_Message(receive->recv);
+    Message_Info(receive->recv);
   } else {
     return init_table(receive);
   }
