@@ -6,8 +6,8 @@ An "engine" of some sort during 'user-menu:ing' I came up with while playing aro
 solution is how bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include "scanner.h"
 #include "cstring.h"
+#include "scanner.h"
 #include "command.h"
 
 static int8_t state = _MAIN;
@@ -29,21 +29,21 @@ static cmnd_item main[] = {
 };
 
 static cmnd_item mesg[] = {
-  {_MESG, _EXIT, "-read"},
-  {_MESG, _EXIT, "-send"},
+  {_MESG, _DONE, "-read"},
+  {_MESG, _DONE, "-send"},
   {_MESG, _MAIN, "-back"}
 };
 
 static cmnd_item dvce[] = {
-  {_DVCE, _EXIT, "-read"},
+  {_DVCE, _DONE, "-read"},
   {_DVCE, _DLED, "-init"},
   {_DVCE, _MAIN, "-back"}
 };
 
 static cmnd_item dled[] = {
-  {_DLED, _EXIT, "-red"},
-  {_DLED, _EXIT, "-blue"},
-  {_DLED, _EXIT, "-green"},
+  {_DLED, _DONE, "-red"},
+  {_DLED, _DONE, "-blue"},
+  {_DLED, _DONE, "-green"},
   {_DLED, _MAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
@@ -65,6 +65,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
  *'command_scan'-function prior. This data makes it possible for bitwise operation on the 'blueprint-bytes'
  */
   switch(item.this_state) {
+
   case _MAIN:
     reset_protocol();
     TABLE |= (1 << index);
@@ -80,21 +81,15 @@ static void write_protocol(cmnd_item item, int8_t index) {
   break;
   default:
     Message_Info("Something went south while writing protocol.");
-    reset_protocol();
+    exit(EXIT_FAILURE);
   }
   return;
 }
 
-static void render_options(cmnd_item *items, size_t size_array) {                       // göra define
-/*Renders options based on amount of members in current 'command-item'*/
+static int8_t command_scan(cmnd_item *items, size_t size_array) {
 
   for (size_t i = 0; i < size_array; i++)
     printf("\t\t\t%s\n", items[i].cmnd);
-}
-
-static int8_t command_scan(cmnd_item *items, size_t size_array) {
-  
-  render_options(items, size_array);
 
   char command[SBUFF] = {'\0'};
   size_t cmnd_size = scan_driver(command, SBUFF, "select");
@@ -112,7 +107,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
 
 int8_t command_driver(uint8_t *protocol) {
 
-  while (state != _EXIT) {
+  while (state != _DONE) {
     switch(state) {
     case _MAIN:
       Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
@@ -131,13 +126,12 @@ int8_t command_driver(uint8_t *protocol) {
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
     }
+    if (state == _EXIT) return EXIT;
   }
 
   protocol[TINDX] = TABLE;
   protocol[AINDX] = ATTRB;
   protocol[FINDX] = FORWD;
-  
-  reset_protocol();
-  
+
   return command_driver_check(protocol);
 }

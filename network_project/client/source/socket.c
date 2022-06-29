@@ -4,8 +4,6 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include <sys/socket.h>
-#include <arpa/inet.h>
 #include "socket.h"
 
 int32_t socket_create(void) {

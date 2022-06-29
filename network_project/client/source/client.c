@@ -5,16 +5,31 @@ Info info info.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
-#include "scanner.h"
 #include "client.h"
 
-static uint8_t client_package(int32_t socket_client, rqst_t *request) {
-  request->size_send = send(socket_client, request->pack, request->size_pack, 0);
+static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client) {
+
+  if (command_driver(client->protocol) <= FAIL)
+    return EXIT;
+
+  request->protocol = client->protocol;
+  request->socket = client->socket_client;
+  request->size_user = string_copy(request->user, client->user, SBUFF);
+
+  receive->protocol = client->protocol;
+  receive->socket = client->socket_client;
+  receive->size_user = string_copy(receive->user, client->user, SBUFF);
+
+  return routine_config_check(request, receive);
+}
+
+static int8_t client_package(rqst_t *request) {
+  request->size_send = send(request->socket, request->pack, request->size_pack, 0);
   return SUCC;
 }
                
-static uint8_t server_package(int32_t socket_client, recv_t *receive) {
-  receive->size_recv = recv(socket_client, receive->recv, FBUFF, 0);
+static int8_t server_package(recv_t *receive) {
+  receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);
   return SUCC;
 }
 
@@ -22,49 +37,45 @@ int8_t client_driver(client_t *client) {
 
   rqst_t request = {0};
   recv_t receive = {0};
-  rout_t routine = ROUT_CMND;
 
-  request.size_user = string_copy(request.user, client->user, SBUFF);
-
-  int8_t result = 0;
-  //uint8_t protocol[3] = {0};
+  int8_t control = 0;
+  rout_t routine = ROUT_CONF;
 
   while (routine != ROUT_DONE) {
 
     switch(routine) {
-    case ROUT_CMND:
-      result = command_driver(client->protocol);
-      if (result <= FAIL)
+    case ROUT_CONF:
+      control = routine_config(&request, &receive, client);
+      if (control <= FAIL) {
         routine = ROUT_DONE;
-      else
+      } else {
         routine = ROUT_RQST;
+      }
       break;
     case ROUT_RQST:
-      request.protocol = client->protocol;
-      result = request_driver(&request);
-      if (result != SUCC)
+      control = request_driver(&request);
+      if (control != SUCC)
         routine = ROUT_DONE;
       else
         routine = ROUT_SEND;
       break;
     case ROUT_SEND:
-      result = client_package(client->socket_client, &request);
-      if (result != SUCC)
+      control = client_package(&request);
+      if (control != SUCC)
         routine = ROUT_DONE;
       else
         routine = ROUT_RESP;
       break;
     case ROUT_RESP:
-      result = server_package(client->socket_client, &receive);
-      if (result != SUCC)
+      control = server_package(&receive);
+      if (control != SUCC)
         routine = ROUT_DONE;
       else
         routine = ROUT_RECV;
       break;
     case ROUT_RECV:
-      receive.protocol = client->protocol;
-      result = receive_driver(&receive);
-      if (result != SUCC)
+      control = receive_driver(&receive);
+      if (control != SUCC)
         routine = ROUT_DONE;
       else
         routine = ROUT_FRWD;
@@ -78,5 +89,5 @@ int8_t client_driver(client_t *client) {
       exit(EXIT_FAILURE);
     }
   }
-  return result;
+  return control;
 }

@@ -15,7 +15,6 @@ static int32_t size_scan = 0;
 static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
-
     if (!check_byte_asci(scan[i])) {
       Message_Info("Only ASCII ('English') characters allowed.");
 		  return SCAN_INPUT;
@@ -23,11 +22,10 @@ static int8_t scan_check(char *scan) {
     } else if (check_byte_delm(scan[i])) {
       Message_Info("Pipe charachter ('|') is for losers. Use another one.");
       return SCAN_INPUT;
-
-    } else if (check_scan_minl(size_scan, 2)) {
-      Message_Info("Enter at least two characters.");
-      return SCAN_INPUT;
     }
+  } if (check_scan_minl(size_scan, 2)) {
+    Message_Info("Enter at least two characters.");
+    return SCAN_INPUT;
   }
   return SCAN_COMPL;
 }
@@ -47,7 +45,6 @@ static int8_t scan_input(char *scan, int32_t size_buffer, char *prompt) {
 int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
 
   uint8_t state = SCAN_INPUT;
-
   while (state != SCAN_COMPL) {
 
     switch(state) {
@@ -61,7 +58,6 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
       exit(EXIT_FAILURE);
     }
   }
-
   if (!check_term(scan, size_scan)) {
     Message_Info("Failed to terminate userinput.");
     return FAIL;

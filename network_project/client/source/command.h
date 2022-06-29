@@ -7,7 +7,8 @@
 #define _MESG 1
 #define _DVCE 2
 #define _DLED 3
-#define _EXIT 4
+#define _DONE 4
+#define _EXIT 5
 
 int8_t command_driver(uint8_t *protocol);
 
@@ -22,5 +23,4 @@ inline static int8_t command_driver_check(uint8_t *protocol) {
   }
   return SUCC;
 }
-
 #endif

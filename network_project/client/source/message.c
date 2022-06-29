@@ -12,7 +12,7 @@ static int8_t message_binder(rqst_t *request, mesg_t *message) {
   request->size_pack = (
     request->size_user + message->size_topc + message->size_mesg + TBUFF + POFFS
   );
-  
+
   request->user[request->size_user - 1] = DELIM;
   message->topc[message->size_topc - 1] = DELIM;
   message->mesg[message->size_mesg - 1] = DELIM;
@@ -27,7 +27,9 @@ static int8_t message_binder(rqst_t *request, mesg_t *message) {
 
 static int8_t message_writer(rqst_t *request, mesg_t *message) {
 
-  datetime_append(message->datm);
+  if(!datetime_append(message->datm))
+    return FAIL;
+    
   message->size_topc = scan_driver(message->topc, SBUFF, "topic");
   message->size_mesg = scan_driver(message->mesg, SBUFF, "message");
   return message_binder(request, message);

@@ -18,7 +18,7 @@ CONSTANT                            |  UNBIT  |    -    |    -    |    -    |   
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
-                                    |  UNBIT  |  ONLINE |    -    |    -    |    -    |     -    |   LOGIN   |   SIGNUP  |
+                                    |  UNBIT  |  ACKNW  |    -    |    -    |    -    |     -    |   SETUP   |   LOGIN   |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define TMESG 0     //              Table Message       - Set equals 'init message business' (to the server)
 #define TDVCE 1     //              Table Device        - Set equals 'init device business' (to the server)
@@ -30,6 +30,11 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 #define ATTR4 4     //              Attribute #0        
 #define ATTR5 5     //              Attribute #0        ----
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
+
+#define LOGIN 0
+#define SETUP 1
+#define ACKNW 6
+
 //-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
 #define TINDX 0     //              TABLE BYTE IDX      - (in protocol array)
 #define AINDX 1     //              ATTRIBUTE BYTE IDX  - (in protocol array)
