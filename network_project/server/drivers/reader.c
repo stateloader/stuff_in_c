@@ -7,7 +7,6 @@ info fasda
 #include "reader.h"
 
 static int8_t phase_file_open(server_t *server, const char *path) {
-  Message_Info("inside phase file_open");
 
   server->dbfile = fopen(path, "r");
   if (!server->dbfile) {
@@ -18,7 +17,6 @@ static int8_t phase_file_open(server_t *server, const char *path) {
 }
 
 static int8_t phase_file_read(server_t *server) {
-  Message_Info("inside phase file_read");
 
   server->size_resp = fread(server->resp, sizeof(char), FBUFF, server->dbfile);
   fclose(server->dbfile);
@@ -28,7 +26,6 @@ static int8_t phase_file_read(server_t *server) {
 //------------------------------------------------------------------------------------------------------------------------
 
 static int8_t read_mesg(server_t *server) {
-  Message_Info("inside read mesg");
 
   phase_file_open(server, "drivers/database/mesglog.dat");
   phase_file_read(server);
@@ -48,7 +45,6 @@ static read_item read_items[] = {
 };
 
 int8_t database_reader(server_t *server) {
-  Message_Info("Inside read_driver");
  
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (server->protocol[TINDX] & (1 << read_items[i].table))

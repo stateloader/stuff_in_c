@@ -18,7 +18,7 @@ CONSTANT                            |  UNBIT  |    -    |    -    |    -    |   
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 --------------------------------------------------------------------------------------------------------------FORWARD BYTE
-                                    |  UNBIT  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
+                                    |  UNBIT  |  ONLINE |    -    |    -    |    -    |     -    |   LOGIN   |   SIGNUP  |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define TMESG 0     //              Table Message       - Set equals 'init message business' (to the server)
 #define TDVCE 1     //              Table Device        - Set equals 'init device business' (to the server)
@@ -50,11 +50,11 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
-#define HEADER_FORM "\n%s\t\t%s\n%s\n\n"
+#define HEADER_FORM "\n%s\n%s\t\t%s\n%s\n\n"
 #define Header_Border "----------------------------------------------------------------------------------------------------"
-#define Render_Header(itm, inf) printf(HEADER_FORM, itm, inf, Header_Border);
+#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 
-#define FORM_INFO "\t\t\tSystem: %s\n"
+#define FORM_INFO "\t\t\t[System] %s\n"
 #define Message_Info(inf) printf(FORM_INFO, inf);
 
 #define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n"
@@ -71,6 +71,3 @@ int8_t datetime_append(char *datetime);
 int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
 
 #endif
-
-//#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
-//

@@ -9,10 +9,12 @@
 
 typedef enum ClientRoutine {
   ROUT_CMND, ROUT_RQST, ROUT_SEND,
-  ROUT_RECV, ROUT_FWRD, ROUT_DONE
+  ROUT_RESP, ROUT_RECV, ROUT_FRWD,
+  ROUT_DONE
 } rout_t;
 
 typedef struct Client {
+  uint8_t protocol[3];
   int32_t socket_client;
   int32_t socket_status;
   int32_t size_user;

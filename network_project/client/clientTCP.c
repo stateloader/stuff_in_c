@@ -9,7 +9,7 @@ info info info info info info
 
 
 static client_t socket_setup(char *address, int32_t port) {
-  Render_Header("CONNECT   |", "Connecting to server");
+  Render_Header("CONNECT   ", "Connecting to server");
   
   client_t client = {0};
   client.socket_client = socket_create();

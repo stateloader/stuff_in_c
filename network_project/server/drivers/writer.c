@@ -8,14 +8,12 @@ info fasda
 #include "writer.h"
 
 static int8_t phase_file_open(server_t *server, const char *path) {
-  Message_Info("inside phase file_open");
 
   server->dbfile = fopen(path, "a");
   return check_file_open(server);
 }
 
 static int8_t phase_file_appd(server_t *server) {
-  Message_Info("inside phase file_append");
 
   server->size_pack -= POFFS;
   int32_t size_write = fwrite(server->pack, sizeof(char), server->size_pack, server->dbfile);
@@ -26,14 +24,13 @@ static int8_t phase_file_appd(server_t *server) {
 }
 
 static int8_t response_writer(server_t *server, char *response) {
-  Message_Info("inside phase file_append");
+
   server->size_resp = string_copy(server->resp, response, SBUFF);
   return SUCC;
 
 }
 //------------------------------------------------------------------------------------------------------------------------
 static int8_t write_mesg(server_t *server) {
-  Message_Info("inside write mesg");
 
   phase_file_open(server, "drivers/database/mesglog.dat");
   phase_file_appd(server);
@@ -43,7 +40,6 @@ static int8_t write_mesg(server_t *server) {
 }
 
 static int8_t write_dvce(server_t *server) {
-  Message_Info("inside write dvce");
 
   phase_file_open(server, "drivers/database/dvcelog.dat");
   phase_file_appd(server);

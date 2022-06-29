@@ -10,7 +10,7 @@ info info info info info info
 #include "drivers/server.h"
 
 int main(void) {
-  Render_Header("SERVER", "Lorem ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("SERVER", "Server ipsum dolor sit amet, consectetur adipiscing elit");
 
   server_t server = {.status = 1};
 
