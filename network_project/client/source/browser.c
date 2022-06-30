@@ -7,10 +7,10 @@ solution is how bits being set (or cleared) simultaneously on the fly which fina
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
-#include "scanner.h"
+#include "scanner.h"  
 #include "browser.h"
 
-static int8_t state = _CONN;
+static int8_t state = _MAIN;
 
 /*-------------------------------------------------------------------------------------------------------COMMAND STRUCTURE
 3 (for now, more to come) menues being represented as 'command item'. Each item stores constants relevant for where the
@@ -21,12 +21,6 @@ typedef struct CommandItem {
   const uint8_t next_state;
   const char *cmnd;
 } cmnd_item;
-
-static cmnd_item conn[] = {
-  {_CONN, _INIT, "-login"},
-  {_CONN, _INIT, "-signup"},
-  {_CONN, _EXIT, "-exit"}
-};
 
 static cmnd_item main[] = {
   {_MAIN, _MESG, "-message"},
@@ -72,9 +66,6 @@ static void write_protocol(cmnd_item item, int8_t index) {
  */
   switch(item.this_state) {
 
-  case _CONN: 
-    STATS |= (1 << index);
-  break;
   case _MAIN:
     reset_protocol();
     TABLE |= (1 << index);
@@ -118,14 +109,7 @@ int8_t browse_driver(uint8_t *protocol) {
 
   while (state != _INIT) {
    
-    if (protocol[SBYTE] & (0 << VALID))
-      state = _CONN;
-
     switch(state) {
-    case _CONN:
-      Render_Header("CONNECT    ", "Connect ipsum dolor sit amet, consectetur adipiscing elit");
-      state = command_scan(conn, ARRAY_SIZE(conn));
-      break;
     case _MAIN:
       Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(main, ARRAY_SIZE(main));

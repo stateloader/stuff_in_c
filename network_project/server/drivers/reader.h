@@ -12,15 +12,23 @@ description to be
 typedef int8_t (*read_func)(server_t *server);
 
 typedef struct ReadItem {
-  const uint8_t table;
+  const uint8_t flag;
   read_func func;
 } read_item;
 
 int8_t database_reader(server_t *server);
 
-inline static int8_t check_size_read(server_t *server, int32_t size_read) {
-  if (server->size_pack != size_read) {
-    Message_Info("recived and written of different sizes");
+inline static int8_t reader_file_open_check(FILE *file) {
+  if (file == NULL) {
+    Message_Info("failed to open file");
+    return FAIL;
+  }
+  return SUCC;
+}
+
+inline static int8_t reader_file_data_check(int32_t size_recv) {
+  if (size_recv < 4) {
+    Message_Info("to little something reader file");
     return FAIL;
   }
   return SUCC;

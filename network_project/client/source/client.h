@@ -9,8 +9,13 @@ typedef struct Client {
   int32_t socket_client;
   int32_t size_user;
   int32_t size_pass;
+  int32_t size_pack;
+  int32_t size_resv;
   char user[SBUFF];
   char pass[SBUFF];
+  char pack[SBUFF];
+  char recv[SBUFF];
 } client_t;
+
 
 #endif

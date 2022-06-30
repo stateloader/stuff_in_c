@@ -11,9 +11,8 @@ info info info info info info
 int main(void) {
 
   client_t client = {0};
-
   connect_driver(&client, "127.0.0.1", 90190);  
-  session_driver(&client);
+  //session_driver(&client);
   
   exit(EXIT_SUCCESS);
 }

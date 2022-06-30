@@ -3,13 +3,12 @@
 
 #include "configs.h"
 
-#define _CONN 0
-#define _MAIN 1
-#define _MESG 2
-#define _DVCE 3
-#define _DLED 4
-#define _INIT 5
-#define _EXIT 6
+#define _MAIN 0
+#define _MESG 1
+#define _DVCE 2
+#define _DLED 3
+#define _INIT 4
+#define _EXIT 5
 
 int8_t browse_driver(uint8_t *protocol);
 

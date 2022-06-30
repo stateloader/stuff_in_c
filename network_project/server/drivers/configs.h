@@ -53,7 +53,7 @@ ingo info
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 3     //              Delimiters          - (members) Device-model
-#define DACCS 2
+#define DUSER 2
 #define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
 //------------------------------------------------------------------------------------------------------------------------
 #define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
@@ -73,7 +73,10 @@ ingo info
 
 #define SYSTEM_FORM "\t\t\tSystem: %s\n"
 #define Message_Info(sysmesg) printf(SYSTEM_FORM, sysmesg);
-
+/*
+#define SYSTEM_FORM_ERROR "\t\t\t[ERROR] %s, %s\n"
+#define System_Message_Error(err, pbl) printf(SYSTEM_FORM_ERROR, err, pbl);
+*/
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)

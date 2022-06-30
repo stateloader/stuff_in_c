@@ -36,7 +36,8 @@ static int8_t server_package(recv_t *receive) {
 
 int8_t session_driver(client_t *client) {
 
-  rqst_t request = {0}; recv_t receive = {0};
+  rqst_t request = {0};
+  recv_t receive = {0};
 
   int8_t control = 0;
   rout_t routine = ROUT_CONF;
