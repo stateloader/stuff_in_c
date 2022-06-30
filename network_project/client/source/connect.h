@@ -2,7 +2,7 @@
 #define CONNECT_H
 
 #include "configs.h"
-#include "client.h"
+#include "session.h"
 
 int8_t connect_driver(client_t *client, char *address, int32_t port);
 

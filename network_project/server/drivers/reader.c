@@ -45,7 +45,7 @@ static read_item read_items[] = {
 int8_t database_reader(server_t *server) {
  
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
-    if (server->protocol[TINDX] & (1 << read_items[i].table))
+    if (server->protocol[TBYTE] & (1 << read_items[i].table))
       return read_items[i].func(server);
   }
   Message_Info("Oh crap (read_driver)");

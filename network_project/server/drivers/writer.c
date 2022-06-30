@@ -58,7 +58,7 @@ int8_t database_writer(server_t *server) {
   Message_Info("inside filewriter");
  
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
-    if (server->protocol[TINDX] & (1 << write_items[i].model))
+    if (server->protocol[TBYTE] & (1 << write_items[i].model))
       return write_items[i].func(server);
   }
   return FAIL;

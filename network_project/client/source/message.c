@@ -45,7 +45,7 @@ int8_t message_driver(rqst_t *request) {
 
   mesg_t message = {0};
 
-  if (request->protocol[AINDX] & (1 << RWBIT))
+  if (request->protocol[ABYTE] & (1 << RWBIT))
     return message_writer(request, &message);
   else
     return message_reader(request);

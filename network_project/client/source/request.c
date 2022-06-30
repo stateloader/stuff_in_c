@@ -17,7 +17,7 @@ static rqst_item rqst_items[] = {
 int8_t request_driver(rqst_t *request) {
 
   for (size_t i = 0; i < ARRAY_SIZE(rqst_items); i++) {
-    if (request->protocol[TINDX] & (1 << rqst_items[i].task))
+    if (request->protocol[TBYTE] & (1 << rqst_items[i].task))
       return rqst_items[i].func(request);
   }
   Message_Info("couldn't read request-call");

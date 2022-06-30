@@ -5,11 +5,11 @@ Info info info.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
-#include "client.h"
+#include "session.h"
 
 static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client) {
 
-  if (command_driver(client->protocol) <= FAIL) return EXIT;
+  if (browse_driver(client->protocol) <= FAIL) return EXIT;
 
   request->protocol = client->protocol;
   request->socket = client->socket_client;
@@ -34,10 +34,9 @@ static int8_t server_package(recv_t *receive) {
   return SUCC;
 }
 
-int8_t client_driver(client_t *client) {
+int8_t session_driver(client_t *client) {
 
-  rqst_t request = {0};
-  recv_t receive = {0};
+  rqst_t request = {0}; recv_t receive = {0};
 
   int8_t control = 0;
   rout_t routine = ROUT_CONF;

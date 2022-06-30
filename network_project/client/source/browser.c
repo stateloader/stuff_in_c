@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                   COMMAND // menu
+                                                                                                                 "BROWSER"
 --------------------------------------------------------------------------------------------------------------------------
 An "engine" of some sort during 'user-menu:ing' I came up with while playing around with function-pointers. Members of
 'cmnd_item' helps (a lot) in guinding the user to the correct state depending on her/his commands. A neat caviat in this
@@ -8,7 +8,7 @@ solution is how bits being set (or cleared) simultaneously on the fly which fina
 
 #include "cstring.h"
 #include "scanner.h"
-#include "command.h"
+#include "browser.h"
 
 static int8_t state = _CONN;
 
@@ -23,17 +23,11 @@ typedef struct CommandItem {
 } cmnd_item;
 
 static cmnd_item conn[] = {
-  {_CONN, _MAIN, "-login"},
-  {_CONN, _MAIN, "-signup"},
+  {_CONN, _INIT, "-login"},
+  {_CONN, _INIT, "-signup"},
   {_CONN, _EXIT, "-exit"}
 };
-/*
-static cmnd_item conn[] = {
-  {_CONN, _LOGN, "-login"},
-  {_CONN, _SIGN, "-signup"},
-  {_CONN, _EXIT, "-exit"}
-};
-*/
+
 static cmnd_item main[] = {
   {_MAIN, _MESG, "-message"},
   {_MAIN, _DVCE, "-device"},
@@ -41,21 +35,21 @@ static cmnd_item main[] = {
 };
 
 static cmnd_item mesg[] = {
-  {_MESG, _DONE, "-read"},
-  {_MESG, _DONE, "-send"},
+  {_MESG, _INIT, "-read"},
+  {_MESG, _INIT, "-send"},
   {_MESG, _MAIN, "-back"}
 };
 
 static cmnd_item dvce[] = {
-  {_DVCE, _DONE, "-read"},
+  {_DVCE, _INIT, "-read"},
   {_DVCE, _DLED, "-init"},
   {_DVCE, _MAIN, "-back"}
 };
 
 static cmnd_item dled[] = {
-  {_DLED, _DONE, "-red"},
-  {_DLED, _DONE, "-blue"},
-  {_DLED, _DONE, "-green"},
+  {_DLED, _INIT, "-red"},
+  {_DLED, _INIT, "-blue"},
+  {_DLED, _INIT, "-green"},
   {_DLED, _MAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
@@ -65,7 +59,7 @@ screwed things up for me while sending package to the server).
 /-----------------------------------------------------------------------------------------------------------------------*/
 static uint8_t TABLE = 0x80;
 static uint8_t ATTRB = 0x80;
-static uint8_t ACCES = 0x80;
+static uint8_t STATS = 0x80;
 
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80;
@@ -79,7 +73,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
   switch(item.this_state) {
 
   case _CONN: 
-    Message_Info("inne i conn");
+    STATS |= (1 << index);
   break;
   case _MAIN:
     reset_protocol();
@@ -120,9 +114,13 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t command_driver(uint8_t *protocol) {
+int8_t browse_driver(uint8_t *protocol) {
 
-  while (state != _DONE) {
+  while (state != _INIT) {
+   
+    if (protocol[SBYTE] & (0 << VALID))
+      state = _CONN;
+
     switch(state) {
     case _CONN:
       Render_Header("CONNECT    ", "Connect ipsum dolor sit amet, consectetur adipiscing elit");
@@ -148,9 +146,9 @@ int8_t command_driver(uint8_t *protocol) {
     if (state == _EXIT) return EXIT;
   }
 
-  protocol[TINDX] = TABLE;
-  protocol[AINDX] = ATTRB;
-  protocol[FINDX] = ACCES;
+  protocol[TBYTE] = TABLE;
+  protocol[ABYTE] = ATTRB;
+  protocol[SBYTE] = STATS;
 
   return command_driver_check(protocol);
 }

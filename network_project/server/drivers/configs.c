@@ -7,9 +7,9 @@ Info info info
 
 int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol) {
 
-  protocol[TINDX] = package[size_pack - 4];
-  protocol[AINDX] = package[size_pack - 3];
-  protocol[FINDX] = package[size_pack - 2];
+  protocol[TBYTE] = package[size_pack - 4];
+  protocol[ABYTE] = package[size_pack - 3];
+  protocol[SBYTE] = package[size_pack - 2];
 
   if (!check_term(package, size_pack)) {
     Message_Info("--error-- package not nullterminated");
