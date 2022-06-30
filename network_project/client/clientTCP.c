@@ -9,7 +9,8 @@ info info info info info info
 
 int main(void) {
 
-  client_t client = connect_driver("127.0.0.1", 90190);  
+  client_t client = {.validated = 0};
+  connect_driver(&client, "127.0.0.1", 90190);  
   client_driver(&client);
   
   exit(EXIT_SUCCESS);

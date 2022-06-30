@@ -9,8 +9,7 @@ Info info info.
 
 static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client) {
 
-  if (command_driver(client->protocol) <= FAIL)
-    return EXIT;
+  if (command_driver(client->protocol) <= FAIL) return EXIT;
 
   request->protocol = client->protocol;
   request->socket = client->socket_client;
@@ -24,11 +23,13 @@ static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client)
 }
 
 static int8_t client_package(rqst_t *request) {
+  
   request->size_send = send(request->socket, request->pack, request->size_pack, 0);
   return SUCC;
 }
                
 static int8_t server_package(recv_t *receive) {
+  
   receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);
   return SUCC;
 }
@@ -41,7 +42,7 @@ int8_t client_driver(client_t *client) {
   int8_t control = 0;
   rout_t routine = ROUT_CONF;
 
-  while (routine != ROUT_DONE) {
+  while (routine != ROUT_DONE) {                // route exit
 
     switch(routine) {
     case ROUT_CONF:
@@ -81,7 +82,6 @@ int8_t client_driver(client_t *client) {
         routine = ROUT_FRWD;
       break;
     case ROUT_FRWD:
-        // CRUD-stuff.
         routine = ROUT_DONE;
       break;
     default:

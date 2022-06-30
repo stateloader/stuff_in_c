@@ -23,8 +23,6 @@ static int8_t phase_file_read(server_t *server) {
   return SUCC;
 }
 
-//------------------------------------------------------------------------------------------------------------------------
-
 static int8_t read_mesg(server_t *server) {
 
   phase_file_open(server, "drivers/database/mesglog.dat");

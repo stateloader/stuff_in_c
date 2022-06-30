@@ -20,8 +20,10 @@ int8_t receive_driver(server_t *server) {
 
   int8_t result = 0;
   server->size_pack = recv(server->conn.sock_clnt, server->pack, SBUFF, 0);
-  
   result = protocol_append(server->pack, server->size_pack, server->protocol);
   if (result == FAIL) return result;
+
+  
+
   return database_action(server);
 }

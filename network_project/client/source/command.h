@@ -3,12 +3,15 @@
 
 #include "configs.h"
 
-#define _MAIN 0
-#define _MESG 1
-#define _DVCE 2
-#define _DLED 3
-#define _DONE 4
-#define _EXIT 5
+#define _CONN 0
+#define _LOGN 1
+#define _SIGN 2
+#define _MAIN 3
+#define _MESG 4
+#define _DVCE 5
+#define _DLED 6
+#define _DONE 7
+#define _EXIT 8
 
 int8_t command_driver(uint8_t *protocol);
 

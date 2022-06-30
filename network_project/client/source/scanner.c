@@ -15,6 +15,7 @@ static int32_t size_scan = 0;
 static int8_t scan_check(char *scan) {
 
   for (int32_t i = 0; i < size_scan; i++) {
+    
     if (!check_byte_asci(scan[i])) {
       Message_Info("Only ASCII ('English') characters allowed.");
 		  return SCAN_INPUT;
@@ -23,7 +24,8 @@ static int8_t scan_check(char *scan) {
       Message_Info("Pipe charachter ('|') is for losers. Use another one.");
       return SCAN_INPUT;
     }
-  } if (check_scan_minl(size_scan, 2)) {
+  }
+  if (check_scan_minl(size_scan, 2)) {
     Message_Info("Enter at least two characters.");
     return SCAN_INPUT;
   }

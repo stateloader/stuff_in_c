@@ -4,6 +4,6 @@
 #include "configs.h"
 #include "client.h"
 
-client_t connect_driver(char *address, int32_t port);
+int8_t connect_driver(client_t *client, char *address, int32_t port);
 
 #endif
