@@ -14,7 +14,7 @@ int8_t socket_create(int *server_socket) {
   return SUCC;
 }
 
-int8_t socket_bind(int server_socket, struct sockaddr_in *server_address, char *address, int port) {
+int8_t socket_binder(int server_socket, struct sockaddr_in *server_address, char *address, int port) {
 
   server_address->sin_addr.s_addr = inet_addr(address);
   server_address->sin_family = AF_INET;

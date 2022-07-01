@@ -29,7 +29,7 @@ static int8_t device_writer(rqst_t *request, dvce_t *device) {
   datetime_append(device->datm);
 
   for (size_t i = 0; i < ARRAY_SIZE(push_items); i++) {
-    if (request->protocol[AINDX] & (1 << push_items[i].bit))
+    if (request->protocol[ABYTE] & (1 << push_items[i].bit))
       device->size_push = string_copy(device->push, push_items[i].str, SBUFF);
   }
   request->size_pack = (request->size_user + device->size_push + TBUFF + POFFS);
@@ -47,7 +47,7 @@ int8_t device_driver(rqst_t *request) {
 
   dvce_t device = {0};
 
-  if (request->protocol[AINDX] & (1 << RWBIT))
+  if (request->protocol[ABYTE] & (1 << RWBIT))
     return device_writer(request, &device);
   else
     return device_reader(request);

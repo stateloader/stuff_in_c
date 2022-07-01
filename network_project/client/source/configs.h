@@ -11,18 +11,30 @@ Macros implemented reg
 #include <stdint.h>
 #include <unistd.h>
 
-/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
+/*---------------------------------------------------------------------------------------------------------------TABLE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 ------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
---------------------------------------------------------------------------------------------------------------FORWARD BYTE
-                                    |  UNBIT  |  ONLINE |    -    |    -    |    -    |     -    |   LOGIN   |   SIGNUP  |
+-------------------------------------------------------------------------------------------------------------- STATUS BYTE
+                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
+TABLE BYTE, ATTRIBUTE BYTE and STATUS BYTE are throughout the program indexed in an uint8_t array - 'protocol'. Given byte
+in the index are reffered to as below:
+------------------------------------------------------------------------------------------------------------------------*/
+#define TBYTE 0     //              TABLE BYTE          - index 0 in protocol-array
+#define ABYTE 1     //              ATTRIBUTE BYTE      - index 1 in protocol-array
+#define SBYTE 2     //              STATUS BYTE         - index 2 in protocol-array
+
+//--------------------------------------------------------------------------------------------------------TABLE BYTE flags
 #define TMESG 0     //              Table Message       - Set equals 'init message business' (to the server)
 #define TDVCE 1     //              Table Device        - Set equals 'init device business' (to the server)
 
+//----------------------------------------------------------------------------------------------------ATTRIBUTE BYTE flags
 #define ATTR0 0     //              Attribute #0        ----
 #define ATTR1 1     //              Attribute #0        
 #define ATTR2 2     //              Attribute #0         Attribute Bit(N) (except RWBIT) with different local definitions
@@ -30,15 +42,19 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 #define ATTR4 4     //              Attribute #0        
 #define ATTR5 5     //              Attribute #0        ----
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
-//-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
-#define TINDX 0     //              TABLE BYTE IDX      - (in protocol array)
-#define AINDX 1     //              ATTRIBUTE BYTE IDX  - (in protocol array)
-#define FINDX 2     //              FORWARD BYTE IDX    - (in protocol array)
-#define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
-//---------------------------------------------------------------------------------------------------------------DELIMITER
+
+//-------------------------------------------------------------------------------------------------------STATUS BYTE flags
+#define LOGIN 4
+#define SETUP 5
+#define VALID 6
+/*----------------------------------------------------------------------------------------------------------------DELIMITER
+ingo info
+//-----------------------------------------------------------------------------------------------------------------------*/
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 3     //              Delimiters          - (members) Device-model
+#define DACCS 2
+#define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
 //------------------------------------------------------------------------------------------------------------------------
 #define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
 #define EXIT -1     //              EXIT                - User wants to exit the program.

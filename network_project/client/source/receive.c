@@ -130,7 +130,7 @@ static recv_item recv_items[] = {
 static int8_t init_table(recv_t *receive) {
 
   for (size_t i = 0; i < ARRAY_SIZE(recv_items); i++) {
-    if (receive->protocol[TINDX] & (1 << recv_items[i].table)) {
+    if (receive->protocol[TBYTE] & (1 << recv_items[i].table)) {
       receive->meta.entry_delim = recv_items[i].delim;
       return recv_items[i].func(receive);
     }
@@ -140,7 +140,7 @@ static int8_t init_table(recv_t *receive) {
 }
 
 int8_t receive_driver(recv_t *receive) {
-  if (receive->protocol[AINDX] & (1 << RWBIT)) {
+  if (receive->protocol[ABYTE] & (1 << RWBIT)) {
     Message_Info(receive->recv);
   } else {
     return init_table(receive);

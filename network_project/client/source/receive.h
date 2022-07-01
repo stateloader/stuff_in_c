@@ -11,11 +11,14 @@ typedef struct TableMeta {
 } meta_t;
 
 typedef struct Receiver {
+  int32_t socket;
   uint8_t *protocol;
   int32_t size_recv;
+  int32_t size_user;
+  char user[FBUFF];
+  char recv[FBUFF];
   mmod_t *table_mesg;
   dmod_t *table_dvce;
-  char recv[FBUFF];
   meta_t meta;
 } recv_t;
 

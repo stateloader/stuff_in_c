@@ -7,6 +7,7 @@
 #include "configs.h"
 
 typedef struct Request {
+  int32_t socket;
   uint8_t *protocol;
   int32_t size_send;
   int32_t size_user;

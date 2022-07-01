@@ -7,7 +7,7 @@
 typedef int8_t (*write_func)(server_t *server);
 
 typedef struct WriteItem {
-  const uint8_t model;
+  const uint8_t flag;
   write_func func;
 } write_item;
 

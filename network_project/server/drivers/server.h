@@ -11,7 +11,7 @@ typedef struct Connection {
 } conn_t;
 
 typedef struct Server {
-  int8_t status;
+  uint8_t session;
   uint8_t protocol[3];
   int32_t size_pack;
   int32_t size_resp;

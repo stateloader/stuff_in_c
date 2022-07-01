@@ -1,14 +1,14 @@
 /*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                   COMMAND
+                                                                                                                 "BROWSER"
 --------------------------------------------------------------------------------------------------------------------------
 An "engine" of some sort during 'user-menu:ing' I came up with while playing around with function-pointers. Members of
 'cmnd_item' helps (a lot) in guinding the user to the correct state depending on her/his commands. A neat caviat in this
 solution is how bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.
 ------------------------------------------------------------------------------------------------------------------------*/
 
-#include "scanner.h"
 #include "cstring.h"
-#include "command.h"
+#include "scanner.h"  
+#include "browser.h"
 
 static int8_t state = _MAIN;
 
@@ -29,21 +29,21 @@ static cmnd_item main[] = {
 };
 
 static cmnd_item mesg[] = {
-  {_MESG, _EXIT, "-read"},
-  {_MESG, _EXIT, "-send"},
+  {_MESG, _INIT, "-read"},
+  {_MESG, _INIT, "-send"},
   {_MESG, _MAIN, "-back"}
 };
 
 static cmnd_item dvce[] = {
-  {_DVCE, _EXIT, "-read"},
+  {_DVCE, _INIT, "-read"},
   {_DVCE, _DLED, "-init"},
   {_DVCE, _MAIN, "-back"}
 };
 
 static cmnd_item dled[] = {
-  {_DLED, _EXIT, "-red"},
-  {_DLED, _EXIT, "-blue"},
-  {_DLED, _EXIT, "-green"},
+  {_DLED, _INIT, "-red"},
+  {_DLED, _INIT, "-blue"},
+  {_DLED, _INIT, "-green"},
   {_DLED, _MAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
@@ -53,10 +53,10 @@ screwed things up for me while sending package to the server).
 /-----------------------------------------------------------------------------------------------------------------------*/
 static uint8_t TABLE = 0x80;
 static uint8_t ATTRB = 0x80;
-static uint8_t FORWD = 0x80;
+static uint8_t STATS = 0x80;
 
 static void reset_protocol(void) {
-  TABLE = 0x80, ATTRB = 0x80, FORWD = 0x80;
+  TABLE = 0x80, ATTRB = 0x80;
   state = _MAIN;
 }
 
@@ -65,6 +65,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
  *'command_scan'-function prior. This data makes it possible for bitwise operation on the 'blueprint-bytes'
  */
   switch(item.this_state) {
+
   case _MAIN:
     reset_protocol();
     TABLE |= (1 << index);
@@ -80,21 +81,15 @@ static void write_protocol(cmnd_item item, int8_t index) {
   break;
   default:
     Message_Info("Something went south while writing protocol.");
-    reset_protocol();
+    exit(EXIT_FAILURE);
   }
   return;
 }
 
-static void render_options(cmnd_item *items, size_t size_array) {                       // göra define
-/*Renders options based on amount of members in current 'command-item'*/
+static int8_t command_scan(cmnd_item *items, size_t size_array) {
 
   for (size_t i = 0; i < size_array; i++)
     printf("\t\t\t%s\n", items[i].cmnd);
-}
-
-static int8_t command_scan(cmnd_item *items, size_t size_array) {
-  
-  render_options(items, size_array);
 
   char command[SBUFF] = {'\0'};
   size_t cmnd_size = scan_driver(command, SBUFF, "select");
@@ -110,9 +105,10 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t command_driver(uint8_t *protocol) {
+int8_t browse_driver(uint8_t *protocol) {
 
-  while (state != _EXIT) {
+  while (state != _INIT) {
+   
     switch(state) {
     case _MAIN:
       Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
@@ -131,13 +127,12 @@ int8_t command_driver(uint8_t *protocol) {
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
     }
+    if (state == _EXIT) return EXIT;
   }
 
-  protocol[TINDX] = TABLE;
-  protocol[AINDX] = ATTRB;
-  protocol[FINDX] = FORWD;
-  
-  reset_protocol();
-  
+  protocol[TBYTE] = TABLE;
+  protocol[ABYTE] = ATTRB;
+  protocol[SBYTE] = STATS;
+
   return command_driver_check(protocol);
 }
