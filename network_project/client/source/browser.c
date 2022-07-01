@@ -53,7 +53,6 @@ screwed things up for me while sending package to the server).
 /-----------------------------------------------------------------------------------------------------------------------*/
 static uint8_t TABLE = 0x80;
 static uint8_t ATTRB = 0x80;
-static uint8_t STATS = 0x80;
 
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80;
@@ -132,7 +131,6 @@ int8_t browse_driver(uint8_t *protocol) {
 
   protocol[TBYTE] = TABLE;
   protocol[ABYTE] = ATTRB;
-  protocol[SBYTE] = STATS;
 
   return command_driver_check(protocol);
 }

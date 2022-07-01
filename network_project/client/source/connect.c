@@ -1,7 +1,8 @@
 /*------------------------------------------------------------------------------------------------------------------------
                                                                                                                    CONNECT
 --------------------------------------------------------------------------------------------------------------------------
-info info info info info info
+I really wanted to implement the functionality in this module in the BROWSER - "all userinput in one place" but it turned
+out (etc, koda vidare nu istä'llet)
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
@@ -23,8 +24,45 @@ static conn_item conn_items[] = {
   {CONN_, SIGN_, "-signup"},
   {CONN_, EXIT_, "-exit"}
 };
+//conn_items handy while jumping between states in the 'connect_driver'
+
+static void protocol_restore(client_t *client) {
+/*Restores, "default", the protocol where the highest bit always is set.*/
+
+  client->protocol[TBYTE] = 0x80;
+  client->protocol[ABYTE] = 0x80;
+  client->protocol[SBYTE] = 0x80;
+}
+
+static int8_t protocol_obtain(client_t *client) { 
+/*Assigns the protocol by copy received (latest) received protocol.*/
+
+  client->protocol[TBYTE] = client->recv[client->size_recv - 4];
+  client->protocol[ABYTE] = client->recv[client->size_recv - 3];
+  client->protocol[SBYTE] = client->recv[client->size_recv - 2];
+
+  return protocol_obtain_check(client);
+}
+
+static int8_t connect_create_package(client_t *client) {
+/*Creates a canonical package before throwing it at the server.*/
+
+  client->size_pack = (client->size_user + client->size_pass + POFFS);
+
+  client->user[client->size_user - 1] = DELIM;
+  client->pass[client->size_pass - 1] = DELIM;
+
+  strncat(client->pack, client->user, client->size_pack);
+  strncat(client->pack, client->pass, client->size_pack);
+
+  client->user[client->size_user - 1] = '\0';
+  client->pass[client->size_pass - 1] = '\0';
+
+  return protocol_append(client->pack, client->size_pack, client->protocol);
+}
 
 static int8_t connect_scan(conn_item *items, size_t size_array) {
+/*Array of possible choices being printed. "Connect Menu". User choose by mimic one of the choices.*/
 
   for (size_t i = 0; i < size_array; i++)
     printf("\t\t\t%s\n", items[i].cmnd);
@@ -42,81 +80,104 @@ static int8_t connect_scan(conn_item *items, size_t size_array) {
 }
 
 static int8_t scan_userdata(client_t *client) {
+/*Input of username and password, login as in setup-mode.*/
 
   client->size_user = scan_driver(client->user, SBUFF, "username");
   client->size_pass = scan_driver(client->pass, SBUFF, "password");
 
-  return scanner_size_check(client->size_user, client->size_pass);
+  return scanner_size_check(client);
 }
 
 static int8_t connect_login(client_t *client) {
+/*Bit LOGIN being set in SBYTE. When reveived it tells the server to init login-logic.*/
+ 
   Render_Header("LOGIN  ", "Connecting to server");
 
-  if(!scan_userdata(client)) return EXIT_;
-
+  if (!scan_userdata(client)) return EXIT_;
   client->protocol[SBYTE] |= (1 << LOGIN);
 
   return VALD_;
 }
 
-static int8_t connect_signp(client_t *client) {
+static int8_t connect_setup(client_t *client) {
+/*Bit SETUP being set in SBYTE. When reveived it tells the server to init setup-logic.*/
+  
   Render_Header("SIGNUP   ", "Connecting to server");
 
-  if(!scan_userdata(client)) return EXIT_;
-
+  if (!scan_userdata(client)) return EXIT_;
   client->protocol[SBYTE] |= (1 << SETUP);
 
   return VALD_;
 }
 
-static int8_t canonical_package(client_t *client) {
+static int8_t connect_result(client_t *client) {
 
-  client->size_pack = (client->size_user + client->size_pass + POFFS);
-
-  client->user[client->size_user - 1] = DELIM;
-  client->pass[client->size_pass - 1] = DELIM;
-
-  strncat(client->pack, client->user, client->size_pack);
-  strncat(client->pack, client->pass, client->size_pack);
-
-  return protocol_append(client->pack, client->size_pack, client->protocol);
+  if (client->protocol[SBYTE] & (1 << VALID)) {
+    if (client->protocol[SBYTE] & (1 << LOGIN)) {
+      Message_Login_Succ(client->user);
+      return DONE_;
+    } else if (client->protocol[SBYTE] & (1 << SETUP)) {
+      Message_Setup_Succ(client->user);
+      return DONE_;
+    } else {
+      Message_Info("Shouldn't be here, (positive connect result)");
+      return EXIT_;
+    }
+  } else {
+    if (client->protocol[SBYTE] & (1 << LOGIN)) {
+      Message_Login_Fail(client->user);
+      return CONN_;
+    } else if (client->protocol[SBYTE] & (1 << SETUP)) {
+      Message_Setup_Fail(client->user);
+      return CONN_;
+    } else {
+      Message_Info("Shouldn't be here, (negative connect result)");
+      return EXIT_;
+    }
+  }
 }
 
 static int8_t connect_valid(client_t *client) {
+/*Here, the user has entered a username and password in order to login/signup which being sent and dealt
+ *with by the server. If ok, we're DONE and are able to have the time of our lives. Else we're thrown
+ *back to state CONN_ (mening try again).*/
 
-  if (!canonical_package(client)) return EXIT_;
+  int8_t result = 0;
 
-  Message_Info(client->pack);
+  result = connect_create_package(client);
+  if (result != SUCC) return result;
 
-  int32_t size_send = send(client->socket_client, client->pack, client->size_pack, 0);
-  int32_t size_recv = recv(client->socket_client, client->recv, FBUFF, 0);
+  client->size_send = send(client->socket_client, client->pack, client->size_pack, 0);
+  result = connect_send_check(client);
+  if (result != SUCC) return result;
 
-  Message_Info(client->recv);
+  client->size_recv = recv(client->socket_client, client->recv, FBUFF, 0);
+  result = protocol_obtain(client);
+  if (result != SUCC) return result;
 
-  return DONE_;
+  return connect_result(client);
 }
 
-static int8_t connect_setup(client_t *client, char *address, int32_t port) {
-  Render_Header("CONNECT  ", "Connecting to server");
+ int8_t connect_create(client_t *client, char *address, int32_t port) {
+/*Connecting to server.*/
+  Render_Header("CONNECT   ", "Connecting to server");
 
   client->socket_client = socket_create();
   client->socket_status = socket_connect(client->socket_client, address, port);
 
-  client->protocol[TBYTE] = 0x80;
-  client->protocol[ABYTE] = 0x80;
-  client->protocol[SBYTE] = 0x80;
-  
-  return SUCC;
+  return connect_setup_check(client);
 }
 
 int8_t connect_driver(client_t *client, char *address, int32_t port) { 
+/*While the user hasn't made any progress in being validated by the server or typed exit the loop will continue.*/
 
-  int8_t result = connect_setup(client, address, port);
+  int8_t result = connect_create(client, address, port);
   if (result != SUCC) return result;
 
   while (state != DONE_) {
     switch(state) {
     case CONN_:
+      protocol_restore(client);
       Render_Header("VALIDATE ", "Validate ipsum dolor sit amet, consectetur adipiscing elit");
       state = connect_scan(conn_items, ARRAY_SIZE(conn_items));
       break;
@@ -124,7 +185,7 @@ int8_t connect_driver(client_t *client, char *address, int32_t port) {
       state = connect_login(client);
       break;
     case SIGN_:
-      state = connect_signp(client);
+      state = connect_setup(client);
       break;
     case VALD_:
       state = connect_valid(client);
@@ -132,6 +193,5 @@ int8_t connect_driver(client_t *client, char *address, int32_t port) {
     }
     if (state == EXIT_) return EXIT;
   }
-
   return SUCC;
 }

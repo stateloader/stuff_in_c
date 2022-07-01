@@ -7,6 +7,17 @@ info fasda
 #include "sstring.h"
 #include "writer.h"
 
+int8_t writer_protocol_respond(server_t *server) {
+
+  server->size_resp = POFFS;
+
+  server->resp[server->size_resp - 4] = server->protocol[TBYTE];
+  server->resp[server->size_resp - 3] = server->protocol[ABYTE];
+  server->resp[server->size_resp - 2] = server->protocol[SBYTE];
+  server->resp[server->size_resp - 1] = '\0';
+
+  return SUCC;
+}
 
 static int8_t writer_file_open(server_t *server, const char *path) {
 
@@ -62,8 +73,8 @@ static int8_t writer_valid(server_t *server) {
   
   result = writer_file_appd(server);
   if (result != SUCC) return result;
-
-  return SUCC;
+  
+  return writer_protocol_respond(server);
 }
 
 static write_item table_items[] = {

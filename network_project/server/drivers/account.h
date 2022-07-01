@@ -12,7 +12,7 @@ typedef struct UserModel {
 } umod_t;
 
 typedef struct Parser {
-  uint8_t *protocol;
+  uint8_t protocol[3];
   int32_t amnt_delm;
   int32_t amnt_rows;
   int32_t size_user;

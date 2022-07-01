@@ -70,7 +70,7 @@ ingo info
 #define Header_Border "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 
-#define FORM_INFO "\t\t\t[System] %s\n"
+#define FORM_INFO "\t\t\tsystem: %s\n"
 #define Message_Info(inf) printf(FORM_INFO, inf);
 
 #define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n"
@@ -84,6 +84,5 @@ ingo info
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 //--------------------------------------------------------------------------------------------------------------THROUGHOUTS
 int8_t datetime_append(char *datetime);
-int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
-
+int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);   //set
 #endif

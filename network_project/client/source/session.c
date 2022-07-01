@@ -5,6 +5,7 @@ Info info info.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
+#include "connect.h"
 #include "session.h"
 
 static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client) {
@@ -35,6 +36,8 @@ static int8_t server_package(recv_t *receive) {
 }
 
 int8_t session_driver(client_t *client) {
+
+  connect_create(client, "127.0.0.1", 90190);
 
   rqst_t request = {0};
   recv_t receive = {0};
