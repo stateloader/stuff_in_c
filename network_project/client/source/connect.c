@@ -62,7 +62,7 @@ static int8_t connect_login(client_t *client) {
 static int8_t connect_signp(client_t *client) {
   Render_Header("SIGNUP   ", "Connecting to server");
 
-  if( !scan_userdata(client)) return EXIT_;
+  if(!scan_userdata(client)) return EXIT_;
 
   client->protocol[SBYTE] |= (1 << SETUP);
 

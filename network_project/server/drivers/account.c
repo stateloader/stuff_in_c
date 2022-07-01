@@ -23,6 +23,7 @@ static int8_t fetch_rows(pars_t *parser) {
 static int8_t fetch_memo(pars_t *parser) {
 /*malloc rows amount of usermodel-instances*/
   Message_Info("Fetching Memory.");
+  
   parser->table_user = malloc(sizeof(umod_t) * parser->amnt_rows);
 
   return memo_check(parser);
@@ -105,6 +106,7 @@ static int8_t valid_pass(pars_t *parser, int32_t i) {
 
 static int8_t parse_logn(pars_t *parser) {
 /*compare user/pass from current database (table), poly-match and it's a hit.*/
+
   Message_Info("Parsing login-credentials.");
 
   int8_t match = 0;
@@ -123,6 +125,7 @@ static int8_t parse_logn(pars_t *parser) {
 
 static int8_t parse_setp(pars_t *parser) {
 /*compare username during acc-setup, if not taken it's a hit*/
+
   Message_Info("Parsing setup-credentials.");
 
   int8_t taken = 0;
@@ -130,9 +133,10 @@ static int8_t parse_setp(pars_t *parser) {
     taken += (valid_user(parser, i) ==  SUCC) ? 1 : 0;
   
   if (!taken) {
-    parser->protocol[SBYTE] |= (1 << VALID);
     Message_Info("username not taken.");
+    parser->protocol[SBYTE] |= (1 << VALID);
   } else {
+    parser->protocol[SBYTE] ^= (1 << SETUP);
     Message_Info("username already taken.");
   }
 
@@ -151,7 +155,7 @@ int8_t account_driver(pars_t *parser) {
     if (!parse_items[i].func(parser))
       return FAIL;
   }
-
+  Message_Info("efter inits");
   if (parser->protocol[SBYTE] & (1 << LOGIN))
     return parse_logn(parser);
   else if (parser->protocol[SBYTE] & (1 << SETUP)) 

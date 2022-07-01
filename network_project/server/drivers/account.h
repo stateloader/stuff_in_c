@@ -27,9 +27,6 @@ typedef struct Parser {
 } pars_t;
 
 int8_t account_driver(pars_t *parser);
-//-----------------------------------------------------------------------------------------------------SYSTEM MESSAGE DATA
-//#define MESSAGE_FORMAT "\t- %s -\n"
-//#define System_message(str) printf(MESSAGE, str);
 //-----------------------------------------------------------------------------------------------------PARSER ERROR CHECKS
 inline static uint8_t rows_check(pars_t *parser) {
   return SUCC;

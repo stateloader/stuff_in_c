@@ -11,13 +11,13 @@ typedef struct Connection {
 } conn_t;
 
 typedef struct Server {
-  int8_t status;
+  uint8_t session;
   uint8_t protocol[3];
   int32_t size_pack;
   int32_t size_resp;
   char pack[SBUFF];
   char resp[SBUFF];
-  FILE *dbfile;                   // OSÄKER PÅ OM FILES BEHÖVS ÄDKA
+  FILE *dbfile;
   conn_t conn;
 } server_t;
 

@@ -11,7 +11,15 @@ info info info
 #include <stdint.h>
 #include <unistd.h>
 
-/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
+/*-----------------------------------------------------------------------------------------------------SERVER SESSION BYTE
+BIT(N)                              |    7    |    6    |    5    |    4    |    3    |    2   |    1    |     0     |
+CONSTANT                            |  ALIVE  |         |    -    |    -    |    -    |    -    |    -    |   WUSER   | 
+-------------------------------------------------------------------------------------------------------------------------*/
+
+#define ALIVE 7
+
+
+/*---------------------------------------------------------------------------------------------------------------TABLE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 ------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
@@ -48,7 +56,6 @@ in the index are reffered to as below:
 #define SETUP 5
 #define VALID 6
 /*----------------------------------------------------------------------------------------------------------------DELIMITER
-ingo info
 //-----------------------------------------------------------------------------------------------------------------------*/
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
@@ -81,8 +88,6 @@ ingo info
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 //------------------------------------------------------------------------------------------------------------"CONTROLLERS"
 //int8_t datetime_append(char *datetime);
-int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
-
 //#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 
