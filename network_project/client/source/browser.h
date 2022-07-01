@@ -1,7 +1,7 @@
 #ifndef BROSWER_H_
 #define BROWSER_H_
 
-#include "configs.h"
+#include "controller.h"
 
 #define _MAIN 0
 #define _MESG 1
@@ -18,7 +18,7 @@ inline static int8_t command_driver_check(uint8_t *protocol) {
   for (int8_t i = 0; i < 7; i++)
     match += (protocol[TBYTE] & (1 << i)) ? 1 : 0;
   if (match == 0) {
-    Message_Info("Bye Bye!");
+    System_Message("Bye Bye!");
     return EXIT;
   }
   return SUCC;

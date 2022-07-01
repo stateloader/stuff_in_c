@@ -19,6 +19,6 @@ int8_t request_driver(rqst_t *request) {
     if (request->protocol[TBYTE] & (1 << table_items[i].task))
       return table_items[i].func(request);
   }
-  Message_Info("couldn't read request-call");
+  System_Message("couldn't read request-call");
   return FAIL;
 }

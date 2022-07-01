@@ -1,7 +1,7 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include "configs.h"
+#include "controller.h"
 
 typedef struct Client {
   uint8_t protocol[3];

@@ -1,7 +1,7 @@
 #ifndef CONNECT_H
 #define CONNECT_H
 
-#include "configs.h"
+#include "controller.h"
 #include "session.h"
 
 #define CONN_ 0
@@ -21,10 +21,10 @@ int8_t connect_driver(client_t *client, char *address, int32_t port);
 
 static inline int8_t connect_setup_check(client_t *client) {
   if (client->socket_client < 0) {
-    Message_Info("failed to create socket");
+    System_Message("failed to create socket");
     return EXIT_;
   } else if (client->socket_status < 0) {
-    Message_Info("failed connect to server");
+    System_Message("failed connect to server");
     return EXIT_;
   }
   return SUCC;
@@ -32,14 +32,14 @@ static inline int8_t connect_setup_check(client_t *client) {
 
 static inline int8_t scanner_size_check(client_t *client) {
   if (client->size_user < 1 || client->size_pass < 1 ) {
-    Message_Info("something went south while scanning username and/or password");
+    System_Message("something went south while scanning username and/or password");
     return EXIT_;
   }
   return SUCC;
 }  
 static inline int8_t connect_send_check(client_t *client) {
   if (client->size_send != client->size_pack) {
-    Message_Info("size_send not of same value as size_pack");
+    System_Message("size_send not of same value as size_pack");
     return EXIT_;
   }
   return SUCC;
@@ -47,7 +47,7 @@ static inline int8_t connect_send_check(client_t *client) {
 
 static inline int8_t protocol_obtain_check(client_t *client) {
   if (!check_term(client->pack, client->size_pack)) {
-    Message_Info("package not nullterminated");
+    System_Message("package not nullterminated");
     return EXIT_;
   }
   return SUCC;

@@ -1,7 +1,7 @@
 #ifndef DEVICE_H_
 #define DEVICE_H_
 
-#include "configs.h"
+#include "controller.h"
 #include "request.h"
 
 typedef struct PushItem {

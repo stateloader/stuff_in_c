@@ -58,11 +58,11 @@ static int8_t writer_dvce(server_t *server) {
   result = writer_file_appd(server);
   if (result != SUCC) return result;
   
-  Message_Info("contact atmega etc...");
+  System_Message("contact atmega etc...");
   
   return SUCC;
 }
-
+/*
 static int8_t writer_valid(server_t *server) {
 
   Message_Info("inne i writervalid");
@@ -76,7 +76,7 @@ static int8_t writer_valid(server_t *server) {
   
   return writer_protocol_respond(server);
 }
-
+*/
 static write_item table_items[] = {
   {TMESG, writer_mesg}, {TDVCE, writer_dvce}
 };
@@ -87,15 +87,12 @@ static int8_t writer_items(server_t * server, write_item *items, size_t size_arr
     if (server->protocol[byte] & (1 << items[i].flag))
       return items[i].func(server);
   }
-  Message_Info("byte-troubles in reader_items");
+  System_Message("byte-troubles in reader_items");
   return FAIL;
 }
 
 int8_t database_writer(server_t *server) {
-  Message_Info("inside filewriter");
+  System_Message("inside filewriter");
 
-  if (server->protocol[SBYTE] & (1 << SETUP))
-    return writer_valid(server);
-  else
-    return writer_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
+  return writer_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
 }

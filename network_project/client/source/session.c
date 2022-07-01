@@ -37,8 +37,6 @@ static int8_t server_package(recv_t *receive) {
 
 int8_t session_driver(client_t *client) {
 
-  connect_create(client, "127.0.0.1", 90190);
-
   rqst_t request = {0};
   recv_t receive = {0};
   int8_t control = 0;
@@ -87,7 +85,7 @@ int8_t session_driver(client_t *client) {
         routine = ROUT_DONE;
       break;
     default:
-      Message_Info("client routine fail");
+      System_Message("client routine fail");
       exit(EXIT_FAILURE);
     }
   }

@@ -6,8 +6,8 @@ out (etc, koda vidare nu istä'llet)
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
-#include "scanner.h"
 #include "connect.h"
+#include "scanner.h"
 
 static int8_t state = CONN_;
 
@@ -75,7 +75,7 @@ static int8_t connect_scan(conn_item *items, size_t size_array) {
       return items[i].next_state;
     }
   }
-  Message_Info("Not an option. try again");
+  System_Message("Not an option. try again");
   return state;
 }
 
@@ -120,7 +120,7 @@ static int8_t connect_result(client_t *client) {
       Message_Setup_Succ(client->user);
       return DONE_;
     } else {
-      Message_Info("Shouldn't be here, (positive connect result)");
+      System_Message("Shouldn't be here, (positive connect result)");
       return EXIT_;
     }
   } else {
@@ -131,7 +131,7 @@ static int8_t connect_result(client_t *client) {
       Message_Setup_Fail(client->user);
       return CONN_;
     } else {
-      Message_Info("Shouldn't be here, (negative connect result)");
+      System_Message("Shouldn't be here, (negative connect result)");
       return EXIT_;
     }
   }
@@ -164,6 +164,8 @@ static int8_t connect_valid(client_t *client) {
 
   client->socket_client = socket_create();
   client->socket_status = socket_connect(client->socket_client, address, port);
+
+  client->size_user = scan_driver(client->user, SBUFF, "username");
 
   return connect_setup_check(client);
 }

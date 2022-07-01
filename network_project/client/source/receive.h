@@ -1,7 +1,7 @@
 #ifndef RECEIVE_H_
 #define RECEIVE_H_
 
-#include "configs.h"
+#include "controller.h"
 #include "models.h"
 
 typedef struct TableMeta {

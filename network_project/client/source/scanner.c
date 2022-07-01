@@ -17,16 +17,16 @@ static int8_t scan_check(char *scan) {
   for (int32_t i = 0; i < size_scan; i++) {
     
     if (!check_byte_asci(scan[i])) {
-      Message_Info("Only ASCII ('English') characters allowed.");
+      System_Message("Only ASCII ('English') characters allowed.");
 		  return SCAN_INPUT;
 
     } else if (check_byte_delm(scan[i])) {
-      Message_Info("Pipe charachter ('|') is for losers. Use another one.");
+      System_Message("Pipe charachter ('|') is for losers. Use another one.");
       return SCAN_INPUT;
     }
   }
   if (check_scan_minl(size_scan, 2)) {
-    Message_Info("Enter at least two characters.");
+    System_Message("Enter at least two characters.");
     return SCAN_INPUT;
   }
   return SCAN_COMPL;
@@ -61,7 +61,7 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
     }
   }
   if (!check_term(scan, size_scan)) {
-    Message_Info("Failed to terminate userinput.");
+    System_Message("Failed to terminate userinput.");
     return FAIL;
   }
   return size_scan;

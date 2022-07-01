@@ -19,43 +19,13 @@ static int8_t protocol_obtain(server_t *server) {
   return protocol_obtain_check(server);
 }
 
-static int8_t validate_driver(server_t *server) {
-
-  int8_t result = 0;
-
-  result = database_reader(server);
-  if (result != SUCC) return result;
-  
-  pars_t parser = {0};
-
-  parser.protocol[TBYTE] = server->protocol[TBYTE];
-  parser.protocol[ABYTE] = server->protocol[ABYTE];
-  parser.protocol[SBYTE] = server->protocol[SBYTE];
-
-  parser.size_pack = string_copy(parser.pack, server->pack, SBUFF);
-  parser.size_data = string_copy(parser.data, server->resp, SBUFF);
-
-  buffer_flush(server->pack, SBUFF);
-  buffer_flush(server->resp, SBUFF);
-
-  result = account_driver(&parser);
-  if (result != SUCC) return result;
-
-  server->protocol[SBYTE] = parser.protocol[SBYTE];
-
-  if (server->protocol[SBYTE] & (1 << SETUP))
-    return database_writer(server);
-
-  return SUCC;
-}
-
 static int8_t database_driver(server_t *server) {
   
   if (server->protocol[ABYTE] & (1 << RWBIT)) {
-    Message_Info("writing to database");
+    System_Message("writing to database");
     return database_writer(server);
   } else {
-    Message_Info("reading from database");
+    System_Message("reading from database");
     return database_reader(server);
   }
 }
@@ -66,22 +36,6 @@ int8_t receive_driver(server_t *server) {
 
   int8_t result = protocol_obtain(server);
   if (result == FAIL) return result;
-
-  if (server->protocol[SBYTE] & (1 << VALID))
-    return database_driver(server);
-  else
-    return validate_driver(server);
+  
+  return database_driver(server);
 }
-
-/*
-
-  printf("TBYTE Server: ");
-  PrintByte(server->protocol[TBYTE]);
-  printf("ABYTE Server: ");
-  PrintByte(server->protocol[ABYTE]);
-  printf("SBYTE Server: ");
-  PrintByte(server->protocol[SBYTE]);
-
-
-
-*/

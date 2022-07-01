@@ -4,7 +4,7 @@
 #ifndef ACCOUNT_H_
 #define ACCOUNT_H_
 
-#include "configs.h"
+#include "controller.h"
 
 typedef struct UserModel {
   char user[SBUFF];
@@ -33,7 +33,7 @@ inline static uint8_t rows_check(pars_t *parser) {
 }
 inline static uint8_t memo_check(pars_t *parser) {
   if (parser->table_user == NULL) {
-    Message_Info("Memory error while creating user-instances.");
+    System_Message("Memory error while creating user-instances.");
     return FAIL;
   }
   return SUCC;
@@ -41,7 +41,7 @@ inline static uint8_t memo_check(pars_t *parser) {
 
 inline static uint8_t user_check(pars_t *parser) {
   if (parser->user == NULL || parser->pass == NULL) {
-    Message_Info("Member error parseble data in user and/or pass-member.");
+    System_Message("Member error parseble data in user and/or pass-member.");
     return FAIL;
   }
   return SUCC;

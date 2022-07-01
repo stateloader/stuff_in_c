@@ -4,8 +4,6 @@
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
-//#include <stdio.h>
-//#include <stdlib.h>
 #include "socket.h"
 
 int8_t socket_create(int *server_socket) {

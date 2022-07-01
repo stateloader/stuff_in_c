@@ -66,7 +66,7 @@ static int8_t create_table_mesg(recv_t *receive) {
     }
     break;
     default:
-      Message_Info("oh noes");
+      System_Message("oh noes");
       return EXIT;
     }
   }
@@ -114,7 +114,7 @@ static int8_t create_table_dvce(recv_t *receive) {
     }
     break;
     default:
-      Message_Info("oh noes");
+      System_Message("oh noes");
       return EXIT;
     }
   }
@@ -135,13 +135,13 @@ static int8_t init_table(recv_t *receive) {
       return recv_items[i].func(receive);
     }
   }
-  Message_Info("failure, init table");
+  System_Message("failure, init table");
   return FAIL;
 }
 
 int8_t receive_driver(recv_t *receive) {
   if (receive->protocol[ABYTE] & (1 << RWBIT)) {
-    Message_Info(receive->recv);
+    System_Message(receive->recv);
   } else {
     return init_table(receive);
   }

@@ -12,7 +12,7 @@ typedef struct ParseItem {
 
 static int8_t fetch_rows(pars_t *parser) {
 /*fetch amount of rows/entries in database by sniffing delims*/
-  Message_Info("Fetching Rows.");
+  System_Message("Fetching Rows.");
 
   for (int32_t i = 0; i < parser->size_data; i++)
     parser->amnt_delm += (parser->data[i] == DELIM) ? 1 : 0;
@@ -22,7 +22,7 @@ static int8_t fetch_rows(pars_t *parser) {
 
 static int8_t fetch_memo(pars_t *parser) {
 /*malloc rows amount of usermodel-instances*/
-  Message_Info("Fetching Memory.");
+  System_Message("Fetching Memory.");
   
   parser->table_user = malloc(sizeof(umod_t) * parser->amnt_rows);
 
@@ -31,7 +31,7 @@ static int8_t fetch_memo(pars_t *parser) {
 
 static int8_t fetch_user(pars_t *parser) {
 /*fetch user credentials, the account seeking to login or being created*/
-  Message_Info("Fetching client credentials.");
+  System_Message("Fetching client credentials.");
 
   int32_t mem = 0, idx = 0;
   for (int32_t i = 0; i < parser->size_pack - POFFS; i++) {
@@ -62,7 +62,7 @@ static int8_t fetch_user(pars_t *parser) {
 
 static int8_t fetch_tabl(pars_t *parser) {
 /*fetch data to instances in user-table*/
-  Message_Info("Fetching data to instances of usertable from db.");
+  System_Message("Fetching data to instances of usertable from db.");
 
   int32_t mem = 0, idx = 0, row = 0;
 
@@ -107,7 +107,7 @@ static int8_t valid_pass(pars_t *parser, int32_t i) {
 static int8_t parse_logn(pars_t *parser) {
 /*compare user/pass from current database (table), poly-match and it's a hit.*/
 
-  Message_Info("Parsing login-credentials.");
+  System_Message("Parsing login-credentials.");
 
   int8_t match = 0;
   for (int32_t i = 0; i < parser->amnt_rows; i++)
@@ -115,9 +115,9 @@ static int8_t parse_logn(pars_t *parser) {
   
   if (match) {
     parser->protocol[SBYTE] |= (1 << VALID);
-    Message_Info("user credentials valid.");
+    System_Message("user credentials valid.");
   } else {
-    Message_Info("user credentials invalid.");
+    System_Message("user credentials invalid.");
   }
   if (parser->table_user) free(parser->table_user);
   return SUCC;
@@ -126,18 +126,18 @@ static int8_t parse_logn(pars_t *parser) {
 static int8_t parse_setp(pars_t *parser) {
 /*compare username during acc-setup, if not taken it's a hit*/
 
-  Message_Info("Parsing setup-credentials.");
+  System_Message("Parsing setup-credentials.");
 
   int8_t taken = 0;
   for (int32_t i = 0; i < parser->amnt_rows; i++)
     taken += (valid_user(parser, i) ==  SUCC) ? 1 : 0;
   
   if (!taken) {
-    Message_Info("username not taken.");
+    System_Message("username not taken.");
     parser->protocol[SBYTE] |= (1 << VALID);
   } else {
     parser->protocol[SBYTE] ^= (1 << SETUP);
-    Message_Info("username already taken.");
+    System_Message("username already taken.");
   }
 
   if (parser->table_user) free(parser->table_user);
@@ -149,13 +149,13 @@ static pars_item parse_items[] = {
 };
 
 int8_t account_driver(pars_t *parser) {
-  Message_Info("INIT ACCOUNT PARSING\n");
+  System_Message("INIT ACCOUNT PARSING\n");
 
   for (size_t i = 0; i < ARRAY_SIZE(parse_items); i++) {
     if (!parse_items[i].func(parser))
       return FAIL;
   }
-  Message_Info("efter inits");
+  System_Message("efter inits");
   if (parser->protocol[SBYTE] & (1 << LOGIN))
     return parse_logn(parser);
   else if (parser->protocol[SBYTE] & (1 << SETUP)) 

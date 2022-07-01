@@ -1,12 +1,12 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
-#include "configs.h"
+#include "controller.h"
 #include "socket.h"
 #include "client.h"
 #include "request.h"
 #include "receive.h"
-#include "browser.h" // mainmenu
+#include "browser.h"
 
 typedef enum SessionRoutine {
   ROUT_CONF, ROUT_RQST, ROUT_SEND,
@@ -20,14 +20,14 @@ inline static int8_t routine_config_check(rqst_t *request, recv_t *receive) {
 
   for (int8_t i = 0; i < 3; i++) {
     if (request->protocol[i] != receive->protocol[i]) {
-      Message_Info("request and recieve different protocol values");
+      System_Message("request and recieve different protocol values");
       return FAIL;
     }
   } if (request->size_user != receive->size_user) {
-    Message_Info("request and recieve different username balues");
+    System_Message("request and recieve different username balues");
     return FAIL;
   } else if (request->socket != receive->socket){
-    Message_Info("request and recieve different socket values");
+    System_Message("request and recieve different socket values");
     return FAIL;
   }
   return SUCC;

@@ -1,7 +1,7 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-#include "configs.h"
+#include "controller.h"
 
 #define SCAN_INPUT 0
 #define BYTE_CHECK 1

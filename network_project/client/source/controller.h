@@ -1,8 +1,8 @@
-/*----------------------------------------------------------------------------------------------------MACROS SERVER MODULE
-info info info
+/*----------------------------------------------------------------------------------------------------MACROS CLIENT MODULE
+Macros implemented reg
 ------------------------------------------------------------------------------------------------------------------------*/
-#ifndef CONFIG_H_
-#define CONFIG_H_
+#ifndef CONTROLLER_H_
+#define CONTROLLER_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,14 +11,7 @@ info info info
 #include <stdint.h>
 #include <unistd.h>
 
-/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  ALIVE  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
--------------------------------------------------------------------------------------------------------------------------*/
-
-#define ALIVE 7
-
-/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
+/*---------------------------------------------------------------------------------------------------------------TABLE BYTE
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
 ------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
@@ -27,7 +20,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
                                     |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
-
+#define UNBIT 7
 
 /*-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
 TABLE BYTE, ATTRIBUTE BYTE and STATUS BYTE are throughout the program indexed in an uint8_t array - 'protocol'. Given byte
@@ -55,11 +48,12 @@ in the index are reffered to as below:
 #define SETUP 5
 #define VALID 6
 /*----------------------------------------------------------------------------------------------------------------DELIMITER
+ingo info
 //-----------------------------------------------------------------------------------------------------------------------*/
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 3     //              Delimiters          - (members) Device-model
-#define DUSER 2
+#define DACCS 2
 #define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
 //------------------------------------------------------------------------------------------------------------------------
 #define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
@@ -72,22 +66,23 @@ in the index are reffered to as below:
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
-#define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
+#define HEADER_FORM "\n%s\n%s\t\t%s\n%s\n\n"
+#define Header_Border "----------------------------------------------------------------------------------------------------"
+#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 
-#define Header_Bord "----------------------------------------------------------------------------------------------------"
-#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
+#define FORM_INFO "\t\t\tsystem: %s\n"
+#define System_Message(inf) printf(FORM_INFO, inf);
 
-#define SYSTEM_FORM "\t\t\tSystem: %s\n"
-#define Message_Info(sysmesg) printf(SYSTEM_FORM, sysmesg);
+#define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n"
+#define Message_Flee(inf, exp) printf(FORM_FLEE, inf, exp)
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)
 #define check_term(str, len) (str[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
-//------------------------------------------------------------------------------------------------------------"CONTROLLERS"
-//int8_t datetime_append(char *datetime);
-//#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
-
+//--------------------------------------------------------------------------------------------------------------THROUGHOUTS
+int8_t datetime_append(char *datetime);
+int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
 #endif

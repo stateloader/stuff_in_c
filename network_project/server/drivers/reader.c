@@ -33,7 +33,7 @@ static int8_t reader_file_mesg(server_t *server) {
   return SUCC;
 }
 static int8_t reader_file_dvce(server_t *server) {
-  Message_Info("inside read dvce");
+  System_Message("inside read dvce");
 
   int8_t result = 0;
 
@@ -45,7 +45,7 @@ static int8_t reader_file_dvce(server_t *server) {
 
   return SUCC;
 }
-
+/*
 static int8_t reader_valid(server_t *server) {
   Message_Info("inside reader_valid");
 
@@ -59,7 +59,7 @@ static int8_t reader_valid(server_t *server) {
 
   return SUCC;
 }
-
+*/
 static read_item table_items[] = {
   {TMESG, reader_file_mesg}, 
   {TDVCE, reader_file_dvce}
@@ -71,14 +71,11 @@ static int8_t reader_items(server_t * server, read_item *items, size_t size_arr,
     if (server->protocol[byte] & (1 << items[i].flag))
       return items[i].func(server);
   }
-  Message_Info("byte-troubles in reader_items");
+  System_Message("byte-troubles in reader_items");
   return FAIL;
 }
 
 int8_t database_reader(server_t *server) {
 
-  if (server->protocol[SBYTE] & (1 << VALID))
-    return reader_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
-  else
-    return reader_valid(server);
+  return reader_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
 }

@@ -1,7 +1,7 @@
 #ifndef SSTRING_H_
 #define SSTRING_H_
 
-#include "configs.h"
+#include "controller.h"
 
 void buffer_flush(char *buffer, int32_t size_buffer);
 int32_t string_size(char *string, int32_t size_buffer);

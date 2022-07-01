@@ -79,7 +79,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
     ATTRB |= (1 << index);
   break;
   default:
-    Message_Info("Something went south while writing protocol.");
+    System_Message("Something went south while writing protocol.");
     exit(EXIT_FAILURE);
   }
   return;
@@ -100,7 +100,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
       return items[i].next_state;
     }
   }
-  Message_Info("Not an option. try again");
+  System_Message("Not an option. try again");
   return state;
 }
 
