@@ -17,7 +17,7 @@ typedef struct Server {
   int32_t size_resp;
   char pack[SBUFF];
   char resp[SBUFF];
-  FILE *dbfile;
+  FILE *dbfile;                   // OSÄKER PÅ OM FILES BEHÖVS ÄDKA
   conn_t conn;
 } server_t;
 

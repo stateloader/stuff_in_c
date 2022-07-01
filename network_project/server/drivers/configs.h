@@ -18,7 +18,7 @@ CONSTANT                            |  UNBIT  |    -    |    -    |    -    |   
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
-                                    |  UNBIT  |  VALID  |    -    |    -    |    -    |     -    |   SETUP   |   LOGIN  |
+                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -73,10 +73,6 @@ ingo info
 
 #define SYSTEM_FORM "\t\t\tSystem: %s\n"
 #define Message_Info(sysmesg) printf(SYSTEM_FORM, sysmesg);
-/*
-#define SYSTEM_FORM_ERROR "\t\t\t[ERROR] %s, %s\n"
-#define System_Message_Error(err, pbl) printf(SYSTEM_FORM_ERROR, err, pbl);
-*/
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)
@@ -88,6 +84,6 @@ ingo info
 int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
 
 //#define Print_Numb(num, not) printf("TEST---NUMBER: %d ---NOTE %s\n", num, not);
-//#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
+#define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 
 #endif

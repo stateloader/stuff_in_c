@@ -1,3 +1,9 @@
+/*------------------------------------------------------------------------------------------------------------------------
+                                                                                                                   CONNECT
+--------------------------------------------------------------------------------------------------------------------------
+info info info info info info
+------------------------------------------------------------------------------------------------------------------------*/
+
 #include "cstring.h"
 #include "scanner.h"
 #include "connect.h"
@@ -91,7 +97,7 @@ static int8_t connect_valid(client_t *client) {
 }
 
 static int8_t connect_setup(client_t *client, char *address, int32_t port) {
-  Render_Header("CONNECT   ", "Connecting to server");
+  Render_Header("CONNECT  ", "Connecting to server");
 
   client->socket_client = socket_create();
   client->socket_status = socket_connect(client->socket_client, address, port);
@@ -105,14 +111,13 @@ static int8_t connect_setup(client_t *client, char *address, int32_t port) {
 
 int8_t connect_driver(client_t *client, char *address, int32_t port) { 
 
-  int8_t result = 0;
-
-  result = connect_setup(client, address, port);
+  int8_t result = connect_setup(client, address, port);
   if (result != SUCC) return result;
 
   while (state != DONE_) {
     switch(state) {
     case CONN_:
+      Render_Header("VALIDATE ", "Validate ipsum dolor sit amet, consectetur adipiscing elit");
       state = connect_scan(conn_items, ARRAY_SIZE(conn_items));
       break;
     case LOGN_:

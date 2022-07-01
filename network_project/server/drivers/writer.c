@@ -29,10 +29,9 @@ static int8_t response_writer(server_t *server, char *response) {
   return SUCC;
 
 }
-//------------------------------------------------------------------------------------------------------------------------
 static int8_t write_mesg(server_t *server) {
 
-  phase_file_open(server, "drivers/database/mesglog.dat");
+  phase_file_open(server, "drivers/database/mesg.dat");
   phase_file_appd(server);
   response_writer(server, "your message was successfully recieved.");
   
@@ -41,7 +40,7 @@ static int8_t write_mesg(server_t *server) {
 
 static int8_t write_dvce(server_t *server) {
 
-  phase_file_open(server, "drivers/database/dvcelog.dat");
+  phase_file_open(server, "drivers/database/dvce.dat");
   phase_file_appd(server);
   response_writer(server, "device led now glows in <whatever>");
   
@@ -50,16 +49,34 @@ static int8_t write_dvce(server_t *server) {
   return SUCC;
 }
 
-static write_item write_items[] = {
+static int8_t writer_valid(server_t *server) {
+
+  phase_file_open(server, "drivers/database/user.dat");
+  phase_file_appd(server);
+  response_writer(server, "your account has been created.");
+  
+  return SUCC;
+}
+
+static write_item table_items[] = {
   {TMESG, write_mesg}, {TDVCE, write_dvce}
 };
 
-int8_t database_writer(server_t *server) {
-  Message_Info("inside filewriter");
- 
-  for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
-    if (server->protocol[TBYTE] & (1 << write_items[i].model))
-      return write_items[i].func(server);
+static int8_t writer_items(server_t * server, write_item *items, size_t size_arr, uint8_t byte) {
+  
+  for (size_t i = 0; i < size_arr; i++) {
+    if (server->protocol[byte] & (1 << items[i].flag))
+      return items[i].func(server);
   }
+  Message_Info("byte-troubles in reader_items");
   return FAIL;
 }
+
+int8_t database_writer(server_t *server) {
+  Message_Info("inside filewriter");
+  if (server->protocol[SBYTE] & (1 << VALID))
+    return writer_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
+  else
+    return writer_valid(server);
+}
+ 

@@ -24,13 +24,13 @@ static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client)
 
 static int8_t client_package(rqst_t *request) {
   
-  request->size_send = send(request->socket, request->pack, request->size_pack, 0);
+  request->size_send = send(request->socket, request->pack, request->size_pack, 0);  // friia variabler
   return SUCC;
 }
                
 static int8_t server_package(recv_t *receive) {
   
-  receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);
+  receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);                      // fria varaibler
   return SUCC;
 }
 
@@ -38,7 +38,6 @@ int8_t session_driver(client_t *client) {
 
   rqst_t request = {0};
   recv_t receive = {0};
-
   int8_t control = 0;
   rout_t routine = ROUT_CONF;
 
