@@ -4,21 +4,12 @@
 #include "controller.h"
 #include "server.h"
 
-typedef int8_t (*resp_func)(server_t *server);
-
-typedef struct ResponseItem{
-  const uint8_t byte;
-  resp_func func;
+typedef struct Response {
+  const uint8_t flag1;
+  const uint8_t flag2;
+  const char *response;
 } resp_item;
 
 int8_t response_driver(server_t *server, int8_t control);
-
-inline static int8_t response_driver_check(int32_t size_send, int32_t size_pack) {
-  if (size_send != size_pack) {
-    System_Message("size differences send/pack");
-    return FAIL;
-  }
-  return SUCC;
-}
 
 #endif

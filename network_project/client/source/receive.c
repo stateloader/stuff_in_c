@@ -1,7 +1,6 @@
-/*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                   RECIEVE
---------------------------------------------------------------------------------------------------------------------------
-info fasda
+/*-----------------------------------------------------------------------------------------------------------------RECEIVE
+Logic dealing with creation of device requests; send (interact with device) or read historical records from the server.
+Logic dealing with creation of message-requests; send to or read historical records from the server.
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "models.h"
 #include "receive.h"
@@ -144,10 +143,10 @@ static int8_t init_table(recv_t *receive) {
 }
 
 int8_t receive_driver(recv_t *receive) {
-  if (receive->protocol[ABYTE] & (1 << RWBIT)) {
+  //if (receive->protocol[ABYTE] & (1 << RWBIT)) {
     System_Message(receive->recv);
-  } else {
-    return init_table(receive);
-  }
+ // } else {
+    //return init_table(receive);
+  //}
   return SUCC;
 }

@@ -1,7 +1,5 @@
-/*------------------------------------------------------------------------------------------------------------------------
-                                                                                                             SERVER SOCKET
---------------------------------------------------------------------------------------------------------------------------
-info info info info info info
+/*-----------------------------------------------------------------------------------------------------------SERVER SOCKET
+                                                                                                            
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "socket.h"
@@ -30,7 +28,7 @@ int8_t socket_binder(int server_socket, struct sockaddr_in *server_address, char
 int8_t socket_listen(int server_socket) {
 
   if (listen(server_socket, MAX_CLIENT) < 0) {
-    System_Message("\nerror while listening.\n");
+    System_Message("\nerror while listening\n");
     return FAIL;
   }
   return SUCC;
@@ -46,7 +44,10 @@ int8_t socket_accept(int server_socket, int *client_socket, struct sockaddr_in *
     exit(EXIT_FAILURE);
   }
   Render_Header("CONNETION   ", "Client conneted");
-  printf("\t\t\tClient connected at IP: %s and port: %i\n", inet_ntoa(client_address->sin_addr), ntohs(client_address->sin_port));
+  
+  printf("\t\t\tClient connected at IP: %s and port: %i\n",
+    inet_ntoa(client_address->sin_addr), ntohs(client_address->sin_port)
+  );
 
   return SUCC;
 }

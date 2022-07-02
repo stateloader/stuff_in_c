@@ -18,16 +18,18 @@ typedef struct ReadItem {
 
 int8_t database_reader(server_t *server);
 
-inline static int8_t reader_file_open_check(FILE *file) {
-  if (file == NULL) {
+inline static int8_t reader_file_open_check(server_t *server) {
+  if (server->dbfile == NULL) {
+    server->session |= (1 << RPROB);
     System_Message("failed to open file");
     return FAIL;
   }
   return SUCC;
 }
 
-inline static int8_t reader_file_data_check(int32_t size_recv) {
-  if (size_recv < 4) {
+inline static int8_t reader_file_data_check(server_t *server) {
+  if (server->size_resp < 4) {
+    server->session |= (1 << RPROB);
     System_Message("to little something reader file");
     return FAIL;
   }

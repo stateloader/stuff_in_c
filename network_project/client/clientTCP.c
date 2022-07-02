@@ -8,10 +8,14 @@ info info info info info info
 #include "source/connect.h"
 #include "source/session.h"
 
+
+#define TESTETT 1
+#define TESTFYR 4
+
 int main(void) {
 
-  int8_t result = 0;
-  
+  int8_t result = 0;  
+
   client_t client = {0};
 
   result = connect_create(&client, "127.0.0.1", 90190);
@@ -19,6 +23,6 @@ int main(void) {
 
   result = session_driver(&client);
   if (result < SUCC) exit(EXIT_FAILURE);
-
+  
   exit(EXIT_SUCCESS);
 }

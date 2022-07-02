@@ -11,11 +11,16 @@ info info info
 #include <stdint.h>
 #include <unistd.h>
 
-/*--------------------------------------------------------------------------------------------------------------TABLE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  ALIVE  |    -    |    -    |    -    |    -    |     -    |     -     |     -     |
--------------------------------------------------------------------------------------------------------------------------*/
 
+/*------------------------------------------------------------------------------------------------------------SESSION BYTE
+BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
+CONSTANT                            |  ALIVE  |  WPROB  |  RPROB  |  EMPTY  |    -    |     -    |   SDVCE   |   SMESG   |
+-------------------------------------------------------------------------------------------------------------------------*/
+#define SMESG 0
+#define SDVCE 1
+#define EMPTY 4
+#define RPROB 5
+#define WPROB 6
 #define ALIVE 7
 
 /*--------------------------------------------------------------------------------------------------------------TABLE BYTE
@@ -25,7 +30,7 @@ CONSTANT                            |  UNBIT  |    -    |    -    |    -    |   
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
-                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
+                                    |  UNBIT  |  VALID  |    -   |    -    |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define UNBIT 7
 
@@ -51,8 +56,6 @@ in the index are reffered to as below:
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 
 //-------------------------------------------------------------------------------------------------------STATUS BYTE flags
-#define LOGIN 4
-#define SETUP 5
 #define VALID 6
 /*----------------------------------------------------------------------------------------------------------------DELIMITER
 //-----------------------------------------------------------------------------------------------------------------------*/
@@ -67,7 +70,7 @@ in the index are reffered to as below:
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 #define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
-#define FBUFF 32768 //              File Buffer
+#define FBUFF 4096 //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer

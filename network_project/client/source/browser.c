@@ -1,9 +1,7 @@
-/*------------------------------------------------------------------------------------------------------------------------
-                                                                                                                 "BROWSER"
---------------------------------------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------------------------"BROWSER"
 An "engine" of some sort during 'user-menu:ing' I came up with while playing around with function-pointers. Members of
-'cmnd_item' helps (a lot) in guinding the user to the correct state depending on her/his commands. A neat caviat in this
-solution is how bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.
+'cmnd_item' guinding the user to the correct state depending on her/his commands. A neat caviat in this solution is how
+bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstring.h"
