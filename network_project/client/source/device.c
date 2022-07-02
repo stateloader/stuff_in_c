@@ -6,7 +6,8 @@ Logic dealing with creation of device requests; send (interact with device) or r
 #include "device.h"
 
 static int8_t device_package(rqst_t *request, dvce_t *device) {
-  
+/*Creates a canonical package out of the change-which-colour-the-device-will-shine-in-from-now-on-request*/
+
   datetime_append(device->datm);
   request->size_pack = (request->size_user + device->size_push + TBUFF + POFFS);
 
@@ -19,10 +20,10 @@ static int8_t device_package(rqst_t *request, dvce_t *device) {
 
   int8_t result = 0;
 
-  result = protocol_append(request->pack, request->size_pack, request->protocol);
+  result = protocol_append(request);
   if (result != SUCC) return result;
 
-  result = delimiter_check(request->pack, request->size_pack, DDVCE); // check
+  result = delimiter_check(request, DDVCE);
   if (result != SUCC) return result;  
 
   return SUCC;
@@ -33,7 +34,10 @@ static push_item push_items[] = {
 };
 
 static int8_t device_writer(rqst_t *request, dvce_t *device) {
-  
+/*For now, there's nothing more exiting in place for the client than switching the device's ledcolour. Here, a tiny
+ *corresponding string being created before being thrown into the server's database just because... I can. I guess.
+ */
+
   for (size_t i = 0; i < ARRAY_SIZE(push_items); i++) {
     if (request->protocol[ABYTE] & (1 << push_items[i].flag))
       device->size_push = string_copy(device->push, push_items[i].code, SBUFF);
@@ -42,15 +46,13 @@ static int8_t device_writer(rqst_t *request, dvce_t *device) {
 }
 
 static int8_t device_reader(rqst_t *request) {
-
   request->size_pack = POFFS;
-  return protocol_append(request->pack, request->size_pack, request->protocol);
+  return protocol_append(request);
 }
 
 int8_t device_driver(rqst_t *request) {
 
   dvce_t device = {0};
-
   if (request->protocol[ABYTE] & (1 << RWBIT))
     return device_writer(request, &device);
   else

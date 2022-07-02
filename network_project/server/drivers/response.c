@@ -6,19 +6,19 @@
 #include "socket.h"
 #include "response.h"
 
-const char *WRITER_MESG = "\nServer - message successfully delivered\n";
-const char *WRITER_DVCE = "\nServer - ledcolour successfully changed\n";
-const char *PACKAGEWOOT = "\nServer Error - and it's undefined\n";
+const char *WRITER_MESG = "Server - message successfully delivered\n";
+const char *WRITER_DVCE = "Server - ledcolour successfully changed\n";
+const char *PACKAGEWOOT = "Server Error - and it's undefined\n";
 
 static const uint8_t LAST_RESORT[] = {0xFF, 0xFF, 0xFF, 0xFF, 0x00};
 
 static resp_item error_resp[] = {
-  {WPROB, SMESG, "\nServer Error - failed to write deliver message\n"},
-  {WPROB, SDVCE, "\nServer Error - failed to interacting with the device\n"},
-  {WPROB, EMPTY, "\nServer Error - total farse (writer)\n"},
-  {RPROB, SMESG, "\nServer Error - failed to read messages from database\n"},
-  {RPROB, SDVCE, "\nServer Error - failed to read device records\n"},
-  {RPROB, EMPTY, "\nServer Error - total farse (reader)\n"}
+  {WPROB, SMESG, "Server Error - failed to write deliver message\n"},
+  {WPROB, SDVCE, "Server Error - failed to interacting with the device\n"},
+  {WPROB, EMPTY, "Server Error - total farse (writer)\n"},
+  {RPROB, SMESG, "Server Error - failed to read messages from database\n"},
+  {RPROB, SDVCE, "Server Error - failed to read device records\n"},
+  {RPROB, EMPTY, "Server Error - total farse (reader)\n"}
 };
 
 void lethal_response(server_t *server) {

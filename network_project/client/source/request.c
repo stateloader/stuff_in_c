@@ -6,6 +6,51 @@
 #include "device.h"
 #include "request.h"
 
+int8_t datetime_append(char *datetime) {
+/*creates and appends datetime to the (a) request-package*/
+
+  strncat(datetime, __DATE__, TBUFF);
+  strncat(datetime, " ", TBUFF);
+  strncat(datetime, __TIME__, TBUFF);
+  datetime[TBUFF - 1] = DELIM;
+
+  return SUCC;
+}
+
+int8_t delimiter_check(rqst_t *request, int32_t expected) {
+/*makes sure the package has the right amount of delimiters, is canonical*/
+
+  int32_t amnt_delim = 0;
+
+  for (int32_t i = 0; i < request->size_pack; i++)
+    amnt_delim += (request->pack[i] == DELIM) ? 1 : 0;
+    
+  if (amnt_delim != expected) {
+    System_Message("corrupted format on package.");
+    return FAIL;
+  }
+  return SUCC;
+}
+
+int8_t protocol_append(rqst_t *request) {
+/*Assigns the protocol to the package before some append-checks (inlines in header)*/
+
+  request->pack[request->size_pack - 4] = request->protocol[TBYTE];
+  request->pack[request->size_pack - 3] = request->protocol[ABYTE];
+  request->pack[request->size_pack - 2] = request->protocol[SBYTE];
+  request->pack[request->size_pack - 1] = '\0';
+
+  return protocol_append_checks(request);
+}
+
+typedef int8_t (*rqst_func)(rqst_t *request);
+
+typedef struct RequestItem {
+  const uint8_t task;
+  rqst_func func;
+} rqst_item;
+
+
 static rqst_item table_items[] = {
   {TMESG, message_driver}, {TDVCE, device_driver}
 };

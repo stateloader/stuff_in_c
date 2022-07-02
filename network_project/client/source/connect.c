@@ -6,7 +6,7 @@ Ehh, I made something. It turned out as nothing. At the moment we're just enter 
 #include "connect.h"
 #include "scanner.h"
 
- int8_t connect_create(client_t *client, char *address, int32_t port) {
+ int8_t connect_driver(client_t *client, char *address, int32_t port) {
   Render_Header("CONNECT   ", "Connecting to server");
 
   client->socket_client = socket_create();
@@ -18,5 +18,5 @@ Ehh, I made something. It turned out as nothing. At the moment we're just enter 
   client->size_user = scan_driver(client->user, SBUFF, "username");
   client->size_pass = scan_driver(client->pass, SBUFF, "password");
 
-  return connect_setup_check(client);
+  return SUCC;
 }

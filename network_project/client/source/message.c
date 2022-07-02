@@ -7,7 +7,7 @@ Logic dealing with creation of message-requests; send to or read historical reco
 #include "message.h"
 
 static int8_t message_package(rqst_t *request, mesg_t *message) {
-
+/*Creates a canonical package out of the write-a-message-request*/
   datetime_append(message->datm);
 
   request->size_pack = (
@@ -25,10 +25,10 @@ static int8_t message_package(rqst_t *request, mesg_t *message) {
 
   int8_t result = 0;
 
-  result = protocol_append(request->pack, request->size_pack, request->protocol);
+  result = protocol_append(request);
   if (result != SUCC) return result;
 
-  result = delimiter_check(request->pack, request->size_pack, DMSGE);
+  result = delimiter_check(request, DMSGE);
   if (result != SUCC) return result;
 
   return SUCC;
@@ -46,7 +46,7 @@ static int8_t message_writer(rqst_t *request, mesg_t *message) {
 static int8_t message_reader(rqst_t *request) {
 
   request->size_pack = POFFS;
-  return protocol_append(request->pack, request->size_pack, request->protocol);
+  return protocol_append(request);
 }
 
 int8_t message_driver(rqst_t *request) {

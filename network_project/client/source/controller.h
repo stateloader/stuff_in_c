@@ -18,7 +18,7 @@ CONSTANT                            |  UNBIT  |    -    |    -    |    -    |   
 BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
 CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
-                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
+                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |   LINKA   |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define UNBIT 7
 
@@ -44,6 +44,7 @@ in the index are reffered to as below:
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 
 //-------------------------------------------------------------------------------------------------------STATUS BYTE flags
+#define LINKA 0
 #define LOGIN 4
 #define SETUP 5
 #define VALID 6
@@ -61,7 +62,7 @@ ingo info
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 #define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
-#define FBUFF 32768 //              File Buffer
+#define FBUFF 4096 //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
@@ -70,7 +71,7 @@ ingo info
 #define Header_Border "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 
-#define FORM_INFO "\t\t\tsystem: %s\n"
+#define FORM_INFO "\t\t\t%s\n"
 #define System_Message(inf) printf(FORM_INFO, inf);
 
 #define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n"
@@ -83,10 +84,5 @@ ingo info
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 //--------------------------------------------------------------------------------------------------------------CONTROLLERS
-
-int8_t datetime_append(char *datetime);
-int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
-int8_t protocol_obtain(char *package, int32_t size_pack, uint8_t *protocol);
-int8_t delimiter_check(char *package, int32_t size_pack, int32_t expected);
 
 #endif
