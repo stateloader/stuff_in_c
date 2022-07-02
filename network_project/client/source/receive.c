@@ -5,6 +5,11 @@ info fasda
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "models.h"
 #include "receive.h"
+/*
+static int8_t fetch_rows(pars_t *parser)
+static int8_t fetch_memo(pars_t *parser)
+static int8_t fetch_tabl(pars_t *parser)
+*/
 
 static int8_t count_rows(recv_t *receive) {
 //desc
@@ -123,8 +128,7 @@ static int8_t create_table_dvce(recv_t *receive) {
 }
 
 static recv_item recv_items[] = {
-  {TMESG, DMSGE, create_table_mesg},
-  {TDVCE, DDVCE, create_table_dvce}
+  {TMESG, DMSGE, create_table_mesg}, {TDVCE, DDVCE, create_table_dvce}
 };
 
 static int8_t init_table(recv_t *receive) {

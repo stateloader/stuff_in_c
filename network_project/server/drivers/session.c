@@ -19,6 +19,7 @@ int8_t session_driver(server_t *server, char *address, int32_t port) {
 		socket_accept(server->conn.sock_serv, &server->conn.sock_clnt, &client_address);
     result = receive_driver(server);
     response_driver(server, result);
+    System_Message("session done\n");
     close(server->conn.sock_clnt);
   }
   exit(EXIT_FAILURE);

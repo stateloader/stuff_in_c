@@ -61,7 +61,7 @@ ingo info
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 #define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
-#define FBUFF 4096  //              File Buffer
+#define FBUFF 32768 //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
@@ -82,7 +82,11 @@ ingo info
 //-------------------------------------------------------------------------------------------------------------------OTHER
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
-//--------------------------------------------------------------------------------------------------------------THROUGHOUTS
+//--------------------------------------------------------------------------------------------------------------CONTROLLERS
+
 int8_t datetime_append(char *datetime);
 int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
+int8_t protocol_obtain(char *package, int32_t size_pack, uint8_t *protocol);
+int8_t delimiter_check(char *package, int32_t size_pack, int32_t expected);
+
 #endif

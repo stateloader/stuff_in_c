@@ -21,6 +21,7 @@ static int8_t reader_file_read(server_t *server) {
 }
 
 static int8_t reader_file_mesg(server_t *server) {
+  System_Message("reading from database mesg");
 
   int8_t result = 0;
 
@@ -32,8 +33,9 @@ static int8_t reader_file_mesg(server_t *server) {
 
   return SUCC;
 }
+
 static int8_t reader_file_dvce(server_t *server) {
-  System_Message("inside read dvce");
+  System_Message("reading from database dvce");
 
   int8_t result = 0;
 
@@ -45,24 +47,9 @@ static int8_t reader_file_dvce(server_t *server) {
 
   return SUCC;
 }
-/*
-static int8_t reader_valid(server_t *server) {
-  Message_Info("inside reader_valid");
 
-  int8_t result = 0;
-
-  result = reader_file_open(server, "drivers/database/user.dat");
-  if (result != SUCC) return result;
-
-  result = reader_file_read(server);
-  if (result != SUCC) return result;
-
-  return SUCC;
-}
-*/
 static read_item table_items[] = {
-  {TMESG, reader_file_mesg}, 
-  {TDVCE, reader_file_dvce}
+  {TMESG, reader_file_mesg}, {TDVCE, reader_file_dvce}
 };
 
 static int8_t reader_items(server_t * server, read_item *items, size_t size_arr, uint8_t byte) {
@@ -79,3 +66,19 @@ int8_t database_reader(server_t *server) {
 
   return reader_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
 }
+
+/*
+static int8_t reader_valid(server_t *server) {
+  Message_Info("inside reader_valid");
+
+  int8_t result = 0;
+
+  result = reader_file_open(server, "drivers/database/user.dat");
+  if (result != SUCC) return result;
+
+  result = reader_file_read(server);
+  if (result != SUCC) return result;
+
+  return SUCC;
+}
+*/

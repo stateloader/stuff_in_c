@@ -9,8 +9,7 @@ info info info info info info
 #include "request.h"
 
 static rqst_item table_items[] = {
-  {TMESG, message_driver},
-  {TDVCE, device_driver}
+  {TMESG, message_driver}, {TDVCE, device_driver}
 };
 
 int8_t request_driver(rqst_t *request) {

@@ -25,13 +25,13 @@ static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client)
 
 static int8_t client_package(rqst_t *request) {
   
-  request->size_send = send(request->socket, request->pack, request->size_pack, 0);  // friia variabler
+  request->size_send = send(request->socket, request->pack, request->size_pack, 0);
   return SUCC;
 }
                
 static int8_t server_package(recv_t *receive) {
   
-  receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);                      // fria varaibler
+  receive->size_recv = recv(receive->socket, receive->recv, FBUFF, 0);
   return SUCC;
 }
 

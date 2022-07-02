@@ -27,7 +27,7 @@ CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  A
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
                                     |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
 ------------------------------------------------------------------------------------------------------------------------*/
-
+#define UNBIT 7
 
 /*-------------------------------------------------------------------------------------------------------PROTOCOL INDEXING
 TABLE BYTE, ATTRIBUTE BYTE and STATUS BYTE are throughout the program indexed in an uint8_t array - 'protocol'. Given byte
@@ -67,7 +67,7 @@ in the index are reffered to as below:
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 #define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
-#define FBUFF 4096  //              File Buffer
+#define FBUFF 32768 //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
@@ -77,8 +77,8 @@ in the index are reffered to as below:
 #define Header_Bord "----------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
-#define SYSTEM_FORM "\t\t\tSystem: %s\n"
-#define System_Message(sysmesg) printf(SYSTEM_FORM, sysmesg);
+#define SYSTEM_FORM "\t\t\t%s\n"
+#define System_Message(msg) printf(SYSTEM_FORM, msg);
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)
@@ -87,5 +87,9 @@ in the index are reffered to as below:
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
 //------------------------------------------------------------------------------------------------------------"CONTROLLERS"
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
+
+int8_t protocol_append(char *package, int32_t size_pack, uint8_t *protocol);
+int8_t protocol_obtain(char *package, int32_t size_pack, uint8_t *protocol);
+int8_t delimiter_check(char *package, int32_t size_pack, int32_t expected);
 
 #endif

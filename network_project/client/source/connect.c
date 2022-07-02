@@ -34,16 +34,6 @@ static void protocol_restore(client_t *client) {
   client->protocol[SBYTE] = 0x80;
 }
 
-static int8_t protocol_obtain(client_t *client) { 
-/*Assigns the protocol by copy received (latest) received protocol.*/
-
-  client->protocol[TBYTE] = client->recv[client->size_recv - 4];
-  client->protocol[ABYTE] = client->recv[client->size_recv - 3];
-  client->protocol[SBYTE] = client->recv[client->size_recv - 2];
-
-  return protocol_obtain_check(client);
-}
-
 static int8_t connect_create_package(client_t *client) {
 /*Creates a canonical package before throwing it at the server.*/
 
@@ -152,7 +142,7 @@ static int8_t connect_valid(client_t *client) {
   if (result != SUCC) return result;
 
   client->size_recv = recv(client->socket_client, client->recv, FBUFF, 0);
-  result = protocol_obtain(client);
+  result = protocol_obtain(client->recv, client->size_recv, client->protocol);
   if (result != SUCC) return result;
 
   return connect_result(client);
@@ -165,7 +155,10 @@ static int8_t connect_valid(client_t *client) {
   client->socket_client = socket_create();
   client->socket_status = socket_connect(client->socket_client, address, port);
 
+
+  Render_Header("VALIDATE  ", "Enter username and password");
   client->size_user = scan_driver(client->user, SBUFF, "username");
+  client->size_pass = scan_driver(client->pass, SBUFF, "password");
 
   return connect_setup_check(client);
 }

@@ -27,6 +27,7 @@ static int8_t writer_file_open(server_t *server, const char *path) {
 
 static int8_t writer_file_appd(server_t *server) {
 
+
   server->size_pack -= POFFS;
 
   int32_t size_write = fwrite(server->pack, sizeof(char), server->size_pack, server->dbfile);
@@ -36,6 +37,7 @@ static int8_t writer_file_appd(server_t *server) {
 }
 
 static int8_t writer_mesg(server_t *server) {
+  System_Message("writing to database mesg");
 
   int8_t result = 0;
 
@@ -49,7 +51,8 @@ static int8_t writer_mesg(server_t *server) {
 }
 
 static int8_t writer_dvce(server_t *server) {
-
+  System_Message("writing to database dvice");
+  
   int8_t result = 0;
 
   result = writer_file_open(server, "drivers/database/dvce.dat");

@@ -12,7 +12,7 @@ info info info info info info
 
 static int32_t size_scan = 0;
 
-static int8_t scan_check(char *scan) {
+static int8_t scan_check(char *scan, int32_t size_buffer) {
 
   for (int32_t i = 0; i < size_scan; i++) {
     
@@ -28,6 +28,10 @@ static int8_t scan_check(char *scan) {
   if (check_scan_minl(size_scan, 2)) {
     System_Message("Enter at least two characters.");
     return SCAN_INPUT;
+  }
+  if (check_scan_maxl(size_scan, size_buffer)) {
+    System_Message("Enter at least two characters.");
+    exit(EXIT_FAILURE);
   }
   return SCAN_COMPL;
 }
@@ -54,7 +58,7 @@ int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
       state = scan_input(scan, size_buffer, message);
       break;
     case BYTE_CHECK:
-      state = scan_check(scan);
+      state = scan_check(scan, size_buffer);
     break;
     default:
       exit(EXIT_FAILURE);

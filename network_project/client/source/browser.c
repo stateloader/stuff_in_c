@@ -131,6 +131,7 @@ int8_t browse_driver(uint8_t *protocol) {
 
   protocol[TBYTE] = TABLE;
   protocol[ABYTE] = ATTRB;
+  protocol[SBYTE] = ATTRB;
 
   return command_driver_check(protocol);
 }
