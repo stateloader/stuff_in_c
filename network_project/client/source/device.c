@@ -6,7 +6,7 @@ Logic dealing with creation of device requests; send (interact with device) or r
 #include "device.h"
 
 static int8_t device_package(rqst_t *request, dvce_t *device) {
-/*Creates a canonical package out of the change-which-colour-the-device-will-shine-in-from-now-on-request*/
+/*Creates a canonical package out of the change-led-colour-on-device-request*/
 
   datetime_append(device->datm);
   request->size_pack = (request->size_user + device->size_push + TBUFF + POFFS);
@@ -24,7 +24,7 @@ static int8_t device_package(rqst_t *request, dvce_t *device) {
   if (result != SUCC) return result;
 
   result = delimiter_check(request, DDVCE);
-  if (result != SUCC) return result;  
+  if (result != SUCC) return result;
 
   return SUCC;
 }

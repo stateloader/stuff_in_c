@@ -3,12 +3,12 @@
 
 #include "controller.h"
 
-#define _MAIN 0
-#define _MESG 1
-#define _DVCE 2
-#define _DLED 3
-#define _INIT 4
-#define _EXIT 5
+#define BMAIN 0
+#define BMESG 1
+#define BDVCE 2
+#define BDLED 3
+#define BINIT 4
+#define BEXIT 5
 
 int8_t browse_driver(uint8_t *protocol);
 

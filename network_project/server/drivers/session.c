@@ -20,9 +20,9 @@ int8_t session_driver(server_t *server, char *address, int32_t port) {
   int8_t result = 0;
 
   while(server->session & (1 << ALIVE)) {
-		socket_accept(server->conn.sock_serv, &server->conn.sock_clnt, &client_address);
+		result = socket_accept(server->conn.sock_serv, &server->conn.sock_clnt, &client_address);
     result = receive_driver(server);
-    response_driver(server, result);
+    result = response_driver(server, result);
     System_Message("session done\n");
     close(server->conn.sock_clnt);
   }

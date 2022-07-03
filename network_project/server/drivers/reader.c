@@ -58,7 +58,7 @@ static int8_t reader_items(server_t * server, read_item *items, size_t size_arr,
     if (server->protocol[byte] & (1 << items[i].flag))
       return items[i].func(server);
   }
-  server->session |= (1 << RPROB) | (1 << EMPTY);
+  server->session |= (1 << RPROB);
   System_Message("\nServer Error\n- flag for reader items\n");
   return FAIL;
 }

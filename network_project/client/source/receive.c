@@ -6,8 +6,9 @@ Logic dealing with creation of message-requests; send to or read historical reco
 #include "receive.h"
 
 static int8_t table_mesg(recv_t *receive) {
-/*First I made a generic, recursive solution of some sort but it turned out to be (way) to messy. Instead, every table,
- *current or later added, going to be hardcoded after the principle below.
+/*First I made a generic, recursive solution of some sort but it turned out to be (way) to messy. Instead, every table -
+ *current or later added - going to be fetched by the hardcoded principles below. I loop through the entire dataset sent
+ *from the server and 
  */
   int32_t mem = 0, idx = 0, row = 0;
 
@@ -105,29 +106,25 @@ static int8_t table_dvce(recv_t *receive) {
 }
 
 static int8_t fetch_rows(recv_t *receive) {
-
+/*I'm able to fetch number of rows in the (current) dataset by dividing all delims found in the (current) dataset
+ *with the constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with
+ *fetched rows I'm then able to check nothing gone south.
+ */
   receive->size_recv -= POFFS;
-
-  printf("amnt_delm %d\n", receive->amnt_delm);
-  printf("amnt_rows %d\n", receive->amnt_rows);
-  printf("tabl_delm %d\n", receive->tabl_delm);
 
   for (int32_t i = 0; i < receive->size_recv; i++)
     receive->amnt_delm += (receive->recv[i] == DELIM) ? 1 : 0;
   receive->amnt_rows = (receive->amnt_delm / receive->tabl_delm);
 
-  printf("amnt_delm %d\n", receive->amnt_delm);
-  printf("amnt_rows %d\n", receive->amnt_rows);
-  printf("tabl_delm %d\n", receive->tabl_delm);
-
- // if (receive->amnt_rows % receive->amnt_delm != 0) {
-   // System_Message("delimiter-count corrupted.");
-    //return FAIL;
-  //}
+  if (receive->amnt_delm % receive->amnt_rows != 0) {
+    System_Message("delimiter-count/format corrupted.");
+    return FAIL;
+  }
   return SUCC;
 }
 
 static int8_t fetch_memo(recv_t *receive) {
+/*Here N-rows of instances/entries/models if a given table being malloced, hence creating a "table".*/
 
   int8_t result = 0;
 
@@ -151,7 +148,7 @@ static int8_t fetch_memo(recv_t *receive) {
 }
 
 static int8_t fetch_table(recv_t *receive) {
-  
+
   if (receive->protocol[TBYTE] & (1 << TMESG))
     return table_mesg(receive);
 
@@ -171,9 +168,11 @@ static fetch_item items[] = {
 };
 
 static int8_t fetch_init(recv_t *receive) {
+/*handy item-struct above for now used to iterate through all "fetch-functions"*/
 
   if (receive->protocol[TBYTE] & (1 << TMESG))
     receive->tabl_delm = DMSGE;
+
   if (receive->protocol[TBYTE] & (1 << TDVCE))
     receive->tabl_delm = DDVCE;
 
@@ -186,20 +185,20 @@ static int8_t fetch_init(recv_t *receive) {
 }
 
 static int8_t protocol_parser(recv_t *receive) {
+/**/
+  if (receive->protocol[SBYTE] & (0 << VALID)) {        //If the Server had a hard time dealing with recent request a "non-validated"
+    System_Message(receive->recv);                      //bit if it will be returned (with a whiny error-message).
 
-  if (receive->protocol[SBYTE] & (0 << VALID)) {
-    System_Message(receive->recv);                                                            // felmeddelande;
-    return FAIL;
-  } else if (receive->protocol[ABYTE] & (1 << RWBIT)) {
-    System_Message(receive->recv);                                                            //  validerar datainjektion
+  } else if (receive->protocol[ABYTE] & (1 << RWBIT)) { //RWBIT means write-request which return a validation of some sort.  
+    System_Message(receive->recv);
     return SUCC;
   } else {
-    return fetch_init(receive);
+    return fetch_init(receive);                         //Else there was a read-request which being dealt with as described above.
   }
 }
 
 static int8_t protocol_obtain(recv_t *receive) {
-/*Assigns the protocol from the package before some obtain-checks (inlines in header)*/
+/*Assigns the T, A and S Byte to the protocol from the package*/
 
   receive->protocol[TBYTE] = receive->recv[receive->size_recv - 4];
   receive->protocol[ABYTE] = receive->recv[receive->size_recv - 3];

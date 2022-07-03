@@ -32,5 +32,12 @@ inline static int8_t routine_config_check(rqst_t *request, recv_t *receive) {
   }
   return SUCC;
 }
-
+/*
+inline static void clear_restore(rqst_t *request, recv_t *receive) {
+  buffer_flush(request->pack, SBUFF);
+  buffer_flush(request->user, SBUFF);
+  buffer_flush(receive->recv, SBUFF);
+  buffer_flush(receive->user, SBUFF);
+}
+*/
 #endif

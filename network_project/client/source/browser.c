@@ -8,7 +8,7 @@ bits being set (or cleared) simultaneously on the fly which finally being added 
 #include "scanner.h"  
 #include "browser.h"
 
-static int8_t state = _MAIN;
+static int8_t state = BMAIN;
 
 /*-------------------------------------------------------------------------------------------------------COMMAND STRUCTURE
 3 (for now, more to come) menues being represented as 'command item'. Each item stores constants relevant for where the
@@ -20,29 +20,31 @@ typedef struct CommandItem {
   const char *cmnd;
 } cmnd_item;
 
+// {BMAIN, BHELP, "-help"}
+
 static cmnd_item main[] = {
-  {_MAIN, _MESG, "-message"},
-  {_MAIN, _DVCE, "-device"},
-  {_MAIN, _EXIT, "-exit"}
+  {BMAIN, BMESG, "-message"},
+  {BMAIN, BDVCE, "-device"},
+  {BMAIN, BEXIT, "-exit"}
 };
 
 static cmnd_item mesg[] = {
-  {_MESG, _INIT, "-read"},
-  {_MESG, _INIT, "-send"},
-  {_MESG, _MAIN, "-back"}
+  {BMESG, BINIT, "-read"},
+  {BMESG, BINIT, "-send"},
+  {BMESG, BMAIN, "-back"}
 };
 
 static cmnd_item dvce[] = {
-  {_DVCE, _INIT, "-read"},
-  {_DVCE, _DLED, "-init"},
-  {_DVCE, _MAIN, "-back"}
+  {BDVCE, BINIT, "-read"},
+  {BDVCE, BDLED, "-push"},
+  {BDVCE, BMAIN, "-back"}
 };
 
 static cmnd_item dled[] = {
-  {_DLED, _INIT, "-red"},
-  {_DLED, _INIT, "-blue"},
-  {_DLED, _INIT, "-green"},
-  {_DLED, _MAIN, "-back"}
+  {BDLED, BINIT, "-red"},
+  {BDLED, BINIT, "-blue"},
+  {BDLED, BINIT, "-green"},
+  {BDLED, BMAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
 The static variables TABLE, ATTRB and FORWD are used as blueprints during the command-session. Like the protocol-array
@@ -54,7 +56,7 @@ static uint8_t ATTRB = 0x80;
 
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80;
-  state = _MAIN;
+  state = BMAIN;
 }
 
 static void write_protocol(cmnd_item item, int8_t index) {
@@ -63,17 +65,17 @@ static void write_protocol(cmnd_item item, int8_t index) {
  */
   switch(item.this_state) {
 
-  case _MAIN:
+  case BMAIN:
     reset_protocol();
     TABLE |= (1 << index);
   break;
-  case _MESG:
+  case BMESG:
     ATTRB |= (index << RWBIT);
   break;
-  case _DVCE:
+  case BDVCE:
     ATTRB |= (index << RWBIT);
   break;
-  case _DLED:
+  case BDLED:
     ATTRB |= (1 << index);
   break;
   default:
@@ -104,32 +106,37 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
 
 int8_t browse_driver(uint8_t *protocol) {
 
-  while (state != _INIT) {
+  while (state != BINIT) {
    
     switch(state) {
-    case _MAIN:
+    case BMAIN:
       Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(main, ARRAY_SIZE(main));
       break;
-    case _MESG:
+    case BMESG:
       Render_Header("MESSAGE    ", "Message ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
-    case _DVCE:
+    case BDVCE:
       Render_Header("DEVICE     ", "Device ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dvce, ARRAY_SIZE(dvce));
       break;
-    case _DLED:
-      Render_Header("INIT       ", "Ledinit ipsum dolor sit amet, consectetur adipiscing elit");
+    case BDLED:
+      Render_Header("PUSH       ", "PUSH ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
+//  case BHELP:
+//    Render_Header("HELP       ", "No Big Deal");
+
     }
-    if (state == _EXIT) return EXIT;
+    if (state == BEXIT) return EXIT;
   }
 
   protocol[TBYTE] = TABLE;
   protocol[ABYTE] = ATTRB;
   protocol[SBYTE] = ATTRB;
+
+  state = BMAIN;
 
   return command_driver_check(protocol);
 }

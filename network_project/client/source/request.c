@@ -33,7 +33,7 @@ int8_t delimiter_check(rqst_t *request, int32_t expected) {
 }
 
 int8_t protocol_append(rqst_t *request) {
-/*Assigns the protocol to the package before some append-checks (inlines in header)*/
+/*Assigns the protocol to the package*/
 
   request->pack[request->size_pack - 4] = request->protocol[TBYTE];
   request->pack[request->size_pack - 3] = request->protocol[ABYTE];

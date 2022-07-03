@@ -12,7 +12,6 @@ Ehh, I made something. It turned out as nothing. At the moment we're just enter 
   client->socket_client = socket_create();
   client->socket_status = socket_connect(client->socket_client, address, port);
 
-
   Render_Header("VALIDATE  ", "Enter username and password");
 
   client->size_user = scan_driver(client->user, SBUFF, "username");

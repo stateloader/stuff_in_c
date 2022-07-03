@@ -75,7 +75,7 @@ static int8_t writer_items(server_t * server, write_item *items, size_t size_arr
     if (server->protocol[byte] & (1 << items[i].flag))
       return items[i].func(server);
   }
-  server->session |= (1 << WPROB) | (1 << EMPTY);
+  server->session |= (1 << WPROB);
   System_Message("\nbyte-troubles in reader_items\n");
   return FAIL;
 }

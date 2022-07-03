@@ -1,5 +1,7 @@
 /*-----------------------------------------------------------------------------------------------------------------SCANNER
-
+Ah, input/scan - strings - is such delight in C... Here I'm using fgets and the user are forbidden from using anything but
+English letters ("most of the ASCII-table"). Pipe (|) - DELIM - is forbidden for not screwing any canonical formatting up
+and the entire show will come to an end if the user surpass allowed buffer-size.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdio.h>
@@ -11,7 +13,9 @@
 static int32_t size_scan = 0;
 
 static int8_t scan_check(char *scan, int32_t size_buffer) {
-
+/*Second state of two where the input being checked. If not OK the user being threwn back to
+ *the "input/scan-state" again.
+ */
   for (int32_t i = 0; i < size_scan; i++) {
     
     if (!check_byte_asci(scan[i])) {
@@ -35,7 +39,6 @@ static int8_t scan_check(char *scan, int32_t size_buffer) {
 }
 
 static int8_t scan_input(char *scan, int32_t size_buffer, char *prompt) {
-
   printf("%s: ", prompt);
   buffer_flush(scan, size_buffer);
 
@@ -49,6 +52,7 @@ static int8_t scan_input(char *scan, int32_t size_buffer, char *prompt) {
 int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
 
   uint8_t state = SCAN_INPUT;
+
   while (state != SCAN_COMPL) {
 
     switch(state) {

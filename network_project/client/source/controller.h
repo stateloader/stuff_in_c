@@ -85,4 +85,7 @@ ingo info
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 //--------------------------------------------------------------------------------------------------------------CONTROLLERS
 
+
+//void controller();
+
 #endif
