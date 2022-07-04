@@ -1,6 +1,7 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
+#include "cstring.h"
 #include "controller.h"
 #include "socket.h"
 #include "client.h"
@@ -32,12 +33,10 @@ inline static int8_t routine_config_check(rqst_t *request, recv_t *receive) {
   }
   return SUCC;
 }
-/*
-inline static void clear_restore(rqst_t *request, recv_t *receive) {
-  buffer_flush(request->pack, SBUFF);
-  buffer_flush(request->user, SBUFF);
-  buffer_flush(receive->recv, SBUFF);
-  buffer_flush(receive->user, SBUFF);
+inline static void free_session_memory(recv_t *receive) {
+
+  if (receive->table_mesg) free(receive->table_mesg);
+  if (receive->table_dvce) free(receive->table_dvce);
+
 }
-*/
 #endif

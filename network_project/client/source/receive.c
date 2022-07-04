@@ -180,7 +180,7 @@ static int8_t fetch_init(recv_t *receive) {
     if (items[i].func(receive) != SUCC)
       return FAIL;
   }
-  receive->protocol[SBYTE] |= (1 << LINKA);
+  //receive->protocol[SBYTE] |= (1 << LINKA);
   return SUCC;
 }
 

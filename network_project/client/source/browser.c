@@ -8,7 +8,7 @@ bits being set (or cleared) simultaneously on the fly which finally being added 
 #include "scanner.h"  
 #include "browser.h"
 
-static int8_t state = BMAIN;
+static int8_t state;// = BMAIN;
 
 /*-------------------------------------------------------------------------------------------------------COMMAND STRUCTURE
 3 (for now, more to come) menues being represented as 'command item'. Each item stores constants relevant for where the
@@ -19,8 +19,6 @@ typedef struct CommandItem {
   const uint8_t next_state;
   const char *cmnd;
 } cmnd_item;
-
-// {BMAIN, BHELP, "-help"}
 
 static cmnd_item main[] = {
   {BMAIN, BMESG, "-message"},
@@ -104,7 +102,9 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t browse_driver(uint8_t *protocol) {
+int8_t browse_driver(client_t *client) {
+
+  state = BMAIN;
 
   while (state != BINIT) {
    
@@ -125,18 +125,16 @@ int8_t browse_driver(uint8_t *protocol) {
       Render_Header("PUSH       ", "PUSH ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
-//  case BHELP:
-//    Render_Header("HELP       ", "No Big Deal");
-
     }
-    if (state == BEXIT) return EXIT;
+    if (state == BEXIT) {
+      client->session &= ~(1 << ALIVE);
+      System_Message("bye!");
+      return EXIT;
+    }
   }
 
-  protocol[TBYTE] = TABLE;
-  protocol[ABYTE] = ATTRB;
-  protocol[SBYTE] = ATTRB;
+  client->protocol[TBYTE] = TABLE;
+  client->protocol[ABYTE] = ATTRB;
 
-  state = BMAIN;
-
-  return command_driver_check(protocol);
+  return SUCC;
 }

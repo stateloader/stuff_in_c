@@ -12,7 +12,7 @@ typedef struct Receiver {
   int32_t amnt_rows;
   int32_t size_recv;
   int32_t size_user;
-  char user[FBUFF];
+  char *user;
   char recv[FBUFF];
   mmod_t *table_mesg;
   dmod_t *table_dvce;
@@ -48,6 +48,7 @@ inline static int8_t protocol_obtain_checks(recv_t *receive) {
   }
   return SUCC;
 }
+
 inline static void release_memory(recv_t *receive) {
 
   if (receive->table_mesg) {

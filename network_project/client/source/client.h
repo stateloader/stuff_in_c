@@ -4,6 +4,7 @@
 #include "controller.h"
 
 typedef struct Client {
+  uint8_t session;
   uint8_t protocol[3];
   int32_t socket_status;
   int32_t socket_client;
@@ -14,8 +15,6 @@ typedef struct Client {
   int32_t size_recv;
   char user[SBUFF];
   char pass[SBUFF];
-  char pack[SBUFF];
-  char recv[SBUFF];
 } client_t;
 
 #endif

@@ -12,7 +12,7 @@ typedef struct Request {
   int32_t size_send;
   int32_t size_user;
   int32_t size_pack;
-  char user[SBUFF];
+  char *user;
   char pack[SBUFF];
 } rqst_t;
 
