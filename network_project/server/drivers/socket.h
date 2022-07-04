@@ -1,7 +1,7 @@
 #ifndef SOCKET_H_
 #define SOCKET_H_
 
-#include "controller.h"
+#include "config.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 

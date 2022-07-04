@@ -1,7 +1,7 @@
 #ifndef RECEIVE_H_
 #define RECEIVE_H_
 
-#include "controller.h"
+#include "config.h"
 #include "models.h"
 
 typedef struct Receiver {

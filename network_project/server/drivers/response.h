@@ -1,7 +1,7 @@
 #ifndef RESPONSE_H_
 #define RESPONSE_H_
 
-#include "controller.h"
+#include "config.h"
 #include "server.h"
 
 typedef struct Response {

@@ -2,7 +2,7 @@
 #define SESSION_H_
 
 #include "cstring.h"
-#include "controller.h"
+#include "config.h"
 #include "socket.h"
 #include "client.h"
 #include "request.h"

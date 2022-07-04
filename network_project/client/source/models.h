@@ -1,7 +1,7 @@
 #ifndef MODELS_H_
 #define MODELS_H_
 
-#include "controller.h"
+#include "config.h"
 
 typedef struct MesgModel {
   uint32_t id;

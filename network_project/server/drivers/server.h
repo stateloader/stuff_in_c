@@ -1,7 +1,7 @@
 #ifndef SERVER_H_
 #define SERVER_H_
 
-#include "controller.h"
+#include "config.h"
 
 typedef struct Connection {
   int8_t status;

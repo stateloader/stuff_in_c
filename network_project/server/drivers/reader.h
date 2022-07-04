@@ -6,7 +6,7 @@ description to be
 #ifndef READER_H_
 #define READER_H_
 
-#include "controller.h"
+#include "config.h"
 #include "server.h"
 
 typedef int8_t (*read_func)(server_t *server);

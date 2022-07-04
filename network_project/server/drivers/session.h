@@ -1,7 +1,7 @@
 #ifndef SESSION_H_
 #define SESSION_H_
 
-#include "controller.h"
+#include "config.h"
 #include "server.h"
 
 typedef enum ServerRoutine {

@@ -1,7 +1,7 @@
 #ifndef WRITER_H_
 #define WRITER_H_
 
-#include "controller.h"
+#include "config.h"
 #include "server.h"
 
 typedef int8_t (*write_func)(server_t *server);

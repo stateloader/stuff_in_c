@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "controller.h"
+#include "config.h"
 
 void buffer_flush(char *string, int32_t size_buffer);
 int32_t string_size(const char *string, int32_t size_buffer);

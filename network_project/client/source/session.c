@@ -10,13 +10,13 @@ static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client)
   if (result <= FAIL) return EXIT;
 
   request->protocol = client->protocol;
-  request->socket = client->socket_client;
+  request->socket = client->conn.socket_client;
   request->size_user = client->size_user;
   
   request->user = client->user;
 
   receive->protocol = client->protocol;
-  receive->socket = client->socket_client;  
+  receive->socket = client->conn.socket_client;  
   receive->size_user = client->size_user;
 
   receive->user = client->user;

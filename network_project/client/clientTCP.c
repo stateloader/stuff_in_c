@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------------------------------------------------
 info info info info info info
 ------------------------------------------------------------------------------------------------------------------------*/
-#include "source/controller.h"
+#include "source/config.h"
 #include "source/client.h"
 #include "source/connect.h"
 #include "source/session.h"

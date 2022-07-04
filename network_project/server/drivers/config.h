@@ -1,5 +1,5 @@
-/*----------------------------------------------------------------------------------------------------MACROS CLIENT MODULE
-Macros implemented reg
+/*----------------------------------------------------------------------------------------------------MACROS SERVER MODULE
+info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 #ifndef CONTROLLER_H_
 #define CONTROLLER_H_
@@ -11,21 +11,26 @@ Macros implemented reg
 #include <stdint.h>
 #include <unistd.h>
 
-/*------------------------------------------------------------------------------------------------------------SESSION BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  ALIVE  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
-------------------------------------------------------------------------------------------------------------------------*/
 
+/*------------------------------------------------------------------------------------------------------------SESSION BYTE
+BIT(N)                                   |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
+CONSTANT                                 |  ALIVE  |  WPROB  |  RPROB  |    -    |    -    |    -    |  SDVCE  |  SMESG  |
+------------------------------------------------------------------------------------------------------------------------*/
+#define SMESG 0
+#define SDVCE 1
+#define RPROB 5
+#define WPROB 6
 #define ALIVE 7
 
 /*--------------------------------------------------------------------------------------------------------------TABLE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
+BIT(N)                                   |    7    |    6    |    5    |    4    |    3    |    2    |     1   |    0    |
+CONSTANT                                 |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG  |
 ------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
+BIT(N)                                   |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
+CONSTANT                                 |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0  |
 -------------------------------------------------------------------------------------------------------------- STATUS BYTE
-                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |           |
+BIT(N)                                   |    7    |    6    |    5    |    4    |    3    |    2    |     1   |    0    |
+CONSTANT                                 |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |    -    |    -    |    -    |
 ------------------------------------------------------------------------------------------------------------------------*/
 #define UNBIT 7
 
@@ -51,17 +56,13 @@ in the index are reffered to as below:
 #define RWBIT 6     //              Read/Write          - Set equals database write, opposite equals database read
 
 //-------------------------------------------------------------------------------------------------------STATUS BYTE flags
-//#define LINKA 0
-#define LOGIN 4
-#define SETUP 5
 #define VALID 6
 /*----------------------------------------------------------------------------------------------------------------DELIMITER
-ingo info
 //-----------------------------------------------------------------------------------------------------------------------*/
 #define DELIM '|'   //              Delimiter           - Used as placeholder between a given model's entries.
 #define DMSGE 4     //              Delimiters          - (members) Message-model
 #define DDVCE 3     //              Delimiters          - (members) Device-model
-#define DACCS 2
+#define DUSER 2
 #define POFFS 4     //              Protocol Offset     - size added to end of package, storing the protocol-bytes and '\0'
 //------------------------------------------------------------------------------------------------------------------------
 #define FLEE -2     //              FLEE/PANIC          - Something went south enough to force quit the entire program.
@@ -69,27 +70,28 @@ ingo info
 #define FAIL 0      //              FAIL/FALSE          - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 #define SUCC 1      //              SUCC/TRUE           - Because I'm an idiot. Custom fun? <bool.h> exists, after all.
 //------------------------------------------------------------------------------------------------------------------BUFFER
-#define FBUFF 4096 //              File Buffer
+#define FBUFF 4096  //              File Buffer
 #define SBUFF 512   //              Scan Buffer
 #define PBUFF 64    //              Path Buffer
 #define TBUFF 21    //              DateTime Buffer
 //--------------------------------------------------------------------------------------------------------------"GRAPHICS"
-#define HEADER_FORM "\n%s\n%s\t\t%s\n%s\n\n"
-#define Header_Border "----------------------------------------------------------------------------------------------------"
-#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
+#define HEADER_FORM "%s\n%s\t\t%s\n%s\n\n"
 
-#define FORM_INFO "\t\t\t%s\n"
-#define System_Message(inf) printf(FORM_INFO, inf);
+#define Header_Bord "----------------------------------------------------------------------------------------------------"
+#define Render_Header(itm, inf) printf(HEADER_FORM, Header_Bord, itm, inf, Header_Bord);
 
-#define FORM_FLEE "\t\t\tFatal: %s\n\t\t\t%s\n"
-#define Message_Flee(inf, exp) printf(FORM_FLEE, inf, exp)
+#define SYSTEM_FORM "\t\t\t%s\n"
+#define System_Message(msg) printf(SYSTEM_FORM, msg);
 //-------------------------------------------------------------------------------------------------------------SOME CHECKS
 #define check_delm(str, len) (str[len - 1] == DELIM)
 #define check_size(str, buf) (str < buf - 1)
 #define check_term(str, len) (str[len - 1] == '\0')
 //-------------------------------------------------------------------------------------------------------------------OTHER
 #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+//------------------------------------------------------------------------------------------------------------"CONTROLLERS"
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
-//--------------------------------------------------------------------------------------------------------------CONTROLLERS
+
+
+//void controller();
 
 #endif

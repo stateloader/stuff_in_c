@@ -4,7 +4,7 @@
 #define INIT_MESG 0
 #define INIT_DVCE 1
 
-#include "controller.h"
+#include "config.h"
 
 typedef struct Request {
   int32_t socket;

@@ -1,7 +1,7 @@
 #ifndef BROSWER_H_
 #define BROWSER_H_
 
-#include "controller.h"
+#include "config.h"
 #include "client.h"
 
 #define BMAIN 0

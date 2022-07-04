@@ -1,7 +1,7 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include "controller.h"
+#include "config.h"
 #include "request.h"
 
 typedef struct Message {
