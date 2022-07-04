@@ -5,18 +5,6 @@
 #include "sstring.h"
 #include "writer.h"
 
-int8_t writer_protocol_respond(server_t *server) {
-
-  server->size_resp = POFFS;
-
-  server->resp[server->size_resp - 4] = server->protocol[TBYTE];
-  server->resp[server->size_resp - 3] = server->protocol[ABYTE];
-  server->resp[server->size_resp - 2] = server->protocol[SBYTE];
-  server->resp[server->size_resp - 1] = '\0';
-
-  return SUCC;
-}
-
 static int8_t writer_file_open(server_t *server, const char *path) {
 
   server->dbfile = fopen(path, "a");
@@ -39,7 +27,7 @@ static int8_t writer_mesg(server_t *server) {
   server->session |= (1 << SMESG);
   int8_t result = 0;
 
-  result = writer_file_open(server, "drivers/database/mesg.dat");
+  result = writer_file_open(server, "source/database/mesg.dat");
   if (result != SUCC) return result;
   
   result = writer_file_appd(server);
@@ -54,7 +42,7 @@ static int8_t writer_dvce(server_t *server) {
   server->session |= (1 << SDVCE);
   int8_t result = 0;
 
-  result = writer_file_open(server, "drivers/database/dvce.dat");
+  result = writer_file_open(server, "source/database/dvce.dat");
   if (result != SUCC) return result;
   
   result = writer_file_appd(server);

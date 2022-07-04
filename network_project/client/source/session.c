@@ -4,9 +4,9 @@
 #include "connect.h"
 #include "session.h"
 
-static int8_t routine_config(rqst_t *request, recv_t *receive, client_t *client) {
+static int8_t session_config(rqst_t *request, recv_t *receive, client_t *client) {
 
-  int8_t result = browse_driver(client);
+  int8_t result = command_driver(client);
   if (result <= FAIL) return EXIT;
 
   request->protocol = client->protocol;
@@ -47,7 +47,7 @@ int8_t session_driver(client_t *client) {
 
     switch(routine) {
     case ROUT_CONF:
-      result = routine_config(&request, &receive, client);
+      result = session_config(&request, &receive, client);
       if (result <= FAIL)
         routine = ROUT_DONE;
       else

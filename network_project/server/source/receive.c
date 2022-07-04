@@ -18,7 +18,7 @@ static int8_t protocol_obtain(server_t *server) {
 
 static int8_t database_driver(server_t *server) {
 
-  if (server->protocol[ABYTE] & (1 << RWBIT))
+  if (server->protocol[ABYTE] & (1 << RWBIT)) 
     return database_writer(server);
   else
     return database_reader(server);

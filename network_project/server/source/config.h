@@ -91,7 +91,4 @@ in the index are reffered to as below:
 //------------------------------------------------------------------------------------------------------------"CONTROLLERS"
 #define PrintByte(msk) {for (int i = 7; 0 <= i; i--) {printf("%c", (msk & (1 << i)) ? '1' : '0');} printf("\n");}
 
-
-//void controller();
-
 #endif

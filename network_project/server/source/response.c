@@ -78,10 +78,8 @@ int8_t response_driver(server_t *server, int8_t control) {
 
   if (control < SUCC)
     lethal_response(server);
-
   else if (server->protocol[ABYTE] & (1 << RWBIT))
     writer_response(server);
-
   else
     server->protocol[SBYTE] |= (1 << VALID);
   

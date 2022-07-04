@@ -12,7 +12,6 @@ typedef struct Connection {
 
 typedef struct Client {
   conn_t conn;
-  uint8_t session;
   uint8_t protocol[3];
   int32_t size_send;
   int32_t size_user;

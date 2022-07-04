@@ -1,5 +1,5 @@
 make:
-	gcc -o serverTCP *c drivers/*c -Wall -Wextra -g
+	gcc -o serverTCP *c source/*c -Wall -Wextra -g
 
 clean:
 	rm -f $(obj) serverTCP

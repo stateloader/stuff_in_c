@@ -6,7 +6,7 @@ bits being set (or cleared) simultaneously on the fly which finally being added 
 
 #include "cstring.h"
 #include "scanner.h"  
-#include "browser.h"
+#include "command.h"
 
 static int8_t state;// = BMAIN;
 
@@ -21,28 +21,28 @@ typedef struct CommandItem {
 } cmnd_item;
 
 static cmnd_item main[] = {
-  {BMAIN, BMESG, "-message"},
-  {BMAIN, BDVCE, "-device"},
-  {BMAIN, BEXIT, "-exit"}
+  {CMAIN, CMESG, "-message"},
+  {CMAIN, CDVCE, "-device"},
+  {CMAIN, CEXIT, "-exit"}
 };
 
 static cmnd_item mesg[] = {
-  {BMESG, BINIT, "-read"},
-  {BMESG, BINIT, "-send"},
-  {BMESG, BMAIN, "-back"}
+  {CMESG, CINIT, "-read"},
+  {CMESG, CINIT, "-send"},
+  {CMESG, CMAIN, "-back"}
 };
 
 static cmnd_item dvce[] = {
-  {BDVCE, BINIT, "-read"},
-  {BDVCE, BDLED, "-push"},
-  {BDVCE, BMAIN, "-back"}
+  {CDVCE, CINIT, "-read"},
+  {CDVCE, CDLED, "-push"},
+  {CDVCE, CMAIN, "-back"}
 };
 
 static cmnd_item dled[] = {
-  {BDLED, BINIT, "-red"},
-  {BDLED, BINIT, "-blue"},
-  {BDLED, BINIT, "-green"},
-  {BDLED, BMAIN, "-back"}
+  {CDLED, CINIT, "-red"},
+  {CDLED, CINIT, "-blue"},
+  {CDLED, CINIT, "-green"},
+  {CDLED, CMAIN, "-back"}
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
 The static variables TABLE, ATTRB and FORWD are used as blueprints during the command-session. Like the protocol-array
@@ -54,7 +54,7 @@ static uint8_t ATTRB = 0x80;
 
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80;
-  state = BMAIN;
+  state = CMAIN;
 }
 
 static void write_protocol(cmnd_item item, int8_t index) {
@@ -63,17 +63,17 @@ static void write_protocol(cmnd_item item, int8_t index) {
  */
   switch(item.this_state) {
 
-  case BMAIN:
+  case CMAIN:
     reset_protocol();
     TABLE |= (1 << index);
   break;
-  case BMESG:
+  case CMESG:
     ATTRB |= (index << RWBIT);
   break;
-  case BDVCE:
+  case CDVCE:
     ATTRB |= (index << RWBIT);
   break;
-  case BDLED:
+  case CDLED:
     ATTRB |= (1 << index);
   break;
   default:
@@ -102,35 +102,31 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return state;
 }
 
-int8_t browse_driver(client_t *client) {
+int8_t command_driver(client_t *client) {
 
-  state = BMAIN;
+  state = CMAIN;
 
-  while (state != BINIT) {
+  while (state != CINIT) {
    
     switch(state) {
-    case BMAIN:
+    case CMAIN:
       Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(main, ARRAY_SIZE(main));
       break;
-    case BMESG:
+    case CMESG:
       Render_Header("MESSAGE    ", "Message ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
-    case BDVCE:
+    case CDVCE:
       Render_Header("DEVICE     ", "Device ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dvce, ARRAY_SIZE(dvce));
       break;
-    case BDLED:
+    case CDLED:
       Render_Header("PUSH       ", "PUSH ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
     }
-    if (state == BEXIT) {
-      client->session &= ~(1 << ALIVE);
-      System_Message("bye!");
-      return EXIT;
-    }
+    if (state == CEXIT) return EXIT;
   }
 
   client->protocol[TBYTE] = TABLE;

@@ -7,7 +7,7 @@
 #include "client.h"
 #include "request.h"
 #include "receive.h"
-#include "browser.h"
+#include "command.h"
 
 typedef enum SessionRoutine {
   ROUT_CONF, ROUT_RQST, ROUT_SEND,
