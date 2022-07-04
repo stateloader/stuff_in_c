@@ -23,6 +23,7 @@ typedef struct CommandItem {
 static cmnd_item main[] = {
   {CMAIN, CMESG, "-message"},
   {CMAIN, CDVCE, "-device"},
+  {CMAIN, CHELP, "-help"},
   {CMAIN, CEXIT, "-exit"}
 };
 
@@ -43,6 +44,10 @@ static cmnd_item dled[] = {
   {CDLED, CINIT, "-blue"},
   {CDLED, CINIT, "-green"},
   {CDLED, CMAIN, "-back"}
+};
+
+static cmnd_item help[] = {
+  {CHELP, CMAIN, "-back"},
 };
 /*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
 The static variables TABLE, ATTRB and FORWD are used as blueprints during the command-session. Like the protocol-array
@@ -76,6 +81,9 @@ static void write_protocol(cmnd_item item, int8_t index) {
   case CDLED:
     ATTRB |= (1 << index);
   break;
+  case CHELP:
+    ;
+  break;
   default:
     System_Message("Something went south while writing protocol.");
     exit(EXIT_FAILURE);
@@ -89,7 +97,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
     printf("\t\t\t%s\n", items[i].cmnd);
 
   char command[SBUFF] = {'\0'};
-  size_t cmnd_size = scan_driver(command, SBUFF, "select");
+  size_t cmnd_size = scan_driver(command, "select", SBUFF);
 
   for (size_t i = 0; i < size_array; i++) {
     if (string_comp(command, items[i].cmnd, cmnd_size)) {
@@ -125,7 +133,13 @@ int8_t command_driver(client_t *client) {
       Render_Header("PUSH       ", "PUSH ipsum dolor sit amet, consectetur adipiscing elit");
       state = command_scan(dled, ARRAY_SIZE(dled));
       break;
+    case CHELP:
+      Render_Header("HELP       ", "Help ipsum dolor sit amet, consectetur adipiscing elit");
+      System_Message("Just go nuts.");
+      state = command_scan(help, ARRAY_SIZE(help));
+      break;
     }
+
     if (state == CEXIT) return EXIT;
   }
 

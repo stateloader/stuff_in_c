@@ -24,7 +24,7 @@ static int8_t reader_file_mesg(server_t *server) {
   server->session |= (1 << SMESG);
   int8_t result = 0;
 
-  result = reader_file_open(server, "drivers/database/mesg.dat");
+  result = reader_file_open(server, "source/database/mesg.dat");
   if (result != SUCC) return result;
   
   result = reader_file_read(server);
@@ -39,7 +39,7 @@ static int8_t reader_file_dvce(server_t *server) {
   server->session |= (1 << SDVCE);
   int8_t result = 0;
 
-  result = reader_file_open(server, "drivers/database/dvce.dat");
+  result = reader_file_open(server, "source/database/dvce.dat");
   if (result != SUCC) return result;
 
   result = reader_file_read(server);
@@ -66,18 +66,3 @@ static int8_t reader_items(server_t * server, read_item *items, size_t size_arr,
 int8_t database_reader(server_t *server) {
   return reader_items(server, table_items, ARRAY_SIZE(table_items), TBYTE);
 }
-/*
-static int8_t reader_valid(server_t *server) {
-  Message_Info("inside reader_valid");
-
-  int8_t result = 0;
-
-  result = reader_file_open(server, "drivers/database/user.dat");
-  if (result != SUCC) return result;
-
-  result = reader_file_read(server);
-  if (result != SUCC) return result;
-
-  return SUCC;
-}
-*/

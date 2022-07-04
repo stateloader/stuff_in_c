@@ -14,8 +14,8 @@ Ehh, I made something. It turned out as nothing. At the moment we're just enter 
 
   Render_Header("VALIDATE  ", "Enter username and password");
 
-  client->size_user = scan_driver(client->user, SBUFF, "username");
-  client->size_pass = scan_driver(client->pass, SBUFF, "password");
+  client->size_user = scan_driver(client->user, "username", SBUFF);
+  client->size_pass = scan_driver(client->pass, "password", SBUFF);
 
   return SUCC;
 }

@@ -82,6 +82,13 @@ int8_t session_driver(client_t *client) {
         routine = ROUT_FRWD;
       break;
     case ROUT_FRWD:
+      for (size_t i = 0; i < receive.amnt_rows; i++) {
+        printf("ID %d \t Username: %s \t Datetime: %s \t Topic: %s \t Message: %s\n",
+          receive.table_mesg[i].id, receive.table_mesg[i].user,
+          receive.table_mesg[i].datm, receive.table_mesg[i].topc,
+          receive.table_mesg[i].mesg
+        );
+      }
       routine = ROUT_DONE;
       break;
     default:

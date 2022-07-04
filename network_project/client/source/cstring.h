@@ -6,8 +6,8 @@
 #include <string.h>
 #include "config.h"
 
-void buffer_flush(char *string, int32_t size_buffer);
-int32_t string_size(const char *string, int32_t size_buffer);
-int32_t string_copy(char *dest, const char *from, int32_t size_buffer);
-int8_t string_comp(char *str1, const char *str2, int32_t comp_length);
+void buffer_flush(char *string, size_t size_buffer);
+size_t string_size(const char *string, size_t size_buffer);
+size_t string_copy(char *dest, const char *from, size_t size_buffer);
+int8_t string_comp(char *str1, const char *str2, size_t comp_length);
 #endif

@@ -10,9 +10,9 @@ static int8_t table_mesg(recv_t *receive) {
  *current or later added - going to be fetched by the hardcoded principles below. I loop through the entire dataset sent
  *from the server and 
  */
-  int32_t mem = 0, idx = 0, row = 0;
+  size_t mem = 0, idx = 0, row = 0;
 
-  for (int32_t i = 0; i < receive->size_recv; i++) {
+  for (size_t i = 0; i < receive->size_recv; i++) {
     char byte = receive->recv[i];
 
     switch(mem) {
@@ -63,9 +63,9 @@ static int8_t table_mesg(recv_t *receive) {
 
 static int8_t table_dvce(recv_t *receive) {
 
-  int32_t mem = 0, idx = 0, row = 0;
+  size_t mem = 0, idx = 0, row = 0;
 
-  for (int32_t i = 0; i < receive->size_recv; i++) {
+  for (size_t i = 0; i < receive->size_recv; i++) {
     char byte = receive->recv[i];
 
     switch(mem) {
@@ -112,7 +112,7 @@ static int8_t fetch_rows(recv_t *receive) {
  */
   receive->size_recv -= POFFS;
 
-  for (int32_t i = 0; i < receive->size_recv; i++)
+  for (size_t i = 0; i < receive->size_recv; i++)
     receive->amnt_delm += (receive->recv[i] == DELIM) ? 1 : 0;
   receive->amnt_rows = (receive->amnt_delm / receive->tabl_delm);
 
@@ -180,7 +180,6 @@ static int8_t fetch_init(recv_t *receive) {
     if (items[i].func(receive) != SUCC)
       return FAIL;
   }
-  //receive->protocol[SBYTE] |= (1 << LINKA);
   return SUCC;
 }
 
@@ -215,19 +214,6 @@ int8_t receive_driver(recv_t *receive) {
   if (result != SUCC) return result;
 
   result = protocol_parser(receive);
-  if (result != SUCC) {
-    release_memory(receive);
-    return result;
-  }
+  if (result != SUCC) return result;
   return SUCC;
 }
-
-/*---------------------------------------------------------------------------------------------------------------TABLE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  UNBIT  |    -    |    -    |    -    |    -    |     -    |   TDVCE   |   TMESG   |
-------------------------------------------------------------------------------------------------------------ATTRIBUTE BYTE
-BIT(N)                              |    7    |    6    |    5    |    4    |    3    |     2    |     1     |     0     |
-CONSTANT                            |  UNBIT  |  RWBIT  |  ATTR5  |  ATTR4  |  ATTR3  |   ATTR2  |   ATTR1   |   ATTR0   |
--------------------------------------------------------------------------------------------------------------- STATUS BYTE
-                                    |  UNBIT  |  VALID  |  SETUP  |  LOGIN  |    -    |     -    |     -     |     -     |
-------------------------------------------------------------------------------------------------------------------------*/

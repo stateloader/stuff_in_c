@@ -10,65 +10,73 @@ and the entire show will come to an end if the user surpass allowed buffer-size.
 #include "cstring.h"
 #include "scanner.h"
 
-static int32_t size_scan = 0;
+static void scan_byte(scan_t *scanner) {
 
-static int8_t scan_check(char *scan, int32_t size_buffer) {
-/*Second state of two where the input being checked. If not OK the user being threwn back to
- *the "input/scan-state" again.
- */
-  for (int32_t i = 0; i < size_scan; i++) {
+  for (size_t i = 0; i < scanner->size_scan; i++) {
     
-    if (!check_byte_asci(scan[i])) {
+    if (!scan_check_asci(scanner->scan_input[i])) {
       System_Message("Only ASCII ('English') characters allowed.");
-		  return SCAN_INPUT;
-
-    } else if (check_byte_delm(scan[i])) {
+      scanner->state = SSCAN;
+      return;
+    }
+    if (scan_check_delm(scanner->scan_input[i])) {
       System_Message("Pipe charachter ('|') is for losers. Use another one.");
-      return SCAN_INPUT;
+      scanner->state = SSCAN; 
+      return;
     }
   }
-  if (check_scan_minl(size_scan, 2)) {
-    System_Message("Enter at least two characters.");
-    return SCAN_INPUT;
-  }
-  if (check_scan_maxl(size_scan, size_buffer)) {
-    System_Message("Enter at least two characters.");
+  if (!scan_check_term(scanner->scan_input, scanner->size_scan)) {
+    System_Message("input not nullterminated.");
     exit(EXIT_FAILURE);
   }
-  return SCAN_COMPL;
+  scanner->state = SDONE;
 }
 
-static int8_t scan_input(char *scan, int32_t size_buffer, char *prompt) {
+static void scan_size(scan_t *scanner) {
+
+  if (scan_check_minl(scanner->size_scan, 1)) {
+    System_Message("Enter at least one characters.");
+    scanner->state = SSCAN;
+    return;
+  }
+  if (scan_check_maxl(scanner->size_scan, scanner->size_buff)) {
+    System_Message("You've passsdfjh gg");
+    exit(EXIT_FAILURE);
+  }
+  scanner->state = SBYTE;
+}
+
+static void scan_input(scan_t *scanner, char *prompt) {
+
   printf("%s: ", prompt);
-  buffer_flush(scan, size_buffer);
+  buffer_flush(scanner->scan_input, scanner->size_buff);
 
-  fgets(scan, size_buffer - 1, stdin);
-  size_scan = string_size(scan, size_buffer) - 1;
-  scan[size_scan  - 1] = '\0';
+  fgets(scanner->scan_input, scanner->size_buff - 1, stdin);
+  scanner->size_scan = string_size(scanner->scan_input, scanner->size_buff) - 1;
+  scanner->scan_input[scanner->size_scan  - 1] = '\0';
 
-  return BYTE_CHECK;
+  scanner->state = SSCHK;
 }
 
-int32_t scan_driver(char *scan, int32_t size_buffer, char *message) {
+size_t scan_driver(char *user_input, char *prompt, size_t size_buffer) {
 
-  uint8_t state = SCAN_INPUT;
+  scan_t scanner = {.state = SSCAN,.size_buff = size_buffer};
 
-  while (state != SCAN_COMPL) {
+  while (scanner.state != SDONE) {
+    switch(scanner.state) {
 
-    switch(state) {
-    case SCAN_INPUT:
-      state = scan_input(scan, size_buffer, message);
+    case SSCAN:
+      scan_input(&scanner, prompt);
       break;
-    case BYTE_CHECK:
-      state = scan_check(scan, size_buffer);
-    break;
+    case SSCHK:
+      scan_size(&scanner);
+      break;
+    case SBCHK:
+      scan_byte(&scanner);
+      break;
     default:
       exit(EXIT_FAILURE);
     }
   }
-  if (!check_term(scan, size_scan)) {
-    System_Message("Failed to terminate userinput.");
-    return FAIL;
-  }
-  return size_scan;
+  return string_copy(user_input, scanner.scan_input, size_buffer);
 }

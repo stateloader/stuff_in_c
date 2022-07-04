@@ -7,11 +7,11 @@
 typedef struct Receiver {
   int32_t socket;
   uint8_t *protocol;
-  int32_t tabl_delm;
-  int32_t amnt_delm;
-  int32_t amnt_rows;
-  int32_t size_recv;
-  int32_t size_user;
+  size_t tabl_delm;
+  size_t amnt_delm;
+  size_t amnt_rows;
+  size_t size_recv;
+  size_t size_user;
   char *user;
   char recv[FBUFF];
   mmod_t *table_mesg;
@@ -47,17 +47,5 @@ inline static int8_t protocol_obtain_checks(recv_t *receive) {
     return FAIL;
   }
   return SUCC;
-}
-
-inline static void release_memory(recv_t *receive) {
-
-  if (receive->table_mesg) {
-    free(receive->table_mesg);
-    receive->table_mesg = NULL;
-  }
-  if (receive->table_dvce) {
-    free(receive->table_dvce);
-    receive->table_dvce = NULL;
-  }
 }
 #endif

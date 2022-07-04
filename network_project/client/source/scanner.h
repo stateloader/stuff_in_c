@@ -3,15 +3,24 @@
 
 #include "config.h"
 
-#define SCAN_INPUT 0
-#define BYTE_CHECK 1
-#define SCAN_COMPL 2
+#define SSCAN 0
+#define SSCHK 1
+#define SBCHK 2
+#define SDONE 3
 
-#define check_byte_asci(byt) (byt >= 0x00 && byt <= 0x7F)
-#define check_byte_delm(byt) (byt == DELIM)
-#define check_scan_minl(len, min) (len <= min)
-#define check_scan_maxl(len, max) (len >= max)
+typedef struct scanner {
+  uint8_t state;
+  size_t size_scan;
+  size_t size_buff;
+  char scan_input[SBUFF];
+} scan_t;
 
-int32_t scan_driver(char *scanner, int32_t size_buffer, char *message);
+#define scan_check_asci(byte) (byte >= 0x00 && byte <= 0x7F)
+#define scan_check_delm(byte) (byte == DELIM)
+#define scan_check_term(scan, size) (scan[size - 1] == '\0')
+#define scan_check_minl(size, minl) (size <= minl)
+#define scan_check_maxl(size, maxl) (size >= maxl)
+
+size_t scan_driver(char *scan_input, char *message, size_t size_buffer);
 
 #endif

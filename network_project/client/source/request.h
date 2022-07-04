@@ -9,14 +9,14 @@
 typedef struct Request {
   int32_t socket;
   uint8_t *protocol;
-  int32_t size_send;
-  int32_t size_user;
-  int32_t size_pack;
+  size_t size_send;
+  size_t size_user;
+  size_t size_pack;
   char *user;
   char pack[SBUFF];
 } rqst_t;
 
-int8_t delimiter_check(rqst_t *request, int32_t expected);
+int8_t delimiter_check(rqst_t *request, size_t expected);
 int8_t datetime_append(char *datetime);
 int8_t protocol_append(rqst_t *request);
 int8_t request_driver(rqst_t *request);

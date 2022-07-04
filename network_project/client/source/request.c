@@ -17,12 +17,12 @@ int8_t datetime_append(char *datetime) {
   return SUCC;
 }
 
-int8_t delimiter_check(rqst_t *request, int32_t expected) {
+int8_t delimiter_check(rqst_t *request, size_t expected) {
 /*makes sure the package has the right amount of delimiters, is canonical*/
 
-  int32_t amnt_delim = 0;
+  size_t amnt_delim = 0;
 
-  for (int32_t i = 0; i < request->size_pack; i++)
+  for (size_t i = 0; i < request->size_pack; i++)
     amnt_delim += (request->pack[i] == DELIM) ? 1 : 0;
     
   if (amnt_delim != expected) {

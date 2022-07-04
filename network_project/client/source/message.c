@@ -37,8 +37,8 @@ static int8_t message_package(rqst_t *request, mesg_t *message) {
 static int8_t message_writer(rqst_t *request, mesg_t *message) {
   Render_Header("WRITE   ", "Enter topic and message");
   
-  message->size_topc = scan_driver(message->topc, SBUFF, "topic");
-  message->size_mesg = scan_driver(message->mesg, SBUFF, "message");
+  message->size_topc = scan_driver(message->topc, "topic", SBUFF);
+  message->size_mesg = scan_driver(message->mesg, "message", SBUFF);
  
   return message_package(request, message);
 }

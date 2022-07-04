@@ -8,8 +8,9 @@
 #define CMESG 1
 #define CDVCE 2
 #define CDLED 3
-#define CINIT 4
-#define CEXIT 5
+#define CHELP 4
+#define CINIT 5
+#define CEXIT 6
 
 int8_t command_driver(client_t *client);
 
