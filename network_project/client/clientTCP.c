@@ -1,27 +1,13 @@
-/*------------------------------------------------------------------------------------------------------------------------
-                                                                                                               CLIENT MAIN
---------------------------------------------------------------------------------------------------------------------------
-info info info info info info
-------------------------------------------------------------------------------------------------------------------------*/
-#include "source/config.h"
-#include "source/client.h"
-#include "source/connect.h"
-#include "source/session.h"
-
-
-#define TESTETT 1
-#define TESTFYR 4
+#include <stdlib.h>
+#include "configs.h"
+#include "controller.h"
 
 int main(void) {
+  Render_Header("Client", "Client ipsum dolor sit amet, consectetur adipiscing elit");
 
-  int8_t result = 0;
-  client_t client = {0};
-
-  result = connect_driver(&client, "127.0.0.1", 90190);
-  if (result < SUCC) exit(EXIT_FAILURE);
-
-  result = session_driver(&client);
-  if (result < SUCC) exit(EXIT_FAILURE);
-  
+  cont_t controller = {.state = 0x00};
+  controller.state |= (1 << ALIVE);
+  while (controller.state & (1 << ALIVE))
+    control_driver(&controller);
   exit(EXIT_SUCCESS);
 }
