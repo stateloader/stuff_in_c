@@ -29,8 +29,11 @@ int8_t receive_driver(server_t *server) {
   server->size_pack = recv(server->conn.sock_clnt, server->pack, SBUFF, 0);
   System_Message("receiving package");
 
+  printf("receieed: %s\n", server->pack);
+/*
   int8_t result = protocol_obtain(server);
   if (result != SUCC) return result;
 
   return database_driver(server);
+*/
 }

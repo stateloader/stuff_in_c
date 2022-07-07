@@ -27,10 +27,10 @@ void connect_driver(conn_t *connect, uint8_t *state, uint16_t *error) {
 //Already connected, carry on to the next state.
 
   Render_Header("CONNECT   ", "Connecting to server");
-/*
+
   connect->sock_desc = socket_create();
-  connect->bind_stat = socket_connect(conn->sock_desc, "127.0.0.1", 90190);
-*/
+  connect->bind_stat = socket_connect(connect->sock_desc, "127.0.0.1", 90190);
+
   connect_checks(connect, state, error);
   if (*state & (1 << ERROR)) return;
 
