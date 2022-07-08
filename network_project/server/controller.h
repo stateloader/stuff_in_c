@@ -5,7 +5,7 @@
 
 typedef struct Controller {
   uint16_t status, error;
-  uint8_t *protocol;
+  uint8_t protocol[3];
   size_t size_recv;
   size_t size_resp;
   char receive[SBUFF];

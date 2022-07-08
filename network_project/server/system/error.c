@@ -12,7 +12,7 @@ typedef struct ErrorItem {
 
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |  RPERR  |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |   RUERR |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
@@ -23,7 +23,9 @@ static error_item error_items[] = {
   {SCERR, "Connection", "Failed to create server connection."},
   {CLERR, "Client",     "Failed to listening for clients."},
   {CAERR, "Client",     "Failed to accepting client."},
-  {RPERR, "Receive",    "Received Package size to small."}
+  {RSERR, "Receive",    "Received package is below lowest accepted size."},
+  {RTERR, "Receive",    "Received package isn't nullterminated."},
+  {RUERR, "Receive",    "Received package has a corrupted protocol."}
 };
 
 void error_driver(uint16_t error, char *location) {

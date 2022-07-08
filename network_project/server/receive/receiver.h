@@ -4,8 +4,8 @@
 #include "../configs.h"
 
 typedef struct Receiver {
-  uint8_t *protocol;
   int32_t client_sock_desc;
+  uint8_t protocol[3];
   size_t size_pack;
   char package[RBUFF];
 } recv_t;

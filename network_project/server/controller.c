@@ -5,7 +5,10 @@
 #include "system/error.h"
 #include "controller.h"
 
+
 static void state_receive(serv_t *server, cont_t *control) {
+  
+  if (control->status & (1 << ERROR)) return;
 
   recv_t receive = {.client_sock_desc = server->client_sock_desc};
   receive_driver(&receive, &control->status, &control->error);
@@ -13,8 +16,11 @@ static void state_receive(serv_t *server, cont_t *control) {
 
 void control_driver(cont_t *control, serv_t *server) {
 
+  recv_t receive = {.client_sock_desc = 0}
+
   socket_listen(server, &control->status, &control->error);
   socket_accept(server, &control->status, &control->error);
+
 
   state_receive(server, control);
 

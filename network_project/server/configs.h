@@ -8,19 +8,23 @@ Macros implemented reg
 #include <stddef.h>
 #include <stdint.h>
 
+#define UNBIT 7
+
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |  RPERR  |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SSERR 0                             // Server Socket Error.
-#define SCERR 1                             // Server Connection Error.
-#define CLERR 2                             // Server Listening (On Client) Error.
+#define SSERR 0                             // Server socket Error.
+#define SCERR 1                             // Server connection Error.
+#define CLERR 2                             // Server listening (On Client) Error.
 #define CAERR 3
-#define RPERR 8                             // Received Package Error;
+#define RSERR 8                             // Received package is below lowest accepted size.
+#define RTERR 9                             // Received package isn't nullterminated.
+#define RUERR 10                            // Received package has a corrupted protocol.
 
 //--------------------------------------------------------------------------------------------------------SERVER CONTROLLER
 
