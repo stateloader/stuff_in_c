@@ -5,6 +5,7 @@
 
 typedef struct Controller {
   uint16_t status, error;
+  int32_t client_sock_desc;
   uint8_t protocol[3];
   size_t size_recv;
   size_t size_resp;

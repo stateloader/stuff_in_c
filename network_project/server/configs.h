@@ -12,19 +12,25 @@ Macros implemented reg
 
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |  RUERR  |  RTERR  |  RSERR  |
+ERROR HIGH BYTE                           |         |    -    |    -    |  WSERR  |  PCERR |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
+ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define SSERR 0                             // Server socket Error.
 #define SCERR 1                             // Server connection Error.
 #define CLERR 2                             // Server listening (On Client) Error.
-#define CAERR 3
+#define CAERR 3                             // Failed to accepting client.
+#define SWERR 4                             // Switch statement has reached Default.
+#define ITERR 5                             // Iteration failed (where a match should has been vailable).
+#define FOERR 6                             // Failed to Open file.
+#define RWERR 7                             // Failed to read/write to file.
 #define RSERR 8                             // Received package is below lowest accepted size.
 #define RTERR 9                             // Received package isn't nullterminated.
 #define RUERR 10                            // Received package has a corrupted protocol.
+#define PCERR 11                            // Package copy failure.
+#define WSERR 12                            // Appendend data still attached to package (while writing to databade).
 
 //--------------------------------------------------------------------------------------------------------SERVER CONTROLLER
 
