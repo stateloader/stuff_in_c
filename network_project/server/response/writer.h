@@ -4,9 +4,9 @@
 #include "../configs.h"
 
 typedef struct Writer {
+  size_t size_appd;
   uint8_t *protocol;
-  size_t size_pack;
-  char *package;
+  char *append;
   FILE *file;
 } write_t;
 

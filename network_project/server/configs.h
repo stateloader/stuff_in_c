@@ -7,12 +7,13 @@ Macros implemented reg
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <unistd.h>
 
 #define UNBIT 7
 
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |         |    -    |    -    |  WSERR  |  PCERR |  RUERR  |  RTERR  |  RSERR  |
+ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
@@ -30,7 +31,10 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 #define RTERR 9                             // Received package isn't nullterminated.
 #define RUERR 10                            // Received package has a corrupted protocol.
 #define PCERR 11                            // Package copy failure.
-#define WSERR 12                            // Appendend data still attached to package (while writing to databade).
+#define FWERR 12                            // Failed to write (append) to file.
+#define FRERR 13                            // Failet do read from file.
+#define DDERR 14                            // Delimiter error.
+#define RCERR 15                            // Failed to response client.
 
 //--------------------------------------------------------------------------------------------------------SERVER CONTROLLER
 

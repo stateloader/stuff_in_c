@@ -1,6 +1,10 @@
+/*-------------------------------------------------------------------------------------------------------------ERROR DRIVER
+Macros implemented reg                                                                                                   
+/------------------------------------------------------------------------------------------------------------------------*/
+
 #include "error.h"
 
-#define ERROR_FORMAT "\n-- Error -- %s, %s\n\n"
+#define ERROR_FORMAT "\n-- Error [%s] -- %s\n\n"
 
 typedef struct ErrorItem {
   const uint16_t flag;
@@ -10,7 +14,7 @@ typedef struct ErrorItem {
 
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |  WSERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
+ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
@@ -18,18 +22,22 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 
 
 static error_item error_items[] = {
-  {SSERR, "Socket",     "Failed to create server-socket."},
-  {SCERR, "Connection", "Failed to create server connection."},
-  {CLERR, "Client",     "Failed to listening for clients."},
-  {CAERR, "Client",     "Failed to accepting client."},
-  {SWERR, "Switch",     "Switch statement has reached default."},
-  {ITERR, "Iteration",  "Failed (where a match should has been vailable)."},
-  {FOERR, "File",       "Failed to open file."},
-  {RWERR, "File",       "Failed to read/write to file"},
-  {RSERR, "Receive",    "Received package is below lowest accepted size."},
-  {RTERR, "Receive",    "Received package isn't nullterminated."},
-  {RUERR, "Receive",    "Received package has a corrupted protocol."},
-  {WSERR, "Write",      "Appendend data still attached to package (while writing to databade)."}
+  {SSERR, "SOCKET",     "Failed to create server-socket."},
+  {SCERR, "CONNECTION", "Failed to create server connection."},
+  {CLERR, "CLIENT",     "Failed to listening for clients."},
+  {CAERR, "CLIENT",     "Failed to accepting client."},
+  {SWERR, "SWITCH",     "Switch statement has reached default."},
+  {ITERR, "ITERATION",  "Failed (where a match should has been vailable)."},
+  {FOERR, "FILE",       "Failed to open file."},
+  {RWERR, "FILE",       "Failed to read/write to file"},
+  {RSERR, "RECEIVE",    "Received package is below lowest accepted size."},
+  {RTERR, "RECEIVE",    "Received package isn't nullterminated."},
+  {RUERR, "RECEIVE",    "Received package has a corrupted protocol."},
+  {PCERR, "PACKAGE",    "Failed to copy package."},
+  {FWERR, "WRITE FILE", "Failed to write (append) to file."},
+  {FRERR, "READ FILE",  "Failed to read from file."},
+  {DDERR, "DELIMITER",  "Delimiter error."},
+  {RCERR, "RESPONSE",   "Failed to response client."}
 };
 
 void error_driver(uint16_t error) {

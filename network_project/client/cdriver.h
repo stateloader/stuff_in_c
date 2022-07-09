@@ -1,9 +1,9 @@
-#ifndef CONTROLLER_H_
-#define CONTROLLER_H_
+#ifndef CDRIVER_H_
+#define CDRIVER_H_
 
 #include "configs.h"
 
-typedef struct Controller {
+typedef struct ClientDriver {
   uint8_t state;
   uint16_t error;
   uint8_t *protocol;
@@ -18,9 +18,9 @@ typedef struct Controller {
   size_t size_recv;
   char request[SBUFF];
   char receive[RBUFF];
-} cont_t;
+} dver_t;
 
-void control_driver(cont_t *controller);
+void client_driver(dver_t *driver);
 
 #endif
 /*

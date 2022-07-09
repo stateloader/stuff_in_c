@@ -4,9 +4,9 @@
 #include "../configs.h"
 
 typedef struct Reader {
+  size_t size_cont;
   uint8_t *protocol;
-  size_t size_pack;
-  char *package;
+  char content[RBUFF];
   FILE *file;
 } read_t;
 

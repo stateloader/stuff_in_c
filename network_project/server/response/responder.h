@@ -1,9 +1,9 @@
-#ifndef RESPONSER_H_
-#define RESPONSER_H_
+#ifndef RESPONDER_H_
+#define RESPONDER_H_
 
 #include "../configs.h"
 
-typedef struct Responser {
+typedef struct Responder {
   int32_t client_sock_desc;
   uint8_t protocol[3];
   size_t size_recv;

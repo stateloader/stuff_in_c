@@ -1,13 +1,20 @@
 #include <stdlib.h>
+#include "command/scanner.h"
 #include "configs.h"
-#include "controller.h"
+#include "cdriver.h"
 
 int main(void) {
-  Render_Header("Client", "Client ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("CLIENT", "Client ipsum dolor sit amet, consectetur adipiscing elit");
 
-  cont_t controller = {.state = 0x00};
-  controller.state |= (1 << ALIVE);
-  while (controller.state & (1 << ALIVE))
-    control_driver(&controller);
+  dver_t driver = {.state = 0x00};
+  driver.state |= (1 << ALIVE);
+
+  Render_Header("VALIDATE  ", "Enter username and password");
+  driver.size_user = scan_driver(driver.username, "username", SBUFF);
+  driver.size_user = scan_driver(driver.password, "password", SBUFF);
+//For now, no password handeling at place at all though :)
+
+  while (driver.state & (1 << ALIVE))
+    client_driver(&driver);
   exit(EXIT_SUCCESS);
 }

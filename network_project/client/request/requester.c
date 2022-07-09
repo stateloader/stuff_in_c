@@ -71,8 +71,7 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table)) {
       table_items[i].func(request, state, error); match++;
     }
-  }
-  if (!match) {
+  } if (!match) {
     *state |= (1 << ERROR); *error |= (1 << IIERR);
   }
   return;

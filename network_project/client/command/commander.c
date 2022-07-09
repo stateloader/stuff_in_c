@@ -137,15 +137,15 @@ void command_driver(cmnd_t *command, uint8_t *state, uint16_t *error) {
       cmnd_state = command_scan(help, ARRAY_SIZE(help));
       break;
     }
-
-    if (cmnd_state == CEXIT) cmnd_state = CINIT;
+    if (cmnd_state == CEXIT) {
+      cmnd_state = CINIT;
+      *state &= ~(1 << ALIVE);
+    }
   }
 
   command->protocol[TBIDX] = TABLE;
   command->protocol[ABIDX] = ATTRB;
   command->protocol[EBIDX] = ECHOB;
-
-  *state |= (1 << CMNDF);
 
   return;
 }

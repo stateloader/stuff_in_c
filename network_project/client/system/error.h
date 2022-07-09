@@ -8,6 +8,6 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 CONSTANT                                  |  SDERR  |    -    |  IIERR  |  DMERR  |  PTERR  |  PSERR  |  COERR  |  SOERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-void error_driver(uint16_t error_flag, char *location);
+void error_driver(uint16_t error_flag);
 
 #endif
