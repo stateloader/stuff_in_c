@@ -54,7 +54,6 @@ static void dvce_pull(reqt_t *request) {
   protocol_attach(request);
 }
 
-
 void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   request->pack_delm = DDVCE;
@@ -65,12 +64,12 @@ void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   case DVCER:
     dvce_pull(request);
-    pull_check(request, state, error);
+    reader_validate(request, state, error);
     break;
 
   case DVCEW:
     dvce_push(&device, request);
-    push_check(request, state, error);
+    writer_validate(request, state, error);
     break;
 
   default:

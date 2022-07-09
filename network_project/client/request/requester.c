@@ -31,7 +31,7 @@ void protocol_attach(reqt_t *request) {
   return;
 }
 
-void push_check(reqt_t *request, uint8_t *state, uint16_t *error) {
+void writer_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*A few checks before a push-request being thrown at the server.*/
 
   size_t delim_count = 0;
@@ -48,7 +48,7 @@ void push_check(reqt_t *request, uint8_t *state, uint16_t *error) {
   return;
 }
 
-void pull_check(reqt_t *request, uint8_t *state, uint16_t *error) {
+void reader_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*A few checks before a pull-request being thrown at the server.*/
 
   if (request->package[request->size_pack - 1] != '\0') {
@@ -68,10 +68,12 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
-
+  
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   if (size_send != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << RSERR);
+  } else {
+    *state |= (1 << SREQT);
   }
   return;
 }

@@ -108,7 +108,7 @@ static int8_t command_scan(cmnd_item *items, size_t size_array) {
   return cmnd_state;
 }
 
-void command_driver(cmnd_t *command, uint8_t *state, uint16_t *error) {
+void command_driver(cmnd_t *command) {
 
   cmnd_state = CMAIN;
 
@@ -137,10 +137,8 @@ void command_driver(cmnd_t *command, uint8_t *state, uint16_t *error) {
       cmnd_state = command_scan(help, ARRAY_SIZE(help));
       break;
     }
-    if (cmnd_state == CEXIT) {
-      cmnd_state = CINIT;
-      *state &= ~(1 << ALIVE);
-    }
+    if (cmnd_state == CEXIT)
+      exit(EXIT_SUCCESS);
   }
 
   command->protocol[TBIDX] = TABLE;

@@ -69,7 +69,7 @@ static void validate_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
   return;
 }
 
-static void validate_push(recv_t *receive, uint8_t *state, uint16_t *error) {
+static void validate_push(recv_t *receive) {
 /*Given original table (write) request, a validation based on (set) Tabel-bit will be printed.*/
 
   if (receive->protocol[TBIDX] & (1 << TMESG))
@@ -95,7 +95,7 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
     validate_pull(receive, state, error);
     break;
   case 1:
-    validate_push(receive, state, error);
+    validate_push(receive);
     break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);

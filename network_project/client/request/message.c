@@ -61,13 +61,13 @@ void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
   switch (route) {
   case MESGR:
     mesg_pull(request);
-    pull_check(request, state, error);
+    reader_validate(request, state, error);
     break;
 
   case MESGW:
     mesg_scan(&message);
     mesg_push(&message, request);
-    push_check(request, state, error);
+    writer_validate(request, state, error);
     break;
 
   default:

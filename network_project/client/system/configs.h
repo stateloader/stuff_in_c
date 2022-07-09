@@ -13,18 +13,14 @@ Macros implemented reg
 
 /*--------------------------------------------------------------------------------------------------------------------State
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  ERROR  |    -    |    -    |  RECVF  |  REQTF  |  CMNDF  |  CONNF  |  ALIVE  |
+CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRECV  |  SREQT  |  SCOMM  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define ALIVE 0                           // When set, a session is ongoing and nothing has went south. Yet.
-#define CONNF 1                           // When set, the client has successfully connected to the server.
-#define CMNDF 2                           // When set, the client has successfully made a request.
-#define REQTF 3                           // When set, the request has successfully been sent to the server.
-#define RECVF 4                           // When set, a response has successfully been revieved from the server.
-#define ERROR 7                           // Something went wrong. Always results in terminate.
+#define SCONN 0                           // State Connect- When set, the client has successfully connected to the server.
+#define SCOMM 1                           // State Command. When set, the client has successfully selected a command.
+#define SREQT 2                           // State Request. When set, the client has successfully sent a request.
+#define SRECV 3                           // State Receive. When set, the cient has successfully recieved a response.
 
-//-----------------------------------------------------------------------------------------------------------ERROR HANDLING
-
-/*-------------------------------------------------------------------------------------------------------------------------
+#define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
