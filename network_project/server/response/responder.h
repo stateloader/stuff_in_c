@@ -1,7 +1,7 @@
 #ifndef RESPONDER_H_
 #define RESPONDER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 typedef struct Responder {
   int32_t client_sock_desc;

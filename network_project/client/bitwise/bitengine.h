@@ -1,11 +1,11 @@
 #ifndef BITENGINE_H_
 #define BITENGINE_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
-#define MODES 0 // Mode Set Bit
-#define MODEC 1 // Mode Clear Bit
-#define MODET 2 // Mode Toggle Bit
+#define MODES 0 // mode set bit
+#define MODEC 1 // mode clear bit
+#define MODET 2 // mode Toggle bit
 
 typedef struct WiseItem {
   const char *name_byte;

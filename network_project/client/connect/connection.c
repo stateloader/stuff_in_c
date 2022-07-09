@@ -1,15 +1,16 @@
 /*---------------------------------------------------------------------------------------------------------------Connection
-Macros implemented reg                                                                                                   
+Dealing with Client connection.                                                                                                
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
 #include "../system/error.h"
-#include "../command/scanner.h"
+#include "../system/scanner.h"
 #include "connection.h"
 
 static const char *ADDRESS = "127.0.0.1";
 static const int32_t PORT = 90190;
 
 static void client_create(clnt_t *client) {
+/*Client socker being created.*/
   System_Message("Creating socket");
 
   client->sock_desc = socket(AF_INET, SOCK_STREAM, 0);
@@ -21,6 +22,7 @@ static void client_create(clnt_t *client) {
 }
 
 static void client_binder(clnt_t *client) {
+/*Client's socket being binder to the server. Handshake bit under the hood.*/
   System_Message("Binding server to socket.");
 
   client->server_address.sin_addr.s_addr = inet_addr(ADDRESS);
@@ -38,6 +40,9 @@ static void client_binder(clnt_t *client) {
 }
 
 void client_connect(clnt_t *client) {
+/*Wraps the  previous static functions. If nothing has failed the client tells who he or she is. The plan is it
+ *implement this as a part of a validation-process iin the future. At the moment just lol.*/
+
   client_create(client);
   client_binder(client);
 

@@ -1,7 +1,7 @@
 #ifndef READER_H_
 #define READER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 typedef struct Reader {
   size_t size_cont;

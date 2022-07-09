@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include "connect/connection.h"
-#include "configs.h"
+#include "system/configs.h"
 #include "cdriver.h"
 
 int main(void) {

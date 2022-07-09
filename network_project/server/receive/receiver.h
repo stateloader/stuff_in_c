@@ -1,7 +1,7 @@
 #ifndef RECEIVER_H_
 #define RECEIVER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 typedef struct Receiver {
   int32_t client_sock_desc;

@@ -1,5 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------Scanner
-Macros implemented reg                                                                                                   
+Scan/Input from the user utilizing fgets. Only English (most of "ASCII"-table) is allowed except the pipe character ('|').
+It governs how most of various processes on both client- and serverside behave and would screw up things rather badly =)
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +9,7 @@ Macros implemented reg
 #include "scanner.h"
 
 static void scan_byte(scan_t *scanner) {
-
+//Last state before 
   for (size_t i = 0; i < scanner->size_scan; i++) {
     
     if (!scan_check_asci(scanner->scan_input[i])) {
@@ -21,8 +22,7 @@ static void scan_byte(scan_t *scanner) {
       scanner->state = SSCAN; 
       return;
     }
-  }
-  if (!scan_check_term(scanner->scan_input, scanner->size_scan)) {
+  } if (!scan_check_term(scanner->scan_input, scanner->size_scan)) {
     System_Message("input not nullterminated.");
     exit(EXIT_FAILURE);
   }
@@ -32,12 +32,12 @@ static void scan_byte(scan_t *scanner) {
 static void scan_size(scan_t *scanner) {
 
   if (scan_check_minl(scanner->size_scan, 1)) {
-    System_Message("Enter at least one characters.");
+    System_Message("Enter at least one character.");
     scanner->state = SSCAN;
     return;
   }
   if (scan_check_maxl(scanner->size_scan, scanner->size_buff)) {
-    System_Message("You've passsdfjh gg");
+    System_Message("You've passed allowed input-limit. Yay!");
     exit(EXIT_FAILURE);
   }
   scanner->state = SDONE;

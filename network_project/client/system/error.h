@@ -1,7 +1,7 @@
 #ifndef ERROR_H_
 #define ERROR_H_
 
-#include "../configs.h"
+#include "configs.h"
 
 /*-----------------------------------------------------------------------------------------------------------error low byte
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |

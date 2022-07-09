@@ -7,8 +7,9 @@
 #include "receiver.h"
 
 static void protocol_obtain(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*A received package's last 4 bytes should be PROTOCOL. These being assigned to the reciever. However, if the package is
- *lesser than POFFS or not null-terminated an error flag is raised before an instant return.*/
+/*A package on both client- and serverside should end with the PROTOCOL. If the received package has a lesser size than
+ *'POFFS' or isn't nullterminated it's instantly invalid. Same is true if (in this case) the server has replied with the
+ *VALID-bit cleared, meaning something went south when working with the client's request.*/
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -36,7 +37,7 @@ static void protocol_obtain(recv_t *receive, uint8_t *state, uint16_t *error)  {
 }
 
 static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16_t *error) {
- /*I'm able to fetch number of rows in the (current) dataset by dividing all delims found in the received package with the
+ /*Here I'm fetching number of rows in the (current) dataset by dividing all delims found in the received package with the
   *constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with fetched rows I'm
   *able to check nothing gone south as well.*/
 

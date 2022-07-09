@@ -4,13 +4,13 @@ An "engine" of some sort during 'user-menu:ing' I came up with while playing aro
 bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.                                                                                                 
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
-#include "cstrings.h"
-#include "scanner.h"
+#include "../system/scanner.h"
+#include "../system/cstrings.h"
 #include "commander.h"
 
 static int8_t cmnd_state;// = BMAIN;
 
-/*-------------------------------------------------------------------------------------------------------COMMAND STRUCTURE
+/*-------------------------------------------------------------------------------------------------------Command Structure
 3 (for now, more to come) menues being represented as 'command item'. Each item stores constants relevant for where the
 user are now and where she/he's heading depending on which command being typed.
 /-----------------------------------------------------------------------------------------------------------------------*/

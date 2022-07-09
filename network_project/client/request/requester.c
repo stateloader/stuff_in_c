@@ -3,7 +3,7 @@ info info info
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
 #include "../connect/connection.h"
-#include "../command/cstrings.h"
+#include "../system/cstrings.h"
 #include "device.h"
 #include "message.h"
 #include "requester.h"

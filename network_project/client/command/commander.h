@@ -1,7 +1,7 @@
 #ifndef COMMANDER_H_
 #define COMMANDER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 #define CMAIN 0   // Command Main
 #define CMESG 1   // Command Message

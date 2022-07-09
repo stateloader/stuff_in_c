@@ -1,7 +1,7 @@
 #ifndef DEVICE_H_
 #define DEVICE_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 #include "requester.h"
 
 #define DVCER 0

@@ -6,8 +6,8 @@ Macros implemented reg
 #include "connect/connection.h"
 #include "request/requester.h"
 #include "command/commander.h"
-#include "command/cstrings.h"
-#include "command/scanner.h"
+#include "system/cstrings.h"
+#include "system/scanner.h"
 #include "receive/receiver.h"
 #include "cdriver.h"
 

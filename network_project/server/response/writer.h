@@ -1,7 +1,7 @@
 #ifndef WRITER_H_
 #define WRITER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 typedef struct Writer {
   size_t size_appd;

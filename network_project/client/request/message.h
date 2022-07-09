@@ -1,7 +1,7 @@
 #ifndef MESSAGE_H_
 #define MESSAGE_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 #include "requester.h"
 
 #define MESGR 0           //Message Read

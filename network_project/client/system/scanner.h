@@ -1,12 +1,12 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
-#include "../configs.h"
+#include "configs.h"
 
-#define SSCAN 0
-#define SSCHK 1
-#define SBCHK 2
-#define SDONE 3
+#define SSCAN 0  // state scan.
+#define SSCHK 1  // state size check.
+#define SBCHK 2  // state byte check. 
+#define SDONE 3  // state done.
 
 typedef struct scanner {
   uint8_t state;

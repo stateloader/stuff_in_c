@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "connect/connection.h"
+#include "system/configs.h"
 #include "sdriver.h"
 
 int main(void) {

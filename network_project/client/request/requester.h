@@ -1,7 +1,7 @@
 #ifndef REQUESTER_H_
 #define REQUESTER_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 
 typedef struct Requester {
   int32_t sock_desc;

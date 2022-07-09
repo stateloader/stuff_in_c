@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------STRINGS
 Same naive approach for string-handeling as in Server. I asume The <libraries> regarding these operations works fine, are
 safer and works much efficient but it was/is fun and educational to play around with the stuff myself.                                                                     
-/------------------------------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstrings.h"
 

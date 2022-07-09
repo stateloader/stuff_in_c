@@ -3,8 +3,8 @@ info info info
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
-#include "../command/cstrings.h"
-#include "../command/scanner.h"
+#include "../system/cstrings.h"
+#include "../system/scanner.h"
 #include "message.h"
 
 static void mesg_scan(mesg_t *message) {
@@ -20,6 +20,7 @@ static void mesg_scan(mesg_t *message) {
 static void mesg_push(mesg_t *message, reqt_t *request) {
 /*Creates/binds a string - a canonical package of type 'message entry' - to be received and stored in server database.*/
   System_Message("Initializes message push request.");
+  
   datetime_attach(request);
 
   request->size_pack = (

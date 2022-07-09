@@ -102,38 +102,6 @@ TERMINATOR              4                  |                                    
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 //-------------------------------------------------------------------------------------------------------------------DEBUG
 #define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
-
-inline static void print_string_and_size(char *string, size_t size_strg) {
-  printf("\tstring           --  %s\n", string);
-  printf("\tsize_string      --  %ld\n", size_strg);
-}
-inline static void print_TBIDX(uint8_t tbidx) {
-  printf("\tcurrent TBIDX    -- ");
-  PrintByte(tbidx);
-}
-inline static void print_ABIDX(uint8_t abidx) {
-  printf("\tcurrent TBIDX    -- ");
-  PrintByte(abidx);
-}
-inline static void print_EBIDX(uint8_t ebidx) {
-  printf("\tcurrent TBIDX    -- ");
-  PrintByte(ebidx);
-}
-inline static void print_username(char *username, size_t size_user) {
-  printf("\tcurrent username  -- %s\n", username);
-  printf("\tcurrent size_pack -- %ld\n", size_user);
-
-}
-inline static void print_password(char *password, size_t size_pass) {
-  printf("\tcurrent password  -- %s\n", password);
-  printf("\tcurrent size_pass -- %ld\n", size_pass);
-
-}
-inline static void print_package(char *package, size_t size_pack) {
-  printf("\tcurrent package   -- %s\n", package);
-  printf("\tcurrent size_pack -- %ld\n", size_pack);
-}
 //------------------------------------------------------------------------------------------------------------------------
-
 
 #endif

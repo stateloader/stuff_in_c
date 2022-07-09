@@ -3,12 +3,13 @@ info info info
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
-#include "../command/cstrings.h"
-#include "../command/scanner.h"
+#include "../system/cstrings.h"
+#include "../system/scanner.h"
 #include "device.h"
 
 static void dvce_scan(uint8_t push, devc_t *device) {
-/*A short string being attached to the dvce push-package based on push/action the <etc>*/
+/*A short string being attached to the dvce push-package corresponding with whatever LED-colour the user choosed.*/
+
   if (push & (1 << ATTR0))
     device->size_push = string_copy(device->dvcepush, "RED", SBUFF);
   if (push & (1 << ATTR1))
@@ -21,6 +22,7 @@ static void dvce_scan(uint8_t push, devc_t *device) {
 
 static void dvce_push(devc_t *device, reqt_t *request) {
 /*Creates/binds a string - a canonical package of type 'device entry' - to be received and stored in server database.*/
+
   System_Message("Initializes device push request.");
 
   datetime_attach(request);

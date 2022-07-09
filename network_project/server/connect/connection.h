@@ -1,7 +1,7 @@
 #ifndef CONNECTION_H_
 #define CONNECTION_H_
 
-#include "../configs.h"
+#include "../system/configs.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
