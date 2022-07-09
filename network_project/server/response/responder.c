@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------------------------------------------------RESPONSE
 Macros implemented reg                                                                                                   
-//-----------------------------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------------------------------*/
 
 #include <sys/socket.h>
 #include "../system/cstrings.h"
@@ -33,6 +33,19 @@ static void response_create(resp_t *response, uint16_t *state) {
   return;
 }
 
+static void database_reader(resp_t *response, uint16_t *state, uint16_t *error) {
+ /*Reader's protocol-member pointing at response-protocol. No need to*/
+
+  read_t reader = {.size_cont = 0};
+  reader.protocol = response->protocol;
+
+  read_driver(&reader, state, error);
+  response->size_resp = string_copy(response->response, reader.content, RBUFF) - 1;
+  response_create(response, state);
+  return;
+}
+
+
 static void database_writer(resp_t *response, uint16_t *state, uint16_t *error) {
  /*The Writer's protocol-member pointing at the response-protocol, its append-member at the received data which going to
   *(if everything goes well) be inserted to the (a) database.*/
@@ -42,23 +55,6 @@ static void database_writer(resp_t *response, uint16_t *state, uint16_t *error) 
   writer.append = response->received;
 
   write_driver(&writer, state, error);
-  response_create(response, state);
-
-  return;
-}
-
-static void database_reader(resp_t *response, uint16_t *state, uint16_t *error) {
- /*Reader's protocol-member pointing at response-protocol. No need to*/
-
-  read_t reader = {.size_cont = 0};
-  reader.protocol = response->protocol;
-
-  read_driver(&reader, state, error);
-  response->size_resp = string_copy(response->response, reader.content, RBUFF);
-  if (response->size_resp != reader.size_cont) {
-    
-  }
-
   response_create(response, state);
 
   return;
@@ -81,9 +77,9 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
     break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SWERR);
-    break;
+    return;
   }
-
+  
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
   if (size_send != response->size_resp) {
     *state |= (1 << ERROR); *error |= (1 << RCERR);

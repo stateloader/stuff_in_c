@@ -6,10 +6,10 @@ BIT(N)                                    |    15   |    14   |    13   |    12 
 ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR  |  PTERR  |  PSERR  |  COERR  |  SOERR  |
+ERROR LOW BYTE                            |  SDERR  |  CPERR  |  IIERR  |  PDERR  |  PTERR  |  PCERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define ERROR_FORMAT "\n-- Error -- %s, %s\n\n"
+#define ERROR_FORMAT "\n-- Error [%s] -- %s\n\n"
 
 typedef struct ErrorItem {
   const uint16_t flag;
@@ -18,27 +18,28 @@ typedef struct ErrorItem {
 } error_item;
 
 static error_item error_items[] = {
-  {SOERR, "Socket",     "Failed to create Socket."},
-  {COERR, "Connection", "Failed to create Socket."},
-  {PSERR, "Package",    "Wrong package size."},
-  {PTERR, "Package",    "Package isn't terminated."},
-  {PDERR, "Package",    "Wrong delimiter-format on package."},
-  {IIERR, "Iterator",   "Failed to fetch an item which should be in place."},
-  {SDERR, "Switch",     "Defaulted switch-statement that shouldn't."},
-  {RSERR, "Request",    "Failed to send package, size of size_pack and size_send differ."},
-  {RRERR, "Response",   "Failed to receive package, size of size_pack and size_recv differ."},
-  {PBERR, "Response",   "Protocol byte not unsigned."},
-  {DCERR, "Response",   "Delimiter count corrupted."},
-  {IVERR, "Response",   "Request invalid."},
-  {MMERR, "Memory",     "Failed to allocate memory for table."}
+  {SSERR, "Socket",     "Failed to create create client-socket."},                                //0
+  {SCERR, "Connection", "Failed to connect to server."},                                          //1
+  {PSERR, "Package",    "Wrong package size."},                                                   //2
+  {PTERR, "Package",    "Package isn't terminated."},                                             //3
+  {PDERR, "Package",    "Corrupted delimiter-format on package."},                                //4
+  {IIERR, "Iterator",   "Failed to fetch an item which should be in place."},                     //5
+  {CPERR, "System",     "Copy Failure."},                                                         //6
+  {SDERR, "Switch",     "Defaulted switch-statement that shouldn't."},                            //7
+  {RSERR, "Request",    "Failed to send package, size of size_pack and size_send differ."},       //8
+  {RRERR, "Response",   "Failed to receive package, size of size_pack and size_recv differ."},    //9
+  {PBERR, "Response",   "Protocol byte not unsigned."},                                           //10
+  {DCERR, "Response",   "Delimiter count corrupted."},                                            //11
+  {IVERR, "Response",   "Request invalid."},                                                      //12
+  {MMERR, "Memory",     "Failed to allocate memory for table."}                                   //13
 };
 
-void error_driver(uint16_t error) {
+void error_driver(uint8_t status, uint16_t error) {
+  if (status & (0 << ERROR)) return;
 
   for (size_t i = 0; i < ARRAY_SIZE(error_items); i++) {
-    if (error & (1 << error_items[i].flag)) {
+    if (error & (1 << error_items[i].flag))
       printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
-    }
   }
   exit(EXIT_FAILURE);
 }

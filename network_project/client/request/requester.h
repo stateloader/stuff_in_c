@@ -4,15 +4,15 @@
 #include "../configs.h"
 
 typedef struct Requester {
-  uint8_t state;
-  uint8_t *protocol;
+  int32_t sock_desc;
+  uint8_t protocol[3];
   size_t pack_delm;
-  size_t size_user;
-  size_t size_datm;
   size_t size_ctrl;
-  size_t size_pack;
+  size_t size_user;
   char username[SBUFF];
+  size_t size_datm;
   char datetime[SBUFF];
+  size_t size_pack;
   char package[SBUFF];
 } reqt_t;
 

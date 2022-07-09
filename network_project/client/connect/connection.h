@@ -2,15 +2,17 @@
 #define CONNECTION_H_
 
 #include "../configs.h"
+#include <sys/socket.h>
+#include <arpa/inet.h>
 
-typedef struct Connection {
-  int32_t bind_stat, sock_desc;
+typedef struct Client {
+  int32_t sock_desc, conn_stat;
+  struct sockaddr_in server_address;
   size_t size_user, size_pass;
   char username[SBUFF];
   char password[SBUFF];
-} conn_t;
+} clnt_t;
 
-void connect_driver(conn_t *connect, uint8_t *state, uint16_t *error);
-void package_send(uint32_t sock_desc, char *package, size_t size_pack, uint8_t *state, uint16_t *error);
-size_t package_recv(uint32_t sock_desc, char *package,  uint8_t *state, uint16_t *error);
+void client_connect(clnt_t *client);
+
 #endif

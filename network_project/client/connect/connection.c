@@ -1,62 +1,48 @@
 /*---------------------------------------------------------------------------------------------------------------Connection
 Macros implemented reg                                                                                                   
 -------------------------------------------------------------------------------------------------------------------------*/
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include "connection.h"
-#include "socket.h"
+#include <stdlib.h>
 #include "../system/error.h"
 #include "../command/scanner.h"
 #include "connection.h"
 
+static const char *ADDRESS = "127.0.0.1";
+static const int32_t PORT = 90190;
 
-static void connect_checks(conn_t *connect, uint8_t *state, uint16_t *error) {
+static void client_create(clnt_t *client) {
+  System_Message("Creating socket");
 
-  if (connect->sock_desc < 0) {
-    *state |= (1 << ERROR); *error |= (1 << SOERR);
-  }// Failed to create socket.
-
-  if (connect->bind_stat < 0) {
-    *state |= (1 << ERROR); *error |= (1 << COERR);
-  }// Falied to connect to server.
-}
-
-void connect_driver(conn_t *connect, uint8_t *state, uint16_t *error) {
-
-  Render_Header("CONNECT   ", "Connecting to server");
-
-  connect->sock_desc = socket_create();
-  connect->bind_stat = socket_connect(connect->sock_desc, "127.0.0.1", 90190);
-
-  connect_checks(connect, state, error);
-  if (*state & (1 << ERROR)) return;
-
-  *state |= (1 << CONNF);
+  client->sock_desc = socket(AF_INET, SOCK_STREAM, 0);
+  if (client->sock_desc < 0) {
+    System_Message("Failed to create socket.");
+    exit(EXIT_FAILURE);
+  }
   return;
 }
 
-void package_send(uint32_t sock_desc, char *package, size_t size_pack, uint8_t *state, uint16_t *error) {
+static void client_binder(clnt_t *client) {
+  System_Message("Binding server to socket.");
 
-  size_t size_send = send(sock_desc, package, size_pack, 0);
-
-  if (size_send != size_pack) {
-    *state |= (1 << ERROR); *error |= (1 << RSERR);
-    return;
-  }// Size on send and package differ; "Failed to send package" - call.
-
-  System_Message("Package sent.");
+  client->server_address.sin_addr.s_addr = inet_addr(ADDRESS);
+  client->server_address.sin_family = AF_INET;
+  client->server_address.sin_port = htons(PORT);
+   
+  client->conn_stat = connect(
+    client->sock_desc, (struct sockaddr *) &client->server_address, sizeof(client->server_address)
+  );
+  if (client->conn_stat < 0) {
+    System_Message("Failed connect to server.");
+    exit(EXIT_FAILURE);
+  }
   return;
 }
 
-size_t package_recv(uint32_t sock_desc, char *package, uint8_t *state, uint16_t *error) {
+void client_connect(clnt_t *client) {
+  client_create(client);
+  client_binder(client);
 
-  size_t size_recv = recv(sock_desc, package, RBUFF, 0);
+  Render_Header("VALIDATE  ", "Enter username and password");
+  client->size_user = scan_driver(client->username, "username", SBUFF);
+  client->size_pass = scan_driver(client->password, "password", SBUFF);
 
-  if (size_recv < 4) {
-    *state |= (1 << ERROR); *error |= (1 << RRERR);
-    return size_recv;
-  }// Size recv is under 4 bytes, meaning the least possible size of a response failed.
-
-  System_Message("Package received.");
-  return size_recv;
 }

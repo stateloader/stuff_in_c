@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "command/scanner.h"
+#include "connect/connection.h"
 #include "configs.h"
 #include "cdriver.h"
 
@@ -7,14 +7,10 @@ int main(void) {
   Render_Header("CLIENT", "Client ipsum dolor sit amet, consectetur adipiscing elit");
 
   dver_t driver = {.state = 0x00};
-  driver.state |= (1 << ALIVE);
+  clnt_t client = {.sock_desc = 0};
+  client_connect(&client);
 
-  Render_Header("VALIDATE  ", "Enter username and password");
-  driver.size_user = scan_driver(driver.username, "username", SBUFF);
-  driver.size_user = scan_driver(driver.password, "password", SBUFF);
-//For now, no password handeling at place at all though :)
-
-  while (driver.state & (1 << ALIVE))
-    client_driver(&driver);
+  driver.client = client;
+  client_driver(&driver);
   exit(EXIT_SUCCESS);
 }

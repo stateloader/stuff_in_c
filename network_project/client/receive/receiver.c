@@ -1,25 +1,28 @@
-/*-----------------------------------------------------------------------------------------------------------------RECEIVER
-Logic dealing with creation of device requests; send (interact with device) or read historical records from the server.
-Logic dealing with creation of message-requests; send to or read historical records from the server.
+/*----------------------------------------------------------------------------------------------------------------RECEIVER
+
 ------------------------------------------------------------------------------------------------------------------------*/
+#include <stdlib.h>
+#include "../connect/connection.h"
 #include "models.h"
 #include "receiver.h"
 
 static void protocol_obtain(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*Assigns the T, A and S Byte to the protocol from the package*/
+/*A received package's last 4 bytes should be PROTOCOL. These being assigned to the reciever. However, if the package is
+ *lesser than POFFS or not null-terminated an error flag is raised before an instant return.*/
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
-  } // If package isn't nullterminated, leave at once.
-
+  }
+  if (receive->size_pack < POFFS) {
+    *state |= (1 << ERROR); *error |= (1 << RSERR); return;
+  }
   receive->protocol[TBIDX] = receive->package[receive->size_pack - 4];
   receive->protocol[ABIDX] = receive->package[receive->size_pack - 3];
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
 
   if (receive->protocol[EBIDX] & (0 << VALID)) {
     *state |= (1 << ERROR); *error |= (1 << IVERR); return;
-  } // If server found request invalid, leave at once.
-
+  }
   if (receive->protocol[TBIDX] & (0 << UNBIT)) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }
@@ -29,77 +32,75 @@ static void protocol_obtain(recv_t *receive, uint8_t *state, uint16_t *error)  {
   if (receive->protocol[EBIDX] & (0 << UNBIT)) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }
+  return;
 }
 
-static void fetch_rows(recv_t *receive, uint8_t *state, uint16_t *error) {
- /*I'm able to fetch number of rows in the (current) dataset by dividing all delims found in the (current) dataset
- *with the constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with
- *fetched rows I'm then able to check nothing gone south.*/
+static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16_t *error) {
+ /*I'm able to fetch number of rows in the (current) dataset by dividing all delims found in the received package with the
+  *constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with fetched rows I'm
+  *able to check nothing gone south as well.*/
+
+  size_t amnt_delm = 0;
 
   for (size_t i = 0; i < receive->size_pack; i++)
-    receive->amnt_delm += (receive->package[i] == DELIM) ? 1 : 0;
-  receive->amnt_rows = (receive->amnt_delm / receive->tabl_delm);
-
-  if (receive->amnt_delm % receive->amnt_rows != 0) {
+    amnt_delm += (receive->package[i] == DELIM) ? 1 : 0;
+  receive->amnt_rows = (amnt_delm / dcount);
+  
+  if (amnt_delm % receive->amnt_rows != 0) {
     *state |= (1 << ERROR); *error |= (1 << DCERR);
   }
   return;
 }
 
-static void fetch_data(recv_t *receive, uint8_t *state, uint16_t *error) {
+static void validate_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*Given original table (read) request, a table out of (set) Table-bit will be created from received package.*/
+
+  receive->size_pack -= POFFS;
 
   if (receive->protocol[TBIDX] & (1 << TMESG)) {
-    receive->table_mesg = table_mesg_create(
-      receive->package, receive->size_pack, receive->amnt_rows,
-      state, error);
-
-  } else if (receive->protocol[TBIDX] & (1 << TDVCE)) {
-    receive->table_dvce = table_dvce_create(
-      receive->package, receive->size_pack, receive->amnt_rows,
-      state, error);
-
-  } else {
-    *state |= (1 << ERROR); *error |= (1 << IIERR);
+    validate_rows(receive, DMESG, state, error);
+    receive->table_mesg = table_mesg_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
+  }
+  if (receive->protocol[TBIDX] & (1 << TDVCE)) {
+    validate_rows(receive, DDVCE, state, error);
+    receive->table_dvce = table_dvce_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
   }
   return;
 }
 
-static void print_resp(recv_t *receive, uint8_t *state, uint16_t *error) {
+static void validate_push(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*Given original table (write) request, a validation based on (set) Tabel-bit will be printed.*/
 
-  if (receive->protocol[TBIDX] & (1 << TMESG)) {
+  if (receive->protocol[TBIDX] & (1 << TMESG))
     System_Message("Your message was successfully delivered.");
 
-  } else if (receive->protocol[TBIDX] & (1 << TDVCE)) {
-    System_Message("Your interaction with the device is executed.");
+  if (receive->protocol[TBIDX] & (1 << TDVCE))
+    System_Message("Your interaction with the device was successfully executed.");
 
-  } else {
-    *state |= (1 << ERROR); *error |= (1 << IIERR);
-  }
   return;
 }
 
 void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
 
+  receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
+
   protocol_obtain(receive, state, error);
   if (*state & (1 << ERROR)) return;
 
   int32_t route = (receive->protocol[EBIDX] & (1 << RWBIT)) ? 1 :  0;
-  receive->size_pack -= POFFS;
 
   switch (route) {
   case 0:
-    print_resp(receive, state, error);
+    validate_pull(receive, state, error);
     break;
-
   case 1:
-    fetch_rows(receive, state, error);
-    if (*state & (1 << ERROR)) return;
-    fetch_data(receive, state, error);
+    validate_push(receive, state, error);
     break;
-
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
     return;
   }
+  if (receive->table_mesg) free(receive->table_mesg);
+  if (receive->table_dvce) free(receive->table_dvce);
   return;
 }

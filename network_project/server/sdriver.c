@@ -39,6 +39,7 @@ static void state_respond(resp_t *response, dver_t *driver) {
 /*Response state, core logic being ran inside the receive-driver. See RESPONSE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return; 
+  
   response_driver(response, &driver->status, &driver->error);
 
   return;
@@ -58,5 +59,5 @@ void server_driver(dver_t *driver, serv_t *server) {
   state_respond(&response, driver);
   close(server->client_sock_desc);
 
-  error_driver(driver->error);
+  error_driver(driver->status, driver->error);
 }

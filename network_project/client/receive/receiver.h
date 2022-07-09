@@ -5,12 +5,11 @@
 #include "models.h"
 
 typedef struct Receiver {
-  uint8_t *protocol;
+  int32_t sock_desc;
+  uint8_t protocol[3];
+  size_t amnt_rows;
   size_t size_pack;
   char package[RBUFF];
-  size_t tabl_delm;
-  size_t amnt_delm;
-  size_t amnt_rows;
   mmod_t *table_mesg;
   dmod_t *table_dvce;
 } recv_t;

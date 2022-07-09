@@ -29,15 +29,16 @@ BIT(N)                                    |    15   |    14   |    13   |    12 
 ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR  |  PTERR  |  PSERR  |  COERR  |  SOERR  |
+ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR  |  PTERR  |  PSERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define SOERR 0                           // Socket error, we didn't even manage to create a socket.                          
-#define COERR 1                           // Connect error, couldn't connect to the server.
+#define SSERR 0                           // Failed to create create client-socket.                         
+#define SCERR 1                           // Failed to connect to server.
+
 #define PSERR 2                           // Package size error, sizes between sent and created doesn't match. 
 #define PTERR 3                           // Package (not) terminated error, package isn't nullterminated.
 #define PDERR 4                           // The supposed amount the entry's delimiter-constant supposed to be is wrong.
 #define IIERR 5                           // Failed to fetch an item (wich should be in place).
-#define TPERR 6                           // <until filling for now>
+#define CPERR 6                           // Copy Failure.
 #define SDERR 7                           // A given switch-statment has reach default (for some reason).
 #define RSERR 8                           // Failed to send package, size of size_pack and size_send differ.
 #define RRERR 9                           // Failed to receive package, size of size_pack and size_recv differ.

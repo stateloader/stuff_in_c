@@ -40,7 +40,7 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 
 /*-------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 CONSTANT                                  |  ERROR  |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |  SSOCK  |  ALIVE  |
@@ -108,5 +108,6 @@ TERMINATOR              4                  |                                    
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
 //-------------------------------------------------------------------------------------------------------------------DEBUG
 #define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
+#define NUMBFORM "\t\t\tNUMBTEST [%s] %ld\n\n"
 //------------------------------------------------------------------------------------------------------------------------
 #endif

@@ -2,6 +2,7 @@
 info info info                                                                                           
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
+#include "../connect/connection.h"
 #include "../command/cstrings.h"
 #include "device.h"
 #include "message.h"
@@ -31,27 +32,25 @@ void protocol_attach(reqt_t *request) {
 }
 
 void push_check(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*A few checks before the package being thrown at the server.*/
+/*A few checks before a push-request being thrown at the server.*/
 
   size_t delim_count = 0;
-
   for (size_t i = 0; i < request->size_pack; i++)
     delim_count += (request->package[i] == DELIM) ? 1 : 0;
 
   if (delim_count != request->pack_delm) {
     *state |= (1 << ERROR); *error |= (1 << PDERR);
-  }
-  if (request->size_ctrl != request->size_pack) {
+  } if (request->size_ctrl != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << PSERR);
-  }
-  if (request->package[request->size_pack - 1] != '\0') {
+  } if (request->package[request->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR);
   }
   return;
 }
 
 void pull_check(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*check package is null-terminated*/
+/*A few checks before a pull-request being thrown at the server.*/
+
   if (request->package[request->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR);
   }
@@ -59,20 +58,20 @@ void pull_check(reqt_t *request, uint8_t *state, uint16_t *error) {
 }
 
 static reqt_item table_items[] = {
-  {TMESG, message_driver},
-  {TDVCE, device_driver}
+  {TMESG, message_driver}, {TDVCE, device_driver}
 };
 
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver*/
 
-  size_t match = 0;
   for (size_t i = 0; i < ARRAY_SIZE(table_items); i++) {
-    if (request->protocol[TBIDX] & (1 << table_items[i].table)) {
-      table_items[i].func(request, state, error); match++;
-    }
-  } if (!match) {
-    *state |= (1 << ERROR); *error |= (1 << IIERR);
+    if (request->protocol[TBIDX] & (1 << table_items[i].table))
+      table_items[i].func(request, state, error);
+  }
+
+  size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
+  if (size_send != request->size_pack) {
+    *state |= (1 << ERROR); *error |= (1 << RSERR);
   }
   return;
 }

@@ -10,7 +10,6 @@ typedef struct ReadItem {
 static read_item read_items[] = {
   {TMESG, "response/database/mesg.dat"},
   {TDVCE, "response/database/dvce.dat"}
-//{FUTURE, "stuff"},
 };
 
 static void database_open(read_t *reader, uint16_t *state, uint16_t *error) {
@@ -36,8 +35,8 @@ static void database_pull(read_t *reader, uint16_t *state, uint16_t *error)  {
   System_Message("Reading from database.");
 
   if (*state & (1 << ERROR)) return;
-  size_t size_cont = fread(reader->content, sizeof(char), RBUFF, reader->file);
-  if (size_cont < 4) {
+  reader->size_cont = fread(reader->content, sizeof(char), RBUFF, reader->file);
+  if (reader->size_cont < 4) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
   }
   fclose(reader->file);
