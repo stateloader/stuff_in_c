@@ -10,8 +10,7 @@ static void database_trim(write_t *writer, uint16_t *state, uint16_t *error) {
   writer->size_appd -= POFFS;
   if (writer->append[writer->size_appd - 1] != DELIM) {
     *state |= (1 << ERROR); *error |= (1 << DDERR);
-  }// Last byte after trim should be a DELIM, else something gone south. 
-
+  }//Last byte after trim should be a DELIM, else something gone south. 
   return;
 }
 
@@ -36,8 +35,7 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
       writer->file = fopen(write_items[i].filepath, "a");
   } if (writer->file == NULL) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
-  }// Failed to open file.
-  
+  }//Failed to open file.
   return;
 }
 
@@ -50,7 +48,7 @@ static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
   size_t size_push = fwrite(writer->append, sizeof(char), writer->size_appd, writer->file);
   if (size_push != writer->size_appd) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
-  }// Failed to append data to file.
+  }//Failed to append data to file.
 
   if (writer->file) fclose(writer->file);
   return;

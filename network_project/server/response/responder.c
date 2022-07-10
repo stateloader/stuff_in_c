@@ -69,13 +69,13 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
   switch (route) {
   case 0:
     database_reader(response, state, error);
-    break;
+  break;
   case 1:
     database_writer(response, state, error);
-    break;
+  break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SWERR);
-    return;
+  return;
   }
   
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);

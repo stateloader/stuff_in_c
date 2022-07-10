@@ -29,7 +29,6 @@ ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR
 -------------------------------------------------------------------------------------------------------------------------*/
 #define SSERR 0                           // Failed to create create client-socket.                         
 #define SCERR 1                           // Failed to connect to server.
-
 #define PSERR 2                           // Package size error, sizes between sent and created doesn't match. 
 #define PTERR 3                           // Package (not) terminated error, package isn't nullterminated.
 #define PDERR 4                           // The supposed amount the entry's delimiter-constant supposed to be is wrong.

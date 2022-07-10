@@ -9,9 +9,21 @@ Macros implemented reg
 #include <stdint.h>
 #include <unistd.h>
 
-#define UNBIT 7
-
 /*-------------------------------------------------------------------------------------------------------------------------
+BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
+---------------------------------------------------------------------------------------------------------------------------
+BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
+CONSTANT                                  |  ERROR  |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |  SSOCK  |  ALIVE  |
+-------------------------------------------------------------------------------------------------------------------------*/
+
+#define ALIVE 0                           // When set, a session is ongoing and nothing has went south. Yet.
+#define SSOCK 1                           // When set, the server has sucessfully created a socket
+#define SSONN 2                           // When set, the server has successfully binded socket to address.
+#define SCACC 3                           // When set, the client has been acepted by the server.
+#define RECVF 4                           // When set, a response has successfully been revieved from the server.
+
+#define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
@@ -19,22 +31,22 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SSERR 0                             // Server socket Error.
-#define SCERR 1                             // Server connection Error.
-#define CLERR 2                             // Server listening (On Client) Error.
-#define CAERR 3                             // Failed to accepting client.
-#define SWERR 4                             // Switch statement has reached Default.
-#define ITERR 5                             // Iteration failed (where a match should has been vailable).
-#define FOERR 6                             // Failed to Open file.
-#define RWERR 7                             // Failed to read/write to file.
-#define RSERR 8                             // Received package is below lowest accepted size.
-#define RTERR 9                             // Received package isn't nullterminated.
-#define RUERR 10                            // Received package has a corrupted protocol.
-#define PCERR 11                            // Package copy failure.
-#define FWERR 12                            // Failed to write (append) to file.
-#define FRERR 13                            // Failet do read from file.
-#define DDERR 14                            // Delimiter error.
-#define RCERR 15                            // Failed to response client.
+#define SSERR 0                           // Server socket Error.
+#define SCERR 1                           // Server connection Error.
+#define CLERR 2                           // Server listening (On Client) Error.
+#define CAERR 3                           // Failed to accepting client.
+#define SWERR 4                           // Switch statement has reached Default.
+#define ITERR 5                           // Iteration failed (where a match should has been vailable).
+#define FOERR 6                           // Failed to Open file.
+#define RWERR 7                           // Failed to read/write to file.
+#define RSERR 8                           // Received package is below lowest accepted size.
+#define RTERR 9                           // Received package isn't nullterminated.
+#define RUERR 10                          // Received package has a corrupted protocol.
+#define PCERR 11                          // Package copy failure.
+#define FWERR 12                          // Failed to write (append) to file.
+#define FRERR 13                          // Failet do read from file.
+#define DDERR 14                          // Delimiter error.
+#define RCERR 15                          // Failed to response client.
 
 //--------------------------------------------------------------------------------------------------------SERVER CONTROLLER
 
