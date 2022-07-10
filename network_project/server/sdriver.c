@@ -14,7 +14,6 @@ static void state_receive(recv_t *receive, dver_t *driver) {
 
   if (driver->status & (1 << ERROR)) return;
 //If error bit is set, fall through.
-
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
@@ -23,7 +22,7 @@ static void state_receive(recv_t *receive, dver_t *driver) {
 static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
 /*After a package has (successfully) been received, this state is about copy received content over to the responder while
  *some checks beeing done. A "middle-hand" of some sort. In earlier interpretations I just pointed at the received data in
- *later states. It worked, but tended to behave unpredictable sometimes why I settled on this solution.*/
+ *later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this solution.*/
 
   if (driver->status & (1 << ERROR)) return;
 //If error bit is set, fall through.
@@ -44,10 +43,19 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
   if (driver->status & (1 << ERROR)) return; 
 //If error bit is set, fall through.
-
   response_driver(response, &driver->status, &driver->error);
 
   return;
+}
+
+static void state_flusher(resp_t *response, recv_t *receive, dver_t *driver) {
+
+  buffer_flush(response->received, SBUFF);
+  buffer_flush(response->response, RBUFF);
+  buffer_flush(receive->package, SBUFF);
+
+  error_driver(driver->status, driver->error);
+  close(driver->server.client_sock_desc);
 }
 
 void server_driver(dver_t *driver) {
@@ -61,7 +69,5 @@ void server_driver(dver_t *driver) {
   state_receive(&receive, driver);
   state_courier(&response, &receive, driver);
   state_respond(&response, driver);
-  close(driver->server.client_sock_desc);
-
-  error_driver(driver->status, driver->error);
+  state_flusher(&response, &receive, driver);
 }

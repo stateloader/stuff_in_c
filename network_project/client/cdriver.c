@@ -28,6 +28,7 @@ static void state_command(dver_t *driver) {
   cmnd_t command = {0};
   command_driver(&command);
   protocol_copy(driver->protocol, command.protocol);
+  PrintByte(driver->protocol[TBIDX]);
   return;
 }
 
@@ -59,30 +60,17 @@ static void state_receive(dver_t *driver) {
 }
 
 static void state_outcome(dver_t *driver) {
-  if (driver->state & (1 << ERROR)) return;
-//If error bit is set, fall through.
+  
+  error_driver(driver->state, driver->error);
 
-  driver->state |= (1 << SRECV);
-  if (driver->state == SSUCC)
-    System_Message("session full pott");
+  
 }
 
 void client_driver(dver_t *driver) {
-  
-  state_command(driver);
-  state_request(driver);
-  state_receive(driver);
-  state_outcome(driver);
 
-  error_driver(driver->state, driver->error);
-//If error bit is set, let's examine what went south.
+    state_command(driver);
+    state_request(driver);
+    state_receive(driver);
+    state_outcome(driver);
+
 }
-
-
-/*
-
-  PrintByte(command.protocol[TBIDX]);
-  PrintByte(command.protocol[ABIDX]);
-  PrintByte(command.protocol[EBIDX]);
-
-  */

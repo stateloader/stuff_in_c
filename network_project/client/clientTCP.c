@@ -12,7 +12,8 @@ int main(void) {
 
   driver.client = client;
   driver.state |= (1 << SCONN);
-
+  
   client_driver(&driver);
+  
   exit(EXIT_SUCCESS);
 }

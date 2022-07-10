@@ -21,7 +21,7 @@ CONSTANT                                  |  ERROR  |    -    |    -    |    -  
 #define SCACC 1                           // State Accept. When set, a client has been acepted by the server.
 #define RECVF 2                           // When set, a request has successfully been revieved from the server.
 
-#define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
+#define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
