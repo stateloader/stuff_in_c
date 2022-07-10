@@ -9,6 +9,8 @@ static void validate_receival(recv_t *receive, uint16_t *state, uint16_t *error)
 /*A received package's last 4 bytes should be PROTOCOL. These being assigned to the receiver's protocol-member for easy
  *access during the errant.*/
 
+  System_Message("Validating package.");
+
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << RTERR); return;
   }// Received package not nullterminated.
@@ -33,6 +35,9 @@ static void validate_receival(recv_t *receive, uint16_t *state, uint16_t *error)
 void receive_driver(recv_t *receive, uint16_t *state, uint16_t *error) {
 
   receive->size_pack = recv(receive->client_sock_desc, receive->package, SBUFF, 0);
+
+  System_Message("Package received from client.");
+
   validate_receival(receive, state, error);
   return;
 }

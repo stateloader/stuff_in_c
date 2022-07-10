@@ -14,11 +14,6 @@ static void database_trim(write_t *writer, uint16_t *state, uint16_t *error) {
   return;
 }
 
-typedef struct WriteItem {
-  const uint8_t flag;
-  const char *filepath;
-} write_item;
-
 static write_item write_items[] = {
   {TMESG, "response/database/mesg.dat"},
   {TDVCE, "response/database/dvce.dat"}
@@ -29,6 +24,7 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
  *comes in place*/
 
   if (*state & (1 << ERROR)) return;
+  System_Message("Opens database.");
 
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
     if (writer->protocol[TBIDX] & (1 << write_items[i].flag))
@@ -41,9 +37,9 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
 
 static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
 /*Writing (appending) to database*/
-  System_Message("Appending to database.");
 
   if (*state & (1 << ERROR)) return;
+  System_Message("Writing to database.");
 
   size_t size_push = fwrite(writer->append, sizeof(char), writer->size_appd, writer->file);
   if (size_push != writer->size_appd) {
@@ -55,6 +51,8 @@ static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
 }
 
 void write_driver(write_t *writer, uint16_t *state, uint16_t *error) {
+
+  System_Message("Initiates database append.");
 
   database_trim(writer, state, error);
   database_open(writer, state, error);

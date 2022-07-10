@@ -19,8 +19,8 @@ static void mesg_scan(mesg_t *message) {
 
 static void mesg_push(mesg_t *message, reqt_t *request) {
 /*Creates/binds a string - a canonical package of type 'message entry' - to be received and stored in server database.*/
-  System_Message("Initializes message push request.");
-  
+
+  System_Message("Initiates message push request.");
   datetime_attach(request);
 
   request->size_pack = (
@@ -52,6 +52,7 @@ static void mesg_pull(reqt_t *request) {
   request->size_pack = POFFS;
   protocol_attach(request);
 }
+
 void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   request->pack_delm = DMESG;

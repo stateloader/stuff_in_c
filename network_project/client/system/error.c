@@ -32,5 +32,7 @@ void error_driver(uint8_t status, uint16_t error) {
         printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
     }
     exit(EXIT_FAILURE);
+  } else {
+    System_Message("Session completed successfully.");
   }
 }

@@ -22,6 +22,8 @@ mmod_t *table_mesg_create(const char *package, size_t size_pack, size_t rows, ui
     return NULL;
   }
 
+  System_Message("Building table, message records.");
+
   size_t mem = 0, idx = 0, row = 0;
   
   for (size_t i = 0; i < size_pack; i++) {
@@ -73,12 +75,13 @@ mmod_t *table_mesg_create(const char *package, size_t size_pack, size_t rows, ui
 }
 dmod_t *table_dvce_create(const char *package, size_t size_pack, size_t rows, uint8_t *state, uint16_t *error) {
 /*Same principle as above.*/
-
   dmod_t *table_dvce = malloc(sizeof(dmod_t) * rows);
   if (table_dvce == NULL) {
     *state |= (1 << ERROR); *error |= (1 << MMERR);
     return NULL;
   }
+  
+  System_Message("Building table, device records.");
 
   size_t mem = 0, idx = 0, row = 0;
   for (size_t i = 0; i < size_pack; i++) {

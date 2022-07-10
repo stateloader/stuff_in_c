@@ -46,5 +46,7 @@ void error_driver(uint16_t status, uint16_t error) {
       if (error & (1 << error_items[i].flag))
       printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
     }
+  } else {
+    System_Message("Session completed successfully.");
   }
 }

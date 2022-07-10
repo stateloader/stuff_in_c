@@ -56,7 +56,6 @@ void reader_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
   }
   return;
 }
-
 static reqt_item table_items[] = {
   {TMESG, message_driver}, {TDVCE, device_driver}
 };
@@ -68,6 +67,8 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
+  System_Message("Sending request to server.");
+
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   if (size_send != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << RSERR);

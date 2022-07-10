@@ -62,8 +62,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
 /*If PROTOCOL sent from the client has its RWBIT set it means it's a request that requires data to be pushed/appended to
  *the (a) database while the opposite means read/pull.*/
 
-  System_Message("Creates response.");
-
+  System_Message("Creating response.");
   int32_t route = (response->protocol[EBIDX] & (1 << RWBIT)) ? 1 : 0;
 
   switch (route) {
@@ -77,7 +76,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SWERR);
   return;
   }
-  
+  System_Message("Sending response to client.");
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
   if (size_send != response->size_resp) {
     *state |= (1 << ERROR); *error |= (1 << RCERR);

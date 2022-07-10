@@ -12,8 +12,6 @@ info info info
 #include "receive/receiver.h"
 #include "cdriver.h"
 
-#define SSUCC 0xF
-
 static void protocol_copy(uint8_t *dest, uint8_t *from) {
   dest[TBIDX] = from[TBIDX];
   dest[ABIDX] = from[ABIDX];
@@ -23,20 +21,15 @@ static void protocol_copy(uint8_t *dest, uint8_t *from) {
 static void state_command(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
-//If error bit is set, fall through.
-
   cmnd_t command = {0};
   command_driver(&command);
   protocol_copy(driver->protocol, command.protocol);
-  PrintByte(driver->protocol[TBIDX]);
   return;
 }
 
 static void state_request(dver_t *driver) {
   
   if (driver->state & (1 << ERROR)) return;
-//If error bit is set, fall through.
-
   driver->state |= (1 << SCOMM);
 
   reqt_t request = {.sock_desc = driver->client.sock_desc};
@@ -50,8 +43,6 @@ static void state_request(dver_t *driver) {
 static void state_receive(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
-//If error bit is set, fall through.
-
   driver->state |= (1 << SREQT);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
@@ -61,16 +52,15 @@ static void state_receive(dver_t *driver) {
 
 static void state_outcome(dver_t *driver) {
   
+  System_Message("Evaluating session.");
   error_driver(driver->state, driver->error);
-
-  
 }
 
 void client_driver(dver_t *driver) {
 
-    state_command(driver);
-    state_request(driver);
-    state_receive(driver);
-    state_outcome(driver);
+  state_command(driver);
+  state_request(driver);
+  state_receive(driver);
+  state_outcome(driver);
 
 }

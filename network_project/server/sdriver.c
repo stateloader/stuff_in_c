@@ -13,7 +13,7 @@ static void state_receive(recv_t *receive, dver_t *driver) {
 /*Receive state, core logic runs inside the receive-driver. See RECEIVE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return;
-//If error bit is set, fall through.
+  System_Message("Initiates receive driver.");
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
@@ -25,7 +25,7 @@ static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
  *later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this solution.*/
 
   if (driver->status & (1 << ERROR)) return;
-//If error bit is set, fall through.
+  System_Message("Initiates curier.");
 
   response->protocol[TBIDX] = receive->protocol[TBIDX];
   response->protocol[ABIDX] = receive->protocol[ABIDX];
@@ -42,20 +42,15 @@ static void state_respond(resp_t *response, dver_t *driver) {
 /*Response state, core logic being ran inside the receive-driver. See RESPONSE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return; 
-//If error bit is set, fall through.
   response_driver(response, &driver->status, &driver->error);
 
   return;
 }
 
-static void state_flusher(resp_t *response, recv_t *receive, dver_t *driver) {
+static void state_outcome(dver_t *driver) {
 
-  buffer_flush(response->received, SBUFF);
-  buffer_flush(response->response, RBUFF);
-  buffer_flush(receive->package, SBUFF);
-
+  System_Message("Evaluates errors.");
   error_driver(driver->status, driver->error);
-  close(driver->server.client_sock_desc);
 }
 
 void server_driver(dver_t *driver) {
@@ -69,5 +64,5 @@ void server_driver(dver_t *driver) {
   state_receive(&receive, driver);
   state_courier(&response, &receive, driver);
   state_respond(&response, driver);
-  state_flusher(&response, &receive, driver);
+  state_outcome(driver);
 }
