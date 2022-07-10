@@ -16,7 +16,7 @@ user are now and where she/he's heading depending on which command being typed.
 /-----------------------------------------------------------------------------------------------------------------------*/
 
 static cmnd_item main[] = {
-  {CMAIN, CMESG, "-message"},
+  {CMAIN, CMESG, "-comment"},
   {CMAIN, CDVCE, "-device"},
   {CMAIN, CHELP, "-help"},
   {CMAIN, CEXIT, "-exit"}
@@ -110,11 +110,11 @@ void command_driver(cmnd_t *command) {
    
     switch(cmnd_state) {
     case CMAIN:
-      Render_Header("MAIN", "Select in menu by enter any of the aviable commands");
+      Render_Header("MAIN", "Select in menu by enter any of the available commands");
       cmnd_state = command_scan(main, ARRAY_SIZE(main));
       break;
     case CMESG:
-      Render_Header("MESSAGE", "Read old messages or post a new");
+      Render_Header("COMMENT", "Read old comments or post a new");
       cmnd_state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
     case CDVCE:

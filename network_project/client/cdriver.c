@@ -8,6 +8,7 @@ info info info
 #include "command/commander.h"
 #include "system/cstrings.h"
 #include "system/scanner.h"
+#include "receive/publish.h"
 #include "receive/receiver.h"
 #include "cdriver.h"
 
@@ -48,6 +49,7 @@ static void state_receive(dver_t *driver) {
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
   receive_driver(&receive, &driver->state, &driver->error);
+  publish_driver(&receive, &driver->state, &driver->error);
 }
 
 static void state_outcome(dver_t *driver) {
@@ -68,3 +70,12 @@ void client_driver(dver_t *driver) {
 
   error_driver(driver->state, driver->error);
 }
+
+
+/*
+
+  PrintByte(command.protocol[TBIDX]);
+  PrintByte(command.protocol[ABIDX]);
+  PrintByte(command.protocol[EBIDX]);
+
+  */

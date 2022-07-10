@@ -1,7 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------RECEIVER
 
 ------------------------------------------------------------------------------------------------------------------------*/
-#include <stdlib.h>
 #include "../connect/connection.h"
 #include "models.h"
 #include "receiver.h"
@@ -101,7 +100,5 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SDERR);
     return;
   }
-  if (receive->table_mesg) free(receive->table_mesg);
-  if (receive->table_dvce) free(receive->table_dvce);
   return;
 }

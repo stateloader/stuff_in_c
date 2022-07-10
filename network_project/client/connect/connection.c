@@ -45,8 +45,8 @@ void client_connect(clnt_t *client) {
 
   client_create(client);
   client_binder(client);
-
-  Render_Header("VALIDATE", "Enter username and password");
+  
+  Render_Header("CONFIRM", "Enter username and password");
   client->size_user = scan_driver(client->username, "username", SBUFF);
   client->size_pass = scan_driver(client->password, "password", SBUFF);
 }
