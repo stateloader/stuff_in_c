@@ -4,7 +4,7 @@
 #include "sdriver.h"
 
 int main(void) {
-  Render_Header("Server", "Client ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("SERVER", "SERVER ipsum dolor sit amet, consectetur adipiscing elit");
 
   dver_t driver = {.status = 0x00};
   serv_t server = {.client_sock_desc = 0};

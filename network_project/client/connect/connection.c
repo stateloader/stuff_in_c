@@ -30,8 +30,8 @@ static void client_binder(clnt_t *client) {
   client->server_address.sin_port = htons(PORT);
    
   client->conn_stat = connect(
-    client->sock_desc, (struct sockaddr *) &client->server_address, sizeof(client->server_address)
-  );
+    client->sock_desc, (struct sockaddr *) &client->server_address, sizeof(client->server_address));
+
   if (client->conn_stat < 0) {
     System_Message("Failed connect to server.");
     exit(EXIT_FAILURE);
@@ -41,12 +41,12 @@ static void client_binder(clnt_t *client) {
 
 void client_connect(clnt_t *client) {
 /*Wraps the  previous static functions. If nothing has failed the client tells who he or she is. The plan is it
- *implement this as a part of a validation-process iin the future. At the moment just lol.*/
+ *implement this as a part of a validation-process in the future. Password-part unnecessary at the moment.*/
 
   client_create(client);
   client_binder(client);
 
-  Render_Header("VALIDATE  ", "Enter username and password");
+  Render_Header("VALIDATE", "Enter username and password");
   client->size_user = scan_driver(client->username, "username", SBUFF);
   client->size_pass = scan_driver(client->password, "password", SBUFF);
 }

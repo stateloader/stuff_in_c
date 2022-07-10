@@ -9,7 +9,7 @@ It governs how most of various processes on both client- and serverside behave a
 #include "scanner.h"
 
 static void scan_byte(scan_t *scanner) {
-//Last state before 
+
   for (size_t i = 0; i < scanner->size_scan; i++) {
     
     if (!scan_check_asci(scanner->scan_input[i])) {

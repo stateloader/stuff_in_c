@@ -21,5 +21,4 @@ void server_binder(serv_t *server, uint16_t *status, uint16_t *error);
 void socket_listen(serv_t *server, uint16_t *status, uint16_t *error);
 void socket_accept(serv_t *server, uint16_t *status, uint16_t *error);
 
-//void package_resp(uint32_t client_sock_desc, char *package, uint8_t *state, uint16_t *error);
 #endif

@@ -3,8 +3,8 @@ When the client/user has sent a read-requests (from a given database) its (entir
 the server. The model-structs are used for creating rows/instances, these in turn collected into 'tables'. This is done
 by titerate through the received raw database-string as shown in this source file.
 
-At first, I'd a more generic solution in place involving recursion and some fanzy stuff but it turned out even messier than
-this hard-coded solution.
+At first, I'd a more generic solution in place involving recursion and some fanzy stuff but it turned out to be even
+messier than this hard-coded solution.
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
 #include "models.h"
@@ -72,6 +72,7 @@ mmod_t *table_mesg_create(const char *package, size_t size_pack, size_t rows, ui
   return table_mesg;
 }
 dmod_t *table_dvce_create(const char *package, size_t size_pack, size_t rows, uint8_t *state, uint16_t *error) {
+/*Same principle as above.*/
 
   dmod_t *table_dvce = malloc(sizeof(dmod_t) * rows);
   if (table_dvce == NULL) {

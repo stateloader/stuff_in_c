@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------SERVER DRIVER
-The very driver that's running until something goes south inside 'server_driver'.                                                                                                
+Main driver. Runs until something goes (very) south.                                                                                             
 /------------------------------------------------------------------------------------------------------------------------*/
 #include "connect/connection.h"
 #include "receive/receiver.h"
@@ -10,9 +10,11 @@ The very driver that's running until something goes south inside 'server_driver'
 #include "sdriver.h"
 
 static void state_receive(recv_t *receive, dver_t *driver) {
-/*Receive state, core logic being ran inside the receive-driver. See RECEIVE MODULE.*/
+/*Receive state, core logic runs inside the receive-driver. See RECEIVE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return;
+//If error bit is set, fall through.
+
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
@@ -24,6 +26,7 @@ static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
  *later states. It worked, but tended to behave unpredictable sometimes why I settled on this solution.*/
 
   if (driver->status & (1 << ERROR)) return;
+//If error bit is set, fall through.
 
   response->protocol[TBIDX] = receive->protocol[TBIDX];
   response->protocol[ABIDX] = receive->protocol[ABIDX];
@@ -40,14 +43,14 @@ static void state_respond(resp_t *response, dver_t *driver) {
 /*Response state, core logic being ran inside the receive-driver. See RESPONSE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return; 
-  
+//If error bit is set, fall through.
+
   response_driver(response, &driver->status, &driver->error);
 
   return;
 }
 
 void server_driver(dver_t *driver, serv_t *server) {
-/*The very server-driver and its states.*/
 
   socket_listen(server, &driver->status, &driver->error);
   socket_accept(server, &driver->status, &driver->error);

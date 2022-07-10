@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------------------------------------------Commander
+/*----------------------------------------------------------------------------------------------------------------COMMANDER
 An "engine" of some sort during 'user-menu:ing' I came up with while playing around with function-pointers. Members of
 'cmnd_item' guinding the user to the correct state depending on her/his commands. A neat caviat in this solution is how
 bits being set (or cleared) simultaneously on the fly which finally being added to the request-protocol.                                                                                                 
@@ -11,7 +11,7 @@ bits being set (or cleared) simultaneously on the fly which finally being added 
 static int8_t cmnd_state;// = BMAIN;
 
 /*-------------------------------------------------------------------------------------------------------Command Structure
-3 (for now, more to come) menues being represented as 'command item'. Each item stores constants relevant for where the
+3 (for now, more to come) menues being represented as 'command item'(s). Each item stores constants relevant for where the
 user are now and where she/he's heading depending on which command being typed.
 /-----------------------------------------------------------------------------------------------------------------------*/
 
@@ -45,16 +45,10 @@ static cmnd_item help[] = {
   {CHELP, CMAIN, "-back"},
 };
 
-/*---------------------------------------------------------------------------------------------------------BYTE BlUEPRINTS
-The static variables TABLE, ATTRB and ECHO are used as blueprints during the command-session. Like the protocol-array
-they being assigned to when the user's done they're unsigned bytes; this because not being regarded as nullbytes (which
-screwed things up for me while sending package to the server).
-/-----------------------------------------------------------------------------------------------------------------------*/
-
 static uint8_t TABLE = 0x80;
 static uint8_t ATTRB = 0x80;
 static uint8_t ECHOB = 0x80;
-
+//The static variables TABLE, ATTRB and ECHOB are used as blueprints during the command-session, later attached to PROTOCOL
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80, ECHOB = 0x80;
   cmnd_state = CMAIN;
@@ -116,23 +110,23 @@ void command_driver(cmnd_t *command) {
    
     switch(cmnd_state) {
     case CMAIN:
-      Render_Header("MAIN       ", "Main ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("MAIN", "Select in menu by enter any of the aviable commands");
       cmnd_state = command_scan(main, ARRAY_SIZE(main));
       break;
     case CMESG:
-      Render_Header("MESSAGE    ", "Message ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("MESSAGE", "Read old messages or post a new");
       cmnd_state = command_scan(mesg, ARRAY_SIZE(mesg));
       break;
     case CDVCE:
-      Render_Header("DEVICE     ", "Device ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("DEVICE", "Read old LED-activity ord interact yourself by enter '-push'");
       cmnd_state = command_scan(dvce, ARRAY_SIZE(dvce));
       break;
     case CDLED:
-      Render_Header("PUSH       ", "PUSH ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("PUSH", "Pick a colour");
       cmnd_state = command_scan(dled, ARRAY_SIZE(dled));
       break;
     case CHELP:
-      Render_Header("HELP       ", "Help ipsum dolor sit amet, consectetur adipiscing elit");
+      Render_Header("HELP", "Everything you need to know");
       System_Message("Just go nuts.");
       cmnd_state = command_scan(help, ARRAY_SIZE(help));
       break;

@@ -9,7 +9,7 @@ info info info
 
 static void mesg_scan(mesg_t *message) {
 /*A subject and a comment being created from client input/scan.*/ 
-  Render_Header("MESSAGE COMPOSE", "Enter a Subject and a Comment.");
+  Render_Header("COMPOSE", "Enter a Subject and a Comment.");
 
   message->size_subj = scan_driver(message->subject, "subject", SBUFF);
   message->size_comm = scan_driver(message->comment, "comment", SBUFF);

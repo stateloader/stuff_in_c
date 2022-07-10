@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------------------------------------------RESPONSE
-Macros implemented reg                                                                                                   
+Basically throws the reveived data                                                                                  
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <sys/socket.h>
@@ -9,8 +9,7 @@ Macros implemented reg
 #include "responder.h"
 
 static void protocol_attach(resp_t *response) {
-/*Same drill as throughout the program both on the server and client side. PROTOCOL beeing attached at the end of the
- *response back to the client.*/
+/*PROTOCOL beeing attached at the end of the response back to the client.*/
 
   response->response[response->size_resp - 4] = response->protocol[TBIDX];
   response->response[response->size_resp - 3] = response->protocol[ABIDX];
@@ -21,11 +20,10 @@ static void protocol_attach(resp_t *response) {
 }
 
 static void response_create(resp_t *response, uint16_t *state) {
-/*Final "touch" in creating a response, PROTOCOL being attached, flags "not VALID" if any errors has accured which later
- *being dealt with on the client side.*/
+/*Final "touch" in creating a response. PROTOCOL being attached, flags "not VALID" if any errors has accured during the
+ *response procedure*/
 
   response->size_resp += POFFS;
-
   if (*state & (1 << ERROR))
     response->protocol[EBIDX] &= ~(1 << VALID);
   protocol_attach(response);
@@ -47,8 +45,8 @@ static void database_reader(resp_t *response, uint16_t *state, uint16_t *error) 
 
 
 static void database_writer(resp_t *response, uint16_t *state, uint16_t *error) {
- /*The Writer's protocol-member pointing at the response-protocol, its append-member at the received data which going to
-  *(if everything goes well) be inserted to the (a) database.*/
+ /*The Writer's protocol-member pointing at the response-protocol while its append-member pointing at the received data
+  *to be processed inside write_driver.*/
 
   write_t writer = {.size_appd = response->size_recv};
   writer.protocol = response->protocol;
@@ -61,8 +59,8 @@ static void database_writer(resp_t *response, uint16_t *state, uint16_t *error) 
 }
 
 void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
-/*If PROTOCOL sent from the client has its RWBIT set it means its a request for pushing/writing anything to the (a)
- *database while the opposite means read/pull.*/
+/*If PROTOCOL sent from the client has its RWBIT set it means it's a request that requires data to be pushed/appended to
+ *the (a) database while the opposite means read/pull.*/
 
   System_Message("Creates response.");
 

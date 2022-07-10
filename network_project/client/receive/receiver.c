@@ -54,7 +54,7 @@ static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16
 }
 
 static void validate_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Given original table (read) request, a table out of (set) Table-bit will be created from received package.*/
+/*Table out of (set) Table-bit will be created from received package.*/
 
   receive->size_pack -= POFFS;
 
@@ -70,7 +70,7 @@ static void validate_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
 }
 
 static void validate_push(recv_t *receive) {
-/*Given original table (write) request, a validation based on (set) Tabel-bit will be printed.*/
+/*Given original table (write) request, a validation based on which TBIDX-bit set will be printed.*/
 
   if (receive->protocol[TBIDX] & (1 << TMESG))
     System_Message("Your message was successfully delivered.");
