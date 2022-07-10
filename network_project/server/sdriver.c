@@ -50,18 +50,18 @@ static void state_respond(resp_t *response, dver_t *driver) {
   return;
 }
 
-void server_driver(dver_t *driver, serv_t *server) {
+void server_driver(dver_t *driver) {
 
-  socket_listen(server, &driver->status, &driver->error);
-  socket_accept(server, &driver->status, &driver->error);
+  socket_listen(&driver->server, &driver->status, &driver->error);
+  socket_accept(&driver->server, &driver->status, &driver->error);
 
-  recv_t receive =  {.client_sock_desc = server->client_sock_desc};
-  resp_t response = {.client_sock_desc = server->client_sock_desc};
+  recv_t receive =  {.client_sock_desc = driver->server.client_sock_desc};
+  resp_t response = {.client_sock_desc = driver->server.client_sock_desc};
   
   state_receive(&receive, driver);
   state_courier(&response, &receive, driver);
   state_respond(&response, driver);
-  close(server->client_sock_desc);
+  close(driver->server.client_sock_desc);
 
   error_driver(driver->status, driver->error);
 }

@@ -23,7 +23,8 @@ static void protocol_copy(uint8_t *dest, uint8_t *from) {
 static void state_command(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
-  
+//If error bit is set, fall through.
+
   cmnd_t command = {0};
   command_driver(&command);
   protocol_copy(driver->protocol, command.protocol);
@@ -33,6 +34,8 @@ static void state_command(dver_t *driver) {
 static void state_request(dver_t *driver) {
   
   if (driver->state & (1 << ERROR)) return;
+//If error bit is set, fall through.
+
   driver->state |= (1 << SCOMM);
 
   reqt_t request = {.sock_desc = driver->client.sock_desc};
@@ -44,7 +47,10 @@ static void state_request(dver_t *driver) {
 }
 
 static void state_receive(dver_t *driver) {
+
   if (driver->state & (1 << ERROR)) return;
+//If error bit is set, fall through.
+
   driver->state |= (1 << SREQT);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
@@ -54,12 +60,12 @@ static void state_receive(dver_t *driver) {
 
 static void state_outcome(dver_t *driver) {
   if (driver->state & (1 << ERROR)) return;
-  driver->state |= (1 << SRECV);
+//If error bit is set, fall through.
 
+  driver->state |= (1 << SRECV);
   if (driver->state == SSUCC)
     System_Message("session full pott");
 }
-
 
 void client_driver(dver_t *driver) {
   
@@ -69,6 +75,7 @@ void client_driver(dver_t *driver) {
   state_outcome(driver);
 
   error_driver(driver->state, driver->error);
+//If error bit is set, let's examine what went south.
 }
 
 

@@ -14,14 +14,12 @@ BIT(N)                                    |    15   |    14   |    13   |    12 
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  ERROR  |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |  SSOCK  |  ALIVE  |
+CONSTANT                                  |  ERROR  |    -    |    -    |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define ALIVE 0                           // When set, a session is ongoing and nothing has went south. Yet.
-#define SSOCK 1                           // When set, the server has sucessfully created a socket
-#define SSONN 2                           // When set, the server has successfully binded socket to address.
-#define SCACC 3                           // When set, the client has been acepted by the server.
-#define RECVF 4                           // When set, a response has successfully been revieved from the server.
+#define SCONN 0                           // State Connected. When set, server is connected and nothing has gone south, yet.
+#define SCACC 1                           // State Accept. When set, a client has been acepted by the server.
+#define RECVF 2                           // When set, a request has successfully been revieved from the server.
 
 #define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
@@ -47,23 +45,6 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 #define FRERR 13                          // Failet do read from file.
 #define DDERR 14                          // Delimiter error.
 #define RCERR 15                          // Failed to response client.
-
-//--------------------------------------------------------------------------------------------------------SERVER CONTROLLER
-
-/*-------------------------------------------------------------------------------------------------------------------------
-BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
----------------------------------------------------------------------------------------------------------------------------
-BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  ERROR  |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |  SSOCK  |  ALIVE  |
--------------------------------------------------------------------------------------------------------------------------*/
-
-#define ALIVE 0                           // When set, a session is ongoing and nothing has went south. Yet.
-#define SSOCK 1                           // When set, the server has sucessfully created a socket
-#define SSONN 2                           // When set, the server has successfully binded socket to address.
-#define SCACC 3                           // When set, the client has been acepted by the server.
-#define RECVF 4                           // When set, a response has successfully been revieved from the server.
-#define ERROR 7                           // Something went wrong. Always results in terminate.
 
 /*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
 The protocol, throughout the comments referred to as 'PROTOCOL' consist of 4 bytes. 3 unsigned and a signed terminator.

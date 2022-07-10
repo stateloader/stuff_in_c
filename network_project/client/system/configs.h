@@ -15,8 +15,8 @@ Macros implemented reg
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRECV  |  SREQT  |  SCOMM  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define SCONN 0                           // State Connect- When set, the client has successfully connected to the server.
-#define SCOMM 1                           // State Command. When set, the client has successfully selected a command.
+#define SCONN 0                           // State Connected When set, the client has successfully connected to server.
+#define SCOMM 1                           // State Command. When set, the client has successfully choosed a command.
 #define SREQT 2                           // State Request. When set, the client has successfully sent a request.
 #define SRECV 3                           // State Receive. When set, the cient has successfully recieved a response.
 
