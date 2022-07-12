@@ -65,13 +65,13 @@ size_t scan_driver(char *user_input, char *prompt, size_t size_buffer) {
 
     case SSCAN:
       scan_input(&scanner, prompt);
-      break;
+    break;
     case SSCHK:
       scan_size(&scanner);
-      break;
+    break;
     case SBCHK:
       scan_byte(&scanner);
-      break;
+    break;
     default:
       exit(EXIT_FAILURE);
     }

@@ -9,7 +9,7 @@
 static void validate_usage(int argc) {
 
   if (argc != 3) {
-    Render_Header("USAGE", "To few argments. You must enter IP-address and port.");
+    Render_Header("USAGE", "Too few argments. You must enter IP-address and port.");
     System_Message("Example: ./clientTCP 127.0.0.1 90190");
     exit(EXIT_FAILURE);
   }
@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
 
   validate_usage(argc);
 
-
   clnt_t client = {.sock_desc = 0};
   client_connect(&client, argv[1], argv[2]);
 
@@ -28,6 +27,5 @@ int main(int argc, char **argv) {
   driver.state |= (1 << SCONN);
   
   client_driver(&driver);
-  
   exit(EXIT_SUCCESS);
 }

@@ -65,16 +65,16 @@ void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
   case DVCER:
     dvce_pull(request);
     reader_validate(request, state, error);
-    break;
+  break;
 
   case DVCEW:
     dvce_push(&device, request);
     writer_validate(request, state, error);
-    break;
+  break;
 
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
-    break;
+  break;
   }
   return;
 }

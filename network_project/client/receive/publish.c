@@ -8,6 +8,18 @@ possiblefor clients/users to manage earlier entries before throwing the request 
 #include "models.h"
 #include "publish.h"
 
+static void release_memo(mmod_t *mesg, dmod_t *dvce) {
+
+  if (mesg) {
+    System_Message("Freeing message table.");
+    free(mesg); mesg = NULL;
+  }
+  if (dvce) {
+    System_Message("Freeing device table.");
+    free(dvce); dvce = NULL;
+  }
+}
+
 static void publish_mesg(mmod_t *mesg, size_t rows) {
   Render_Header("RECORDS", "Messages");
 
@@ -25,19 +37,19 @@ static void publish_dvce(dmod_t *dvce, size_t rows) {
 }
 
 void publish_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
+  
   if (receive->protocol[EBIDX] & (1 << RWBIT)) return;
 
   switch (receive->protocol[TBIDX]) {
   case PUBL_MESG:
     publish_mesg(receive->table_mesg, receive->amnt_rows);
-    break;
+  break;
   case PUBL_DVCE:
     publish_dvce(receive->table_dvce, receive->amnt_rows);
-    break;
+  break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
   }
-  if (receive->table_mesg) free(receive->table_mesg);
-  if (receive->table_dvce) free(receive->table_dvce);
+  release_memo(receive->table_mesg, receive->table_dvce);
   return;
 }

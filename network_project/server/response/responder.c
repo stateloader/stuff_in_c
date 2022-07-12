@@ -43,7 +43,6 @@ static void database_reader(resp_t *response, uint16_t *state, uint16_t *error) 
   return;
 }
 
-
 static void database_writer(resp_t *response, uint16_t *state, uint16_t *error) {
  /*The Writer's protocol-member pointing at the response-protocol while its append-member pointing at the received data
   *to be processed inside write_driver.*/
@@ -76,6 +75,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SWERR);
   return;
   }
+
   System_Message("Sending response to client.");
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
   if (size_send != response->size_resp) {

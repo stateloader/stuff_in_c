@@ -20,7 +20,7 @@ CONSTANT                                  |  ERROR  |    -    |    -    |    -  
 #define SREQT 2                           // State Request. When set, the client has successfully sent a request.
 #define SRECV 3                           // State Receive. When set, the cient has successfully recieved a response.
 
-#define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
+#define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
@@ -89,13 +89,12 @@ TERMINATOR              4                  |                                    
 //----------------------------------------------------------------------------------------------------------------GRAPHICS
 #define FORM_INFO "\t\t\t%s\n"
 #define System_Message(info) printf(FORM_INFO, info);
-//-------------------------------------------------------------------------------------------------------------------HANDY
-#define ARRAY_SIZE(arry) (sizeof(arry)/sizeof(arry[0]))
-//--------------------------------------------------------------------------------------------------------------"GRAPHICS"
+
 #define HEADER_FORM "\n%s\n%s\t\t\t%s\n%s\n\n"
 #define Header_Border "--------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
-//-------------------------------------------------------------------------------------------------------------------DEBUG
+//-------------------------------------------------------------------------------------------------------------------HANDY
+#define ARRAY_SIZE(arry) (sizeof(arry)/sizeof(arry[0]))
 #define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
 //------------------------------------------------------------------------------------------------------------------------
 
