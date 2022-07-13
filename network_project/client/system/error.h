@@ -3,10 +3,13 @@
 
 #include "configs.h"
 
-/*-----------------------------------------------------------------------------------------------------------error low byte
-BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  SDERR  |    -    |  IIERR  |  DMERR  |  PTERR  |  PSERR  |  COERR  |  SOERR  |
--------------------------------------------------------------------------------------------------------------------------*/
+#define ERROR_FORMAT "\n\t\t\tError [%s]\n\t\t\t%s\n"
+
+typedef struct ErrorItem {
+  const uint16_t flag;
+  const char *type;
+  const char *mesg;
+} error_item;
 
 void error_driver(uint8_t status, uint16_t error_flag);
 

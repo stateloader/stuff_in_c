@@ -10,15 +10,9 @@ static void database_trim(write_t *writer, uint16_t *state, uint16_t *error) {
   writer->size_appd -= POFFS;
   if (writer->append[writer->size_appd - 1] != DELIM) {
     *state |= (1 << ERROR); *error |= (1 << DDERR);
-  }// Last byte after trim should be a DELIM, else something gone south. 
-
+  }//Last byte after trim should be a DELIM, else something gone south. 
   return;
 }
-
-typedef struct WriteItem {
-  const uint8_t flag;
-  const char *filepath;
-} write_item;
 
 static write_item write_items[] = {
   {TMESG, "response/database/mesg.dat"},
@@ -30,33 +24,35 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
  *comes in place*/
 
   if (*state & (1 << ERROR)) return;
+  System_Message("Opens database.");
 
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
     if (writer->protocol[TBIDX] & (1 << write_items[i].flag))
       writer->file = fopen(write_items[i].filepath, "a");
   } if (writer->file == NULL) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
-  }// Failed to open file.
-  
+  }//Failed to open file.
   return;
 }
 
 static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
 /*Writing (appending) to database*/
-  System_Message("Appending to database.");
 
   if (*state & (1 << ERROR)) return;
+  System_Message("Writing to database.");
 
   size_t size_push = fwrite(writer->append, sizeof(char), writer->size_appd, writer->file);
   if (size_push != writer->size_appd) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
-  }// Failed to append data to file.
+  }//Failed to append data to file.
 
   if (writer->file) fclose(writer->file);
   return;
 }
 
 void write_driver(write_t *writer, uint16_t *state, uint16_t *error) {
+
+  System_Message("Initiates database append.");
 
   database_trim(writer, state, error);
   database_open(writer, state, error);

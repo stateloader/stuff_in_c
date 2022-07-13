@@ -9,7 +9,7 @@ info info info
 
 static void mesg_scan(mesg_t *message) {
 /*A subject and a comment being created from client input/scan.*/ 
-  Render_Header("COMPOSE", "Enter a Subject and a Comment.");
+  Render_Header("COMPOSE", "Enter subject comment.");
 
   message->size_subj = scan_driver(message->subject, "subject", SBUFF);
   message->size_comm = scan_driver(message->comment, "comment", SBUFF);
@@ -19,8 +19,8 @@ static void mesg_scan(mesg_t *message) {
 
 static void mesg_push(mesg_t *message, reqt_t *request) {
 /*Creates/binds a string - a canonical package of type 'message entry' - to be received and stored in server database.*/
-  System_Message("Initializes message push request.");
-  
+
+  System_Message("Initiates message push request.");
   datetime_attach(request);
 
   request->size_pack = (
@@ -52,6 +52,7 @@ static void mesg_pull(reqt_t *request) {
   request->size_pack = POFFS;
   protocol_attach(request);
 }
+
 void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   request->pack_delm = DMESG;
@@ -62,17 +63,17 @@ void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
   case MESGR:
     mesg_pull(request);
     reader_validate(request, state, error);
-    break;
+  break;
 
   case MESGW:
     mesg_scan(&message);
     mesg_push(&message, request);
     writer_validate(request, state, error);
-    break;
+  break;
 
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
-    break;
+  break;
   }
   return;
 }

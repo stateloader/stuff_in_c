@@ -15,12 +15,12 @@ Macros implemented reg
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRECV  |  SREQT  |  SCOMM  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define SCONN 0                           // State Connect- When set, the client has successfully connected to the server.
-#define SCOMM 1                           // State Command. When set, the client has successfully selected a command.
+#define SCONN 0                           // State Connected When set, the client has successfully connected to server.
+#define SCOMM 1                           // State Command. When set, the client has successfully choosed a command.
 #define SREQT 2                           // State Request. When set, the client has successfully sent a request.
 #define SRECV 3                           // State Receive. When set, the cient has successfully recieved a response.
 
-#define ERROR 7                           /*Something went wrong. Always results in terminate----------------ERROR HANDLING
+#define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
 ---------------------------------------------------------------------------------------------------------------------------
@@ -29,7 +29,6 @@ ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR
 -------------------------------------------------------------------------------------------------------------------------*/
 #define SSERR 0                           // Failed to create create client-socket.                         
 #define SCERR 1                           // Failed to connect to server.
-
 #define PSERR 2                           // Package size error, sizes between sent and created doesn't match. 
 #define PTERR 3                           // Package (not) terminated error, package isn't nullterminated.
 #define PDERR 4                           // The supposed amount the entry's delimiter-constant supposed to be is wrong.
@@ -90,13 +89,12 @@ TERMINATOR              4                  |                                    
 //----------------------------------------------------------------------------------------------------------------GRAPHICS
 #define FORM_INFO "\t\t\t%s\n"
 #define System_Message(info) printf(FORM_INFO, info);
-//-------------------------------------------------------------------------------------------------------------------HANDY
-#define ARRAY_SIZE(arry) (sizeof(arry)/sizeof(arry[0]))
-//--------------------------------------------------------------------------------------------------------------"GRAPHICS"
+
 #define HEADER_FORM "\n%s\n%s\t\t\t%s\n%s\n\n"
 #define Header_Border "--------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
-//-------------------------------------------------------------------------------------------------------------------DEBUG
+//-------------------------------------------------------------------------------------------------------------------HANDY
+#define ARRAY_SIZE(arry) (sizeof(arry)/sizeof(arry[0]))
 #define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
 //------------------------------------------------------------------------------------------------------------------------
 

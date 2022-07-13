@@ -41,10 +41,12 @@ static error_item error_items[] = {
 
 void error_driver(uint16_t status, uint16_t error) {
 
-  if (status & (0 << ERROR)) return;
-
-  for (size_t i = 0; i < ARRAY_SIZE(error_items); i++) {
-    if (error & (1 << error_items[i].flag))
+  if (status & (1 << ERROR)) {
+    for (size_t i = 0; i < ARRAY_SIZE(error_items); i++) {
+      if (error & (1 << error_items[i].flag))
       printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
+    }
+  } else {
+    System_Message("Session completed successfully.");
   }
 }

@@ -9,14 +9,6 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 ERROR LOW BYTE                            |  SDERR  |    -    |    -    |  CPERR  |  IIERR  |  PDERR  |  PTERR  |  PCERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define ERROR_FORMAT "\n-- Error [%s] -- %s\n\n"
-
-typedef struct ErrorItem {
-  const uint16_t flag;
-  const char *type;
-  const char *mesg;
-} error_item;
-
 static error_item error_items[] = {
   {PSERR, "Package",    "Wrong package size."},
   {PTERR, "Package",    "Package isn't terminated."},
@@ -33,11 +25,14 @@ static error_item error_items[] = {
 };
 
 void error_driver(uint8_t status, uint16_t error) {
-  if (status & (0 << ERROR)) return;
 
-  for (size_t i = 0; i < ARRAY_SIZE(error_items); i++) {
-    if (error & (1 << error_items[i].flag))
-      printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
+  if (status & (1 << ERROR)) {
+    for (size_t i = 0; i < ARRAY_SIZE(error_items); i++) {
+      if (error & (1 << error_items[i].flag))
+        printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
+    }
+    exit(EXIT_FAILURE);
+  } else {
+    System_Message("Session completed successfully.");
   }
-  exit(EXIT_FAILURE);
 }

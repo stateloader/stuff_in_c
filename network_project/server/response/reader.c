@@ -3,11 +3,6 @@ Any request from client where pulling/reading any data from a database being thr
 /------------------------------------------------------------------------------------------------------------------------*/
 #include "reader.h"
 
-typedef struct ReadItem {
-  const uint8_t flag;
-  const char *filepath;
-} read_item;
-
 static read_item read_items[] = {
   {TMESG, "response/database/mesg.dat"},
   {TDVCE, "response/database/dvce.dat"}
@@ -33,9 +28,9 @@ static void database_open(read_t *reader, uint16_t *state, uint16_t *error) {
 static void database_pull(read_t *reader, uint16_t *state, uint16_t *error)  {
 /*Reading content from the (a) database.*/
 
+  if (*state & (1 << ERROR)) return;
   System_Message("Reading from database.");
 
-  if (*state & (1 << ERROR)) return;
   reader->size_cont = fread(reader->content, sizeof(char), RBUFF, reader->file);
   if (reader->size_cont <= 0) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
@@ -45,6 +40,9 @@ static void database_pull(read_t *reader, uint16_t *state, uint16_t *error)  {
 }
 
 void read_driver(read_t *reader, uint16_t *state, uint16_t *error) {
+
+  System_Message("Initiates database read.");
+
   database_open(reader, state, error);
   database_pull(reader, state, error);
   return;

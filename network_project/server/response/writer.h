@@ -3,6 +3,11 @@
 
 #include "../system/configs.h"
 
+typedef struct WriteItem {
+  const uint8_t flag;
+  const char *filepath;
+} write_item;
+
 typedef struct Writer {
   size_t size_appd;
   uint8_t *protocol;

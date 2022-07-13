@@ -3,22 +3,21 @@
 #include "system/configs.h"
 #include "sdriver.h"
 
+
 int main(void) {
-  Render_Header("SERVER", "SERVER ipsum dolor sit amet, consectetur adipiscing elit");
+  Render_Header("SERVER", "A noble piece of software in which absolute nothing can go wrong");
 
   dver_t driver = {.status = 0x00};
   serv_t server = {.client_sock_desc = 0};
 
-  server_create(&server, &driver.status, &driver.error);
-  if (driver.status & (1 << ERROR))
-    exit(EXIT_FAILURE);
+  server_create(&server);
+  server_binder(&server);
 
-  server_binder(&server, &driver.status, &driver.error);
-  if (driver.status & (1 << ERROR))
-    exit(EXIT_FAILURE);
+  driver.server = server;
+  driver.status |= (1 << SCONN);
 
-  while (driver.status & (1 << ALIVE))
-    server_driver(&driver, &server);
+  while (driver.status & (1 << SCONN))
+    server_driver(&driver);
   
   exit(EXIT_SUCCESS);
 }

@@ -1,15 +1,16 @@
 /*----------------------------------------------------------------------------------------------------------------RECEIVER
 
 ------------------------------------------------------------------------------------------------------------------------*/
-#include <stdlib.h>
 #include "../connect/connection.h"
 #include "models.h"
 #include "receiver.h"
 
-static void protocol_obtain(recv_t *receive, uint8_t *state, uint16_t *error)  {
+static void validate_pack(recv_t *receive, uint8_t *state, uint16_t *error)  {
 /*A package on both client- and serverside should end with the PROTOCOL. If the received package has a lesser size than
  *'POFFS' or isn't nullterminated it's instantly invalid. Same is true if (in this case) the server has replied with the
  *VALID-bit cleared, meaning something went south when working with the client's request.*/
+
+  System_Message("Validating package.");
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -85,7 +86,9 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
 
-  protocol_obtain(receive, state, error);
+  System_Message("Package received from server.");
+
+  validate_pack(receive, state, error);
   if (*state & (1 << ERROR)) return;
 
   int32_t route = (receive->protocol[EBIDX] & (1 << RWBIT)) ? 1 :  0;
@@ -101,7 +104,5 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SDERR);
     return;
   }
-  if (receive->table_mesg) free(receive->table_mesg);
-  if (receive->table_dvce) free(receive->table_dvce);
   return;
 }

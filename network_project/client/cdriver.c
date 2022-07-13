@@ -8,10 +8,9 @@ info info info
 #include "command/commander.h"
 #include "system/cstrings.h"
 #include "system/scanner.h"
+#include "receive/publish.h"
 #include "receive/receiver.h"
 #include "cdriver.h"
-
-#define SSUCC 0xF
 
 static void protocol_copy(uint8_t *dest, uint8_t *from) {
   dest[TBIDX] = from[TBIDX];
@@ -22,7 +21,6 @@ static void protocol_copy(uint8_t *dest, uint8_t *from) {
 static void state_command(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
-  
   cmnd_t command = {0};
   command_driver(&command);
   protocol_copy(driver->protocol, command.protocol);
@@ -43,28 +41,26 @@ static void state_request(dver_t *driver) {
 }
 
 static void state_receive(dver_t *driver) {
+
   if (driver->state & (1 << ERROR)) return;
   driver->state |= (1 << SREQT);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
   receive_driver(&receive, &driver->state, &driver->error);
+  publish_driver(&receive, &driver->state, &driver->error);
 }
 
 static void state_outcome(dver_t *driver) {
-  if (driver->state & (1 << ERROR)) return;
-  driver->state |= (1 << SRECV);
-
-  if (driver->state == SSUCC)
-    System_Message("session full pott");
+  
+  System_Message("Evaluating session.");
+  error_driver(driver->state, driver->error);
 }
 
-
 void client_driver(dver_t *driver) {
-  
+
   state_command(driver);
   state_request(driver);
   state_receive(driver);
   state_outcome(driver);
 
-  error_driver(driver->state, driver->error);
 }

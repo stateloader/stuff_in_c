@@ -8,11 +8,10 @@
 typedef struct Client {
   int32_t sock_desc, conn_stat;
   struct sockaddr_in server_address;
-  size_t size_user, size_pass;
+  size_t size_user;
   char username[SBUFF];
-  char password[SBUFF];
 } clnt_t;
 
-void client_connect(clnt_t *client);
+void client_connect(clnt_t *client, const char *address, const char *port);
 
 #endif

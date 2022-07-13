@@ -13,8 +13,7 @@ static void state_receive(recv_t *receive, dver_t *driver) {
 /*Receive state, core logic runs inside the receive-driver. See RECEIVE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return;
-//If error bit is set, fall through.
-
+  System_Message("Initiates receive driver.");
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
@@ -23,10 +22,10 @@ static void state_receive(recv_t *receive, dver_t *driver) {
 static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
 /*After a package has (successfully) been received, this state is about copy received content over to the responder while
  *some checks beeing done. A "middle-hand" of some sort. In earlier interpretations I just pointed at the received data in
- *later states. It worked, but tended to behave unpredictable sometimes why I settled on this solution.*/
+ *later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this solution.*/
 
   if (driver->status & (1 << ERROR)) return;
-//If error bit is set, fall through.
+  System_Message("Initiates curier.");
 
   response->protocol[TBIDX] = receive->protocol[TBIDX];
   response->protocol[ABIDX] = receive->protocol[ABIDX];
@@ -43,25 +42,27 @@ static void state_respond(resp_t *response, dver_t *driver) {
 /*Response state, core logic being ran inside the receive-driver. See RESPONSE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return; 
-//If error bit is set, fall through.
-
   response_driver(response, &driver->status, &driver->error);
 
   return;
 }
 
-void server_driver(dver_t *driver, serv_t *server) {
+static void state_outcome(dver_t *driver) {
 
-  socket_listen(server, &driver->status, &driver->error);
-  socket_accept(server, &driver->status, &driver->error);
+  System_Message("Evaluates errors.");
+  error_driver(driver->status, driver->error);
+}
 
-  recv_t receive =  {.client_sock_desc = server->client_sock_desc};
-  resp_t response = {.client_sock_desc = server->client_sock_desc};
+void server_driver(dver_t *driver) {
+
+  socket_listen(&driver->server, &driver->status, &driver->error);
+  socket_accept(&driver->server, &driver->status, &driver->error);
+
+  recv_t receive =  {.client_sock_desc = driver->server.client_sock_desc};
+  resp_t response = {.client_sock_desc = driver->server.client_sock_desc};
   
   state_receive(&receive, driver);
   state_courier(&response, &receive, driver);
   state_respond(&response, driver);
-  close(server->client_sock_desc);
-
-  error_driver(driver->status, driver->error);
+  state_outcome(driver);
 }
