@@ -23,7 +23,7 @@ static void dvce_scan(uint8_t push, devc_t *device) {
 static void dvce_push(devc_t *device, reqt_t *request) {
 /*Creates/binds a string - a canonical package of type 'device entry' - to be received and stored in server database.*/
 
-  System_Message("Initiates device push request.");
+  System_Message("initiates device push request.");
 
   datetime_attach(request);
   dvce_scan(request->protocol[ABIDX], device);
@@ -48,7 +48,8 @@ static void dvce_push(devc_t *device, reqt_t *request) {
 
 static void dvce_pull(reqt_t *request) {
 /*Attaches just the PROTOCOL to the package if the client has requested to read device-records*/
-  System_Message("Initiates device pull request.");
+
+  System_Message("initiates device pull request.");
 
   request->size_pack = POFFS;
   protocol_attach(request);

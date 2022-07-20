@@ -15,9 +15,7 @@ typedef struct Server {
   int32_t client_length;
 } serv_t;
 
-void server_create(serv_t *server);
-void server_binder(serv_t *server);
-
+void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR);
 void socket_listen(serv_t *server, uint16_t *status, uint16_t *error);
 void socket_accept(serv_t *server, uint16_t *status, uint16_t *error);
 

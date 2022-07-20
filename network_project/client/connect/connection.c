@@ -8,12 +8,13 @@ Dealing with Client connection.
 
 static void client_create(clnt_t *client) {
 /*Client socker being created.*/
+
   Render_Header("CONNECT", "You've been connected! Please enter username");
-  System_Message("Creating socket");
+  System_Message("creating socket");
 
   client->sock_desc = socket(AF_INET, SOCK_STREAM, 0);
   if (client->sock_desc < 0) {
-    System_Message("Failed to create socket.");
+    System_Message("failed to create socket.");
     exit(EXIT_FAILURE);
   }
   return;
@@ -21,7 +22,8 @@ static void client_create(clnt_t *client) {
 
 static void client_binder(clnt_t *client, const char *ADDRESS, const char *PORT_STR) {
 /*Client's socket being binder to the server. Handshake bit under the hood.*/
-  System_Message("Binding server to socket.");
+
+  System_Message("binding server to socket.");
 
   uint32_t PORT = atoi(PORT_STR);
 
@@ -33,7 +35,7 @@ static void client_binder(clnt_t *client, const char *ADDRESS, const char *PORT_
     client->sock_desc, (struct sockaddr *) &client->server_address, sizeof(client->server_address));
 
   if (client->conn_stat < 0) {
-    System_Message("Failed connect to server. Address, port or both is incorrect.");
+    System_Message("failed connect to server. Address, port or both is incorrect.");
     exit(EXIT_FAILURE);
   }
   return;
@@ -42,6 +44,7 @@ static void client_binder(clnt_t *client, const char *ADDRESS, const char *PORT_
 void client_connect(clnt_t *client, const char *ADDRESS, const char *PORT_STR) {
 /*Wraps the  previous static functions. If nothing has failed the client tells who he or she is. The plan is it
  *implement this as a part of a validation-process in the future. Password-part unnecessary at the moment.*/
+
   client_create(client);
   client_binder(client, ADDRESS, PORT_STR);
   

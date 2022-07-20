@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------COMMANDER
-better explaination                                                                                              
+Better explaination.                                                                                              
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
 #include "../system/scanner.h"
@@ -46,7 +46,7 @@ static cmnd_item help[] = {
 static uint8_t TABLE = 0x80;
 static uint8_t ATTRB = 0x80;
 static uint8_t ECHOB = 0x80;
-//The static variables TABLE, ATTRB and ECHOB are used as blueprints during the command-session, later attached to PROTOCOL
+//The static variables TABLE, ATTRB and ECHOB are used as blueprints during the command-session, later attached to PROTOCOL.
 
 static void reset_protocol(void) {
   TABLE = 0x80, ATTRB = 0x80, ECHOB = 0x80;
@@ -55,8 +55,8 @@ static void reset_protocol(void) {
 
 static void write_protocol(cmnd_item item, int8_t index) {
 /*'item' and 'index' args determines which state/item we're currently in and which index (command) the user choosed in the
- *'command_scan'-function prior. This data makes it possible for bitwise operation on the 'blueprint-bytes'
- */
+ *'command_scan'-function prior. This data makes it possible for bitwise operation on the 'blueprint-bytes'.*/
+
   switch(item.this_state) {
 
   case CMAIN:
@@ -76,7 +76,7 @@ static void write_protocol(cmnd_item item, int8_t index) {
     ;
   break;
   default:
-    System_Message("Something went south while writing protocol.");
+    System_Message("something went south while writing protocol.");
     exit(EXIT_FAILURE);
   }
   return;

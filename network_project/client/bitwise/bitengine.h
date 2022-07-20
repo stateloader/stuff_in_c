@@ -3,9 +3,9 @@
 
 #include "../system/configs.h"
 
-#define MODES 0 // mode set bit
-#define MODEC 1 // mode clear bit
-#define MODET 2 // mode Toggle bit
+#define MODES 0 // Mode set bit
+#define MODEC 1 // Mode clear bit
+#define MODET 2 // Mode Toggle bit
 
 typedef struct WiseItem {
   const char *name_byte;

@@ -40,9 +40,11 @@ void writer_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   if (delim_count != request->pack_delm) {
     *state |= (1 << ERROR); *error |= (1 << PDERR);
-  } if (request->size_ctrl != request->size_pack) {
+  }
+  if (request->size_ctrl != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << PSERR);
-  } if (request->package[request->size_pack - 1] != '\0') {
+  }
+  if (request->package[request->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR);
   }
   return;
@@ -61,13 +63,13 @@ static reqt_item table_items[] = {
 };
 
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver*/
+/*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver.*/
 
   for (size_t i = 0; i < ARRAY_SIZE(table_items); i++) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
-  System_Message("Sending request to server.");
+  System_Message("sending request to server.");
 
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   if (size_send != request->size_pack) {

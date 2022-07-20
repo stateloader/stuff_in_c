@@ -1,7 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------PUBLISH
-Table created being printed. For now ALL its data but I'll in time implement a menu of some sort making it possible to
-examine the data based on date, name, topic etc. Guess "CRUDE" of some sort could work from here as well, making it
-possiblefor clients/users to manage earlier entries before throwing the request (for change) back to the server. We'll see.                                                             
+Publishes/Prints table created out of received data. For now ALL data. I'll probably implement a menu of some sort making
+it possible to examine the table based on date, name, topic etc.                                                         
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
@@ -9,18 +8,21 @@ possiblefor clients/users to manage earlier entries before throwing the request 
 #include "publish.h"
 
 static void release_memo(mmod_t *mesg, dmod_t *dvce) {
+/*Free memory.*/
 
   if (mesg) {
-    System_Message("Freeing message table.");
+    System_Message("freeing message table.");
     free(mesg); mesg = NULL;
   }
   if (dvce) {
-    System_Message("Freeing device table.");
+    System_Message("freeing device table.");
     free(dvce); dvce = NULL;
   }
 }
 
 static void publish_mesg(mmod_t *mesg, size_t rows) {
+/*Publish message-data.*/
+
   Render_Header("RECORDS", "Messages");
 
   for (size_t i = 0; i < rows; i++)
@@ -29,6 +31,8 @@ static void publish_mesg(mmod_t *mesg, size_t rows) {
 }
 
 static void publish_dvce(dmod_t *dvce, size_t rows) {
+/*Publish device-data (for now "led-history").*/
+
   Render_Header("RECORDS", "Device, LED colour");
 
   for (size_t i = 0; i < rows; i++)
@@ -37,6 +41,7 @@ static void publish_dvce(dmod_t *dvce, size_t rows) {
 }
 
 void publish_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*Examines if read-request. If so, switch tatement checks which table to print in PROTOCOL.*/
   
   if (receive->protocol[EBIDX] & (1 << RWBIT)) return;
 

@@ -10,22 +10,24 @@ Main driver. Runs until something goes (very) south.
 #include "sdriver.h"
 
 static void state_receive(recv_t *receive, dver_t *driver) {
-/*Receive state, core logic runs inside the receive-driver. See RECEIVE MODULE.*/
+/*Receive state. See RECEIVE MODULE.*/
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("Initiates receive driver.");
+  System_Message("initiates receive-driver.");
+
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
 }
 
 static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
-/*After a package has (successfully) been received, this state is about copy received content over to the responder while
- *some checks beeing done. A "middle-hand" of some sort. In earlier interpretations I just pointed at the received data in
- *later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this solution.*/
+/*After a package has (successfully) been received, this state is about copy received content over to the response-members
+ *while some checks being done. A "middle-hand" of some sort. In earlier interpretations I just pointed at the received
+ *data in later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this
+ *solution.*/
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("Initiates curier.");
+  System_Message("initiates curier.");
 
   response->protocol[TBIDX] = receive->protocol[TBIDX];
   response->protocol[ABIDX] = receive->protocol[ABIDX];
@@ -39,9 +41,11 @@ static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
 }
 
 static void state_respond(resp_t *response, dver_t *driver) {
-/*Response state, core logic being ran inside the receive-driver. See RESPONSE MODULE.*/
+/*Response state. See RESPONSE MODULE.*/
 
-  if (driver->status & (1 << ERROR)) return; 
+  if (driver->status & (1 << ERROR)) return;
+  System_Message("initiates response-driver.");
+
   response_driver(response, &driver->status, &driver->error);
 
   return;

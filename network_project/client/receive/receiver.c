@@ -7,10 +7,9 @@
 
 static void validate_pack(recv_t *receive, uint8_t *state, uint16_t *error)  {
 /*A package on both client- and serverside should end with the PROTOCOL. If the received package has a lesser size than
- *'POFFS' or isn't nullterminated it's instantly invalid. Same is true if (in this case) the server has replied with the
- *VALID-bit cleared, meaning something went south when working with the client's request.*/
+ *'POFFS' or isn't nullterminated it's instantly invalid.*/
 
-  System_Message("Validating package.");
+  System_Message("validating package.");
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -23,7 +22,7 @@ static void validate_pack(recv_t *receive, uint8_t *state, uint16_t *error)  {
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
 
   if (receive->protocol[EBIDX] & (0 << VALID)) {
-    *state |= (1 << ERROR); *error |= (1 << IVERR); return;
+    *state |= (1 << ERROR); *error |= (1 << IVERR);
   }
   if (receive->protocol[TBIDX] & (0 << UNBIT)) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
@@ -74,10 +73,10 @@ static void validate_push(recv_t *receive) {
 /*Given original table (write) request, a validation based on which TBIDX-bit set will be printed.*/
 
   if (receive->protocol[TBIDX] & (1 << TMESG))
-    System_Message("Your message was successfully delivered.");
+    System_Message("your message was successfully delivered.");
 
   if (receive->protocol[TBIDX] & (1 << TDVCE))
-    System_Message("Your interaction with the device was successfully executed.");
+    System_Message("your interaction with the device was successfully executed.");
 
   return;
 }
@@ -86,7 +85,7 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
 
-  System_Message("Package received from server.");
+  System_Message("package received from server.");
 
   validate_pack(receive, state, error);
   if (*state & (1 << ERROR)) return;

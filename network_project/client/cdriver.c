@@ -1,5 +1,7 @@
-/*---------------------------------------------------------------------------------------------------------------Controller
-info info info
+/*------------------------------------------------------------------------------------------------------------Client Driver
+When connected, the (a) session going to run through 4 states. During state 'command', client's creating a request which
+being "encoded" into a package sent to the server in state 'request' before receiving server response in state 'reponse'.
+If any error accurs during the process the logic will just "fall through" with immideate return-calls down to <outcome>.
 //-----------------------------------------------------------------------------------------------------------------------*/
 #include "system/error.h"
 #include "bitwise/bitengine.h"
@@ -19,8 +21,10 @@ static void protocol_copy(uint8_t *dest, uint8_t *from) {
 }
 
 static void state_command(dver_t *driver) {
+/*Command state, see COMMAND MODULE*/
 
   if (driver->state & (1 << ERROR)) return;
+
   cmnd_t command = {0};
   command_driver(&command);
   protocol_copy(driver->protocol, command.protocol);
@@ -28,7 +32,8 @@ static void state_command(dver_t *driver) {
 }
 
 static void state_request(dver_t *driver) {
-  
+/*Request state, see REQUEST MODULE*/
+
   if (driver->state & (1 << ERROR)) return;
   driver->state |= (1 << SCOMM);
 
@@ -41,6 +46,7 @@ static void state_request(dver_t *driver) {
 }
 
 static void state_receive(dver_t *driver) {
+/*Request state, see RECEIVE MODULE*/
 
   if (driver->state & (1 << ERROR)) return;
   driver->state |= (1 << SREQT);
@@ -51,8 +57,9 @@ static void state_receive(dver_t *driver) {
 }
 
 static void state_outcome(dver_t *driver) {
-  
-  System_Message("Evaluating session.");
+/*Outcome state*/  
+
+  System_Message("evaluating session.");
   error_driver(driver->state, driver->error);
 }
 

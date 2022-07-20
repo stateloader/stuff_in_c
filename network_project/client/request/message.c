@@ -9,6 +9,7 @@ info info info
 
 static void mesg_scan(mesg_t *message) {
 /*A subject and a comment being created from client input/scan.*/ 
+
   Render_Header("COMPOSE", "Enter subject comment.");
 
   message->size_subj = scan_driver(message->subject, "subject", SBUFF);
@@ -18,9 +19,9 @@ static void mesg_scan(mesg_t *message) {
 }
 
 static void mesg_push(mesg_t *message, reqt_t *request) {
-/*Creates/binds a string - a canonical package of type 'message entry' - to be received and stored in server database.*/
+/*Creates/binds a string - a canonical package of type 'message entry' - to be received by and stored in server database.*/
 
-  System_Message("Initiates message push request.");
+  System_Message("initiates message push request.");
   datetime_attach(request);
 
   request->size_pack = (
@@ -47,7 +48,8 @@ static void mesg_push(mesg_t *message, reqt_t *request) {
 
 static void mesg_pull(reqt_t *request) {
 /*Attaches just the PROTOCOL to the package if the client has requested to read message-records*/
-  System_Message("Initializes message pull request.");
+
+  System_Message("initializes message pull request.");
 
   request->size_pack = POFFS;
   protocol_attach(request);

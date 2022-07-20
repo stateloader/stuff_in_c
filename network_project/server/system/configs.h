@@ -9,7 +9,7 @@ Macros implemented reg
 #include <stdint.h>
 #include <unistd.h>
 
-/*-------------------------------------------------------------------------------------------------------------------------
+/*---------------------------------------------------------------------STATES SERVER (As for now, only ERROR-flag utilized)
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
 ---------------------------------------------------------------------------------------------------------------------------
@@ -17,8 +17,8 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SCONN 0                           // State Connected. When set, server is connected and nothing has gone south, yet.
-#define SCACC 1                           // State Accept. When set, a client has been acepted by the server.
+#define SCONN 0                           // State Connected.
+#define SCACC 1                           // State Accept.
 #define RECVF 2                           // When set, a request has successfully been revieved from the server.
 
 #define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
@@ -103,4 +103,5 @@ TERMINATOR              4                  |                                    
 #define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
 #define NUMBFORM "\t\t\tNUMBTEST [%s] %ld\n\n"
 //------------------------------------------------------------------------------------------------------------------------
+
 #endif
