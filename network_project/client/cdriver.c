@@ -1,8 +1,9 @@
-/*------------------------------------------------------------------------------------------------------------Client Driver
+/*------------------------------------------------------------------------------------------------------------CLIENT DRIVER
 When connected, the (a) session going to run through 4 states. During state 'command', client's creating a request which
 being "encoded" into a package sent to the server in state 'request' before receiving server response in state 'reponse'.
 If any error accurs during the process the logic will just "fall through" with immideate return-calls down to <outcome>.
 //-----------------------------------------------------------------------------------------------------------------------*/
+
 #include "system/error.h"
 #include "bitwise/bitengine.h"
 #include "connect/connection.h"
@@ -24,43 +25,57 @@ static void state_command(dver_t *driver) {
 /*Command state, see COMMAND MODULE*/
 
   if (driver->state & (1 << ERROR)) return;
+  driver->state |= (1 << SCOMM);
 
-  cmnd_t command = {0};
-  command_driver(&command);
-  protocol_copy(driver->protocol, command.protocol);
+  uint8_t protocol[3] = {0};
+  command_driver(protocol);
+  protocol_copy(driver->protocol, protocol);
+
   return;
 }
 
 static void state_request(dver_t *driver) {
-/*Request state, see REQUEST MODULE*/
+/*Request state, see REQUEST MODULE.*/
 
   if (driver->state & (1 << ERROR)) return;
-  driver->state |= (1 << SCOMM);
+
+  driver->state &= ~(1 << SCOMM);
+  driver->state |= (1 << SREQT);
 
   reqt_t request = {.sock_desc = driver->client.sock_desc};
+
   protocol_copy(request.protocol, driver->protocol);
   request.size_user = string_copy(request.username, driver->client.username, SBUFF);
+
   request_driver(&request, &driver->state, &driver->error);
 
   return;
 }
 
 static void state_receive(dver_t *driver) {
-/*Request state, see RECEIVE MODULE*/
+/*Request state, see RECEIVE MODULE.*/
 
   if (driver->state & (1 << ERROR)) return;
-  driver->state |= (1 << SREQT);
+
+  driver->state &= ~(1 << SREQT);
+  driver->state |= (1 << SRECV);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
+  
   receive_driver(&receive, &driver->state, &driver->error);
   publish_driver(&receive, &driver->state, &driver->error);
+
+  return;
 }
 
 static void state_outcome(dver_t *driver) {
-/*Outcome state*/  
+/*Outcome state, checks for errors and asks for more.*/
 
-  System_Message("evaluating session.");
   error_driver(driver->state, driver->error);
+  if (driver->state & (1 << ERROR)) return;
+
+  driver->state &= ~(1 << SREQT);
+  driver->state &= ~(1 << SCONN);
 }
 
 void client_driver(dver_t *driver) {
@@ -69,5 +84,4 @@ void client_driver(dver_t *driver) {
   state_request(driver);
   state_receive(driver);
   state_outcome(driver);
-
 }

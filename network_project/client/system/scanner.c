@@ -32,7 +32,7 @@ static void scan_byte(scan_t *scanner) {
 }
 
 static void scan_size(scan_t *scanner) {
-/*Checks input is within the boarders for allowed input-sizes (max 'broken at the moment')*/
+/*Checks input is within the boarders for allowed input-sizes (max 'broken' at the moment)*/
 
   if (scan_check_minl(scanner->size_scan, 1)) {
     System_Message("Enter at least one character.");
@@ -59,14 +59,14 @@ static void scan_input(scan_t *scanner, char *prompt) {
 }
 
 size_t scan_driver(char *user_input, char *prompt, size_t size_buffer) {
-/*Statemachine of some sort starting with input followed by some checks*/
+/*State-machine of some sort starting with input followed by some checks*/
 
   scan_t scanner = {.state = SSCAN,.size_buff = size_buffer};
   scanner.scan_input = user_input;
 
   while (scanner.state != SDONE) {
-    switch(scanner.state) {
 
+    switch(scanner.state) {
     case SSCAN:
       scan_input(&scanner, prompt);
     break;
@@ -77,12 +77,9 @@ size_t scan_driver(char *user_input, char *prompt, size_t size_buffer) {
       scan_byte(&scanner);
     break;
     default:
+      System_Message("ScanError - Reached default for some reason.");
       exit(EXIT_FAILURE);
     }
   }
-  //size_t size_copy = string_copy(user_input, scanner.scan_input, SBUFF);
-  //user_input[size_copy - 1] = '\0';
-
- // return size_copy;
-   return scanner.size_scan;
+  return scanner.size_scan;
 }

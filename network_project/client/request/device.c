@@ -8,7 +8,7 @@ info info info
 #include "device.h"
 
 static void dvce_scan(uint8_t push, devc_t *device) {
-/*A short string being attached to the dvce push-package corresponding with whatever LED-colour the user choosed.*/
+/*A short string being attached to the dvce push-package corresponding with whatever LED-colour the user "picked".*/
 
   if (push & (1 << ATTR0))
     device->size_push = string_copy(device->dvcepush, "RED", SBUFF);
@@ -67,7 +67,7 @@ void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     dvce_pull(request);
     reader_validate(request, state, error);
   break;
-
+  
   case DVCEW:
     dvce_push(&device, request);
     writer_validate(request, state, error);

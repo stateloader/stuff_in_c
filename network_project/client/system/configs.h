@@ -39,11 +39,11 @@ ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR
 #define IVERR 12                          // Server has cleared VALID-flag.
 #define MMERR 13                          // Failed to allocate memory for table.
 
-/*------------------------------------------------------------------------------------------------------------------POTOCOL
-The protocol, throughout the comments referred to as 'PROTOCOL' consist of 4 bytes. 3 unsigned and a signed terminator.
-This protocol will be attached at the end of every package from both the server and the client during transmissions. For
-the moment it's just possble to write/read records regarding comments and interact with the device and read its historical
-records. Much logic across the program is mostly in place for 'scaling'; for eventual later implementations. 
+/*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
+The protocol, throughout the comments referred to as 'PROTOCOL' consist of 3 bytes (and a NULL-terminator). This protocol
+will be attached at the end of every package from both the server and the client during transmissions. For the moment it's
+just possble to write/read regarding comments and the device. Much logic across the program is mostly in place for making
+it easier to scale things up down the road.
 
 BIT (N)          INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------------------------------
@@ -52,17 +52,15 @@ TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    - 
 ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
 ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
----------------------------------------------------------------------------------------------------------------------------
-TERMINATOR         4                       |                                     NULL                                     |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define UNBIT 7
-//------------------------------------------------------------------------------------------------------------------------
-#define TBIDX 0                           // Table Byte Index (in PROTOCOL).
-#define ABIDX 1                           // Attribute Byte Index (in PROTOCOL).
-#define EBIDX 2                           // ECHO Byte Index (in PROTOCOL).
+#define UNBIT 7                           // Most Significant Bit. Always set, constant used for error-checking/formatting.
+
+#define TBIDX 0                           // Table Byte Index.
+#define ABIDX 1                           // Attribute Byte Index.
+#define EBIDX 2                           // Echo Byte Index.
 //---------------------------------------------------------------------------------------------------------------Table Bits
-#define TMESG 0                           // Table Message Byte, indicates there's message-business ongoing.
-#define TDVCE 1                           // Table Device Byte, indicates there's device-business ongoing.
+#define TMESG 0                           // Table Message Byte
+#define TDVCE 1                           // Table Device Byte
 //-----------------------------------------------------------------------------------------------------------Attribute Bits
 #define ATTR0 0
 #define ATTR1 1
@@ -78,7 +76,7 @@ TERMINATOR         4                       |                                    
 #define RBUFF 4096                        // Receive Buffer
 #define SBUFF 512                         // Standard (Input) Buffer.
 #define TBUFF 22                          // Datetime Buffer
-#define POFFS 4                           // Package offset (size added for 3 protocol bytes and a terminator.
+#define POFFS 4                           // Package offset (size added/reduced for PROTOCOL and a terminator.
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'                         // Delimiter.
 #define DMESG 4                           // Delemiters (in) Message.

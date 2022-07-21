@@ -3,25 +3,21 @@
 
 #include "../system/configs.h"
 
-#define CMAIN 0   // command main
-#define CMESG 1   // command message
-#define CDVCE 2   // command device
-#define CDLED 3   // command device Led
-#define CHELP 4   // command help
-#define CINIT 5   // command init
-#define CEXIT 6   // command exit
+#define CMAIN 0   // Command Main
+#define CMESG 1   // Command Message
+#define CDVCE 2   // Command Device
+#define CDLED 3   // Command Device Led
+#define CHELP 4   // Command Help
+#define CINIT 5   // Command Init
+#define CEXIT 6   // Command Exit
 
-typedef struct CommandItem {
-  const uint8_t this_state;
-  const uint8_t next_state;
-  const char *cmnd;
-} cmnd_item;
-
-typedef struct commander {
-  uint8_t state;
+typedef struct Commander {
+  uint8_t menu_state;
   uint8_t protocol[3];
+  size_t size_cmnd;
+  char cmnd[SBUFF];
 } cmnd_t;
 
-void command_driver(cmnd_t *command);
+void command_driver(uint8_t *protocol);
 
 #endif

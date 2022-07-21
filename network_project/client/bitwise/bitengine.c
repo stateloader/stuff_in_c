@@ -16,7 +16,7 @@ static void print_done(uint8_t *byte, uint8_t flag, wise_item *item) {
 }
 
 void bitwise_operation(uint8_t *byte, int32_t mode, uint8_t flag, wise_item *item) {
-/*Engine of some sort dealing with bitoperations on the controller*/
+/*Engine of some sort dealing with bitoperations.*/
 
   print_init(byte, flag, item);
   switch(mode) {

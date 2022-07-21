@@ -3,10 +3,10 @@
 
 #include "configs.h"
 
-#define SSCAN 0  // state scan.
-#define SSCHK 1  // state size check.
-#define SBCHK 2  // state byte check. 
-#define SDONE 3  // state done.
+#define SSCAN 0  // State Scan.
+#define SSCHK 1  // State Size Check.
+#define SBCHK 2  // State Byte Check. 
+#define SDONE 3  // State Done.
 
 typedef struct scanner {
   uint8_t state;

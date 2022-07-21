@@ -8,7 +8,7 @@ info info info
 #include "message.h"
 
 static void mesg_scan(mesg_t *message) {
-/*A subject and a comment being created from client input/scan.*/ 
+/*A subject and a comment being entered/created by client input/scan.*/ 
 
   Render_Header("COMPOSE", "Enter subject comment.");
 
@@ -62,11 +62,11 @@ void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
   int32_t route = (request->protocol[EBIDX] & (1 << RWBIT)) ? MESGW : MESGR;
 
   switch (route) {
+
   case MESGR:
     mesg_pull(request);
     reader_validate(request, state, error);
   break;
-
   case MESGW:
     mesg_scan(&message);
     mesg_push(&message, request);

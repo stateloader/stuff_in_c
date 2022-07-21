@@ -9,12 +9,12 @@ Dealing with Client connection.
 static void client_create(clnt_t *client) {
 /*Client socker being created.*/
 
-  Render_Header("CONNECT", "You've been connected! Please enter username");
+  Render_Header("CONNECT", "Q(oo)-o");
   System_Message("creating socket");
 
   client->sock_desc = socket(AF_INET, SOCK_STREAM, 0);
   if (client->sock_desc < 0) {
-    System_Message("failed to create socket.");
+    System_Message("Failed to create socket.");
     exit(EXIT_FAILURE);
   }
   return;

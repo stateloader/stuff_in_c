@@ -4,9 +4,6 @@ Dealing with Server connection(s).
 #include <stdlib.h>
 #include "connection.h"
 
-//static const char *ADDRESS = "127.0.0.1";
-//static const int32_t PORT = 90190;
-
 static void server_create(serv_t *server) {
 /*creates a socket for two-way communication.*/
 

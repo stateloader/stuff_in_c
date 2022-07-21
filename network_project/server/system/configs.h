@@ -47,20 +47,18 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 #define RCERR 15                          // Failed to response client.
 
 /*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
-The protocol, throughout the comments referred to as 'PROTOCOL' consist of 4 bytes. 3 unsigned and a signed terminator.
-This protocol will be attached at the end of every package from both the server and the client during transmissions. For
-the moment it's just possble to write/read records regarding comments and interact with the device and read its historical
-records. Much logic across the program is mostly in place for (eventual) later implementations. 
+The protocol, throughout the comments referred to as 'PROTOCOL' consist of 3 bytes (and a NULL-terminator). This protocol
+will be attached at the end of every package from both the server and the client during transmissions. For the moment it's
+just possble to write/read records regarding comments and interact with the device and read its historical records. Much
+logic across the program is mostly in place for (eventual) later implementations. 
 
-BIT (N)          INDEX (IN PROTOCOL)           7         6         5         4         3          2         1        0
+BIT (N)          INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------------------------------
-TABLE BYTE              0                  |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
+TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
 ---------------------------------------------------------------------------------------------------------------------------
-ATTRIBUTE BYTE          1                  |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
+ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE               3                  |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
----------------------------------------------------------------------------------------------------------------------------
-TERMINATOR              4                  |                                     NULL                                     |
+ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
 -------------------------------------------------------------------------------------------------------------------------*/
 #define UNBIT 7
 //---------------------------------------------------------------------------------------------------------------TABLE BITS
