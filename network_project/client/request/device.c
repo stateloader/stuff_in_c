@@ -21,16 +21,14 @@ static void dvce_scan(uint8_t push, devc_t *device) {
 }
 
 static void dvce_push(devc_t *device, reqt_t *request) {
-/*Creates/binds a string - a canonical package of type 'device entry' - to be received and stored in server database.*/
+/*Creates a Device push-request by binding all relevant data into a canonical string.*/
 
   System_Message("initiates device push request.");
 
   datetime_attach(request);
   dvce_scan(request->protocol[ABIDX], device);
 
-  request->size_pack = (
-    request->size_user + request->size_datm + device->size_push + POFFS  // func för va args kanske
-  );
+  request->size_pack = (request->size_user + request->size_datm + device->size_push + POFFS);
 
   request->username[request->size_user - 1] = DELIM;
   request->datetime[request->size_datm - 1] = DELIM;
@@ -41,13 +39,12 @@ static void dvce_push(devc_t *device, reqt_t *request) {
   strncat(request->package, device->dvcepush, request->size_pack);
 
   protocol_attach(request);
-  request->size_ctrl = string_size(request->package, SBUFF);
   
   return;
 }
 
 static void dvce_pull(reqt_t *request) {
-/*Attaches just the PROTOCOL to the package if the client has requested to read device-records*/
+/*Creates a Device pull-request. Only PROTOCOL (and terminator) necessary.*/
 
   System_Message("initiates device pull request.");
 
@@ -65,17 +62,12 @@ void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   case DVCER:
     dvce_pull(request);
-    reader_validate(request, state, error);
-  break;
-  
+    break;
   case DVCEW:
     dvce_push(&device, request);
-    writer_validate(request, state, error);
-  break;
-
+    break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
-  break;
   }
   return;
 }

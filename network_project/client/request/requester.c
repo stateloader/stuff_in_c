@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------REQUESTER
-info info info                                                                                           
+                                                                                    
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
 #include "../connect/connection.h"
@@ -8,8 +8,41 @@ info info info
 #include "message.h"
 #include "requester.h"
 
+static void validate_push(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*Some checks before a push-request being sent to the server.*/
+
+  size_t delim_count = 0;
+  for (size_t i = 0; i < request->size_pack; i++)
+    delim_count += (request->package[i] == DELIM) ? 1 : 0;
+
+  if (delim_count != request->pack_delm) {
+    *state |= (1 << ERROR); *error |= (1 << PDERR);
+  }//wrong delimiter-format.
+  if (request->size_pack < POFFS) {
+    *state |= (1 << ERROR); *error |= (1 << PSERR);
+  }//corrupted size on package.
+  if (request->package[request->size_pack - 1] != '\0') {
+    *state |= (1 << ERROR); *error |= (1 << PTERR);
+  }//package isn't nullterminated.
+
+  return;
+}
+
+static void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*Some checks before a pull-request being sent to the server.*/
+
+  if (request->package[request->size_pack - 1] != '\0') {
+    *state |= (1 << ERROR); *error |= (1 << PTERR);
+  }//package isn't nullterminated.
+
+  return;
+}
+static reqt_item table_items[] = {
+  {TMESG, message_driver}, {TDVCE, device_driver}
+};
+
 void datetime_attach(reqt_t *request) {
-/*Creating a timestamp attached to every push/write request-packages.*/
+/*Attaches a timestamp to a packages.*/
 
   strncat(request->datetime, __DATE__, TBUFF);
   strncat(request->datetime, " ", TBUFF);
@@ -20,8 +53,7 @@ void datetime_attach(reqt_t *request) {
 }
 
 void protocol_attach(reqt_t *request) {
-/*Attaches the PROTOCOL (set during the client's endeavours in COMMAND MODULE). These 4 bytes, regardless push/write or
- *pull/read requests, ends every request sent to the server.*/
+/*Attaches the PROTOCOL (and nullterminator) to packages.*/
 
   request->package[request->size_pack - 4] = request->protocol[TBIDX];
   request->package[request->size_pack - 3] = request->protocol[ABIDX];
@@ -31,37 +63,6 @@ void protocol_attach(reqt_t *request) {
   return;
 }
 
-void writer_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*A few checks before a push-request being thrown at the server.*/
-
-  size_t delim_count = 0;
-  for (size_t i = 0; i < request->size_pack; i++)
-    delim_count += (request->package[i] == DELIM) ? 1 : 0;
-
-  if (delim_count != request->pack_delm) {
-    *state |= (1 << ERROR); *error |= (1 << PDERR);
-  }
-  if (request->size_ctrl != request->size_pack) {
-    *state |= (1 << ERROR); *error |= (1 << PSERR);
-  }
-  if (request->package[request->size_pack - 1] != '\0') {
-    *state |= (1 << ERROR); *error |= (1 << PTERR);
-  }
-  return;
-}
-
-void reader_validate(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*A few checks before a pull-request being thrown at the server.*/
-
-  if (request->package[request->size_pack - 1] != '\0') {
-    *state |= (1 << ERROR); *error |= (1 << PTERR);
-  }
-  return;
-}
-static reqt_item table_items[] = {
-  {TMESG, message_driver}, {TDVCE, device_driver}
-};
-
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver.*/
 
@@ -69,11 +70,14 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
+  if (*state & (1 << ERROR)) return;
+
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
+  System_Message("sending request to server.");
+  
   if (size_send != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << RSERR);
-    return;
   }
-  System_Message("sending request to server.");
+
   return;
 }

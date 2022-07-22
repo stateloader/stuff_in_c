@@ -76,8 +76,12 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
   return;
   }
 
-  System_Message("Sending response to client.");
+  if (!(*state & (1 << ERROR)))
+    response->response[response->size_resp - 2] |= (1 << VALID);
+  
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
+  System_Message("Sending response to client.");
+
   if (size_send != response->size_resp) {
     *state |= (1 << ERROR); *error |= (1 << RCERR);
   }

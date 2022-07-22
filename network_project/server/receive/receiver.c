@@ -6,21 +6,25 @@ First leg of the (a) client's request starts with the receival. It happens here 
 #include "receiver.h"
 
 static void validate_receival(recv_t *receive, uint16_t *state, uint16_t *error) {
-/*A received package's last 4 bytes should be PROTOCOL. These being assigned to the receiver's protocol-member for easy
- *access during the errant.*/
+/*A received package's last 4 bytes should be PROTOCOL and terminator. These being assigned to the receiver's
+ *protocol-member for easy access during the errant.*/
 
   System_Message("Validating package.");
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << RTERR); return;
-  }// Received package not nullterminated.
+  }//received package not nullterminated.
   if (receive->size_pack < POFFS) {
     *state |= (1 << ERROR); *error |= (1 << RSERR); return;
-  }// Received package size lesser than ("mandatory") protocol-size.
+  }//received package size lesser than ("mandatory") protocol-size.
 
   receive->protocol[TBIDX] = receive->package[receive->size_pack - 4];
   receive->protocol[ABIDX] = receive->package[receive->size_pack - 3];
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
+
+  PrintByte(receive->protocol[TBIDX]);
+  PrintByte(receive->protocol[ABIDX]);
+  PrintByte(receive->protocol[EBIDX]);
 
   if (receive->protocol[TBIDX] & (0 << UNBIT)) {
     *state |= (1 << ERROR); *error |= (1 << RUERR);
@@ -28,7 +32,7 @@ static void validate_receival(recv_t *receive, uint16_t *state, uint16_t *error)
     *state |= (1 << ERROR); *error |= (1 << RUERR);
   } if (receive->protocol[EBIDX] & (0 << UNBIT)) {
     *state |= (1 << ERROR); *error |= (1 << RUERR);
-  }// Most significant bit isn't set (equals corrupted protocol).
+  }//most significant bit isn't set in given PROTOCOL-byte (equals corrupted protocol).
   return;
 }
 

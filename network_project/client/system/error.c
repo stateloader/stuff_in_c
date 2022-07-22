@@ -6,19 +6,18 @@ info info info
 #include "error.h"
 
 static error_item error_items[] = {
-  {PSERR, "Package",    "Wrong package size."},
-  {PTERR, "Package",    "Package isn't terminated."},
+  {PSERR, "Package",    "Package size is corrupted."},
+  {PTERR, "Package",    "Package isn't nullterminated."},
   {PDERR, "Package",    "Corrupted delimiter-format on package."},
-  {IIERR, "Iterator",   "Failed to fetch an item which should be in place."},
+  {IFERR, "System",     "Failed to fetch an item which should be in place."},
   {CPERR, "System",     "Copy failure."},
-  {SDERR, "Switch",     "Defaulted switch-statement that shouldn't."},
-  {RSERR, "Request",    "Failed to send package, size of size_pack and size_send differ."},
-  {RRERR, "Response",   "Failed to receive package, size of size_pack and size_recv differ."},
-  {PBERR, "Response",   "Protocol MSB not set."},
-  {DCERR, "Response",   "Delimiter count corrupted."},
-  {IVERR, "Response",   "Request invalid."},
-  {MMERR, "Memory",     "Failed to allocate memory for table."}
+  {SDERR, "System",     "Defaulted Switch-statement."},
+  {RSERR, "Request",    "Sent package is corrupted (control-size and send-size differ)."},
+  {PBERR, "Response",   "MSB (one or more bytes) in PROTOCOL isn't set."},
+  {PIERR, "Response",   "Package (response) has its VALID-flag cleared (Something went south server-side)."},
+  {MAERR, "Memory",     "Failed to allocate memory."}
 };
+
 
 static void print_errors(uint8_t status, uint16_t error) {
 /*Prints error(s) detected.*/

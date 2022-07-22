@@ -22,7 +22,6 @@ static void release_memo(mmod_t *mesg, dmod_t *dvce) {
 
 static void publish_mesg(mmod_t *mesg, size_t rows) {
 /*Publish message-data.*/
-
   Render_Header("RECORDS", "Messages");
 
   for (size_t i = 0; i < rows; i++)
@@ -32,7 +31,6 @@ static void publish_mesg(mmod_t *mesg, size_t rows) {
 
 static void publish_dvce(dmod_t *dvce, size_t rows) {
 /*Publish device-data (for now "led-history").*/
-
   Render_Header("RECORDS", "Device, LED colour");
 
   for (size_t i = 0; i < rows; i++)

@@ -1,4 +1,3 @@
-
 #ifndef CSTRINGS_H_
 #define CSTRINGS_H_
 #include "configs.h"

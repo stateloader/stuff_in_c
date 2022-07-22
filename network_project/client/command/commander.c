@@ -61,11 +61,7 @@ static void protocol_write(menu_item item, int8_t index) {
 /*Set bits to PROTOCOL "on the fly". Guess the Exemple-comment below makes this mess easier to understand.*/
 
   switch(item.this_state) {
-/*------------------------------------------------------------------------------------------------------------Weird Example
-Current 'menu_state' is CMAIN and client has entered "-comment". Hence bit 0 ("comment-business") will be set in 
-Now, 'next_state' going to be CMESG where the user enters -read or -send wheras their index-positions tells if
-the PROTOCOL's ECHO_BYTE going to have its RWBIT (read/write to database) set or cleared. Returns CINIT.
--------------------------------------------------------------------------------------------------------------------------*/
+
   case CMAIN:
     protocol_reset();
     TABLE |= (1 << index);
@@ -155,6 +151,12 @@ void command_driver(uint8_t *protocol) {
   return;
 }
 
+
+/*------------------------------------------------------------------------------------------------------------Weird Example
+Current 'menu_state' is CMAIN and client has entered "-comment". Hence bit 0 ("comment-business") will be set in 
+Now, 'next_state' going to be CMESG where the user enters -read or -send wheras their index-positions tells if
+the PROTOCOL's ECHO_BYTE going to have its RWBIT (read/write to database) set or cleared. Returns CINIT.
+-------------------------------------------------------------------------------------------------------------------------*/
 
 /*Every state has its own menu; 'items'. It and its size being fed into the 'command-scanner' where the allowed commands
  *being printed before the user choose one of them.

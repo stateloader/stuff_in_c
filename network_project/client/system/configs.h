@@ -7,37 +7,32 @@ Macros implemented reg
 #include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
-
 /*------------------------------------------------------------------------------------------------------------STATES CLIENT
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRECV  |  SREQT  |  SCOMM  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define SCONN 0                           // State Connected.
-#define SCOMM 1                           // State Command.
-#define SREQT 2                           // State Request.
-#define SRECV 3                           // State Receive.
+#define SCONN 0   // State Connected.
+#define SCOMM 1   // State Command.
+#define SREQT 2   // State Request.
+#define SRECV 3   // State Receive.
 
-#define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
+#define ERROR 7   /* State Error.         Something went wrong-----------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |  SDERR  |    -    |  MMERR  |  IVERR  |  DCERR  |  PBERR  |  RRERR  |  RSERR  |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |  MAERR  |  PIERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-ERROR LOW BYTE                            |  SDERR  |  TPERR  |  IIERR  |  PDERR  |  PTERR  |  PSERR  |  SCERR  |  SSERR  |
+ERROR LOW BYTE                            |  PBERR  |  RSERR  |  SDERR  |  CPERR  |  IFERR  |  PDERR  |  PTERR  |  PSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define SSERR 0                           // Failed to create create client-socket.                         
-#define SCERR 1                           // Failed to connect to server.
-#define PSERR 2                           // Package size error, sizes between sent and created doesn't match. 
-#define PTERR 3                           // Package (not) terminated error, package isn't nullterminated.
-#define PDERR 4                           // The supposed amount the entry's delimiter-constant supposed to be is wrong.
-#define IIERR 5                           // Failed to fetch an item (wich should be in place).
-#define CPERR 6                           // Copy Failure.
-#define SDERR 7                           // A given switch-statment has reach default (for some reason).
-#define RSERR 8                           // Failed to send package, size of size_pack and size_send differ.
-#define RRERR 9                           // Failed to receive package, size of size_pack and size_recv differ.
-#define PBERR 10                          // Protocol Byte wrong format.
-#define DCERR 11                          // Delimitier count corrupted.
-#define IVERR 12                          // Server has cleared VALID-flag.
-#define MMERR 13                          // Failed to allocate memory for table.
+#define PSERR 0   // Package Size         Package size is corrupted.
+#define PTERR 1   // Package Terminate    Package isn't nullterminated.
+#define PDERR 2   // Package Delimiter    Corrupted delimiter-format on package.
+#define IFERR 3   // Iterate Fetch        Failed to fetch an item during iteration (wich should be in place).
+#define CPERR 4   // Copy                 Copy (String) is corrupted.
+#define SDERR 5   // Switch Default       Defaulted Switch-statement.
+#define RSERR 6   // Request Send         Sent package is corrupted (control-size and send-size differ).
+#define PBERR 7   // Protocol Byte        MSB (one or more bytes) in PROTOCOL isn't set.
+#define PIERR 8   // Package Invalid      Package (response) has its VALID-flag cleared (Something went south server-side).
+#define MAERR 9   // Memory Alloc         Failed to allocate memory.
 
 /*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
 The protocol, throughout the comments referred to as 'PROTOCOL' consist of 3 bytes (and a NULL-terminator). This protocol
@@ -45,22 +40,20 @@ will be attached at the end of every package from both the server and the client
 just possble to write/read regarding comments and the device. Much logic across the program is mostly in place for making
 it easier to scale things up down the road.
 
-BIT (N)          INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
+BIT (N)         INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------------------------------
-TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
+TABLE BYTE      0                         |  MSBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG  |
 ---------------------------------------------------------------------------------------------------------------------------
-ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
+ATTRIBUTE BYTE  1                         |  MSBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0  |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE          2                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
+ECHO BYTE       2                         |  MSBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT  |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define UNBIT 7                           // Most Significant Bit. Always set, constant used for error-checking/formatting.
-
-#define TBIDX 0                           // Table Byte Index.
-#define ABIDX 1                           // Attribute Byte Index.
-#define EBIDX 2                           // Echo Byte Index.
+#define TBIDX 0   // Table Byte Index.
+#define ABIDX 1   // Attribute Byte Index.
+#define EBIDX 2   // Echo Byte Index.
 //---------------------------------------------------------------------------------------------------------------Table Bits
-#define TMESG 0                           // Table Message Byte
-#define TDVCE 1                           // Table Device Byte
+#define TMESG 0   // Table Message Byte
+#define TDVCE 1   // Table Device Byte
 //-----------------------------------------------------------------------------------------------------------Attribute Bits
 #define ATTR0 0
 #define ATTR1 1
@@ -70,18 +63,20 @@ ECHO BYTE          2                       |  UNBIT  |  VALID  |    -    |    - 
 #define ATTR5 5
 #define ATTR6 6
 //---------------------------------------------------------------------------------------------------------------Echo Bits
-#define RWBIT 0                           // Read/Write bit.
+#define RWBIT 0   // Read/Write bit.
 #define VALID 6
+//------------------------------------------------------------------------------------------------------------------------
+#define MSBIT 7   // Most Significant Bit. Always set in bytes belonging to PROTOCOL.
 //-----------------------------------------------------------------------------------------------------------------BUFFERS
-#define RBUFF 4096                        // Receive Buffer
-#define SBUFF 512                         // Standard (Input) Buffer.
-#define TBUFF 22                          // Datetime Buffer
-#define POFFS 4                           // Package offset. Size added/reduced for PROTOCOL (and a terminator).
+#define RBUFF 4096  // Receive Buffer.
+#define SBUFF 512 // Standard Buffer.
+#define TBUFF 22  // Datetime Buffer.
+#define POFFS 4   // Package offset.    Size added/reduced for PROTOCOL (and a terminator).
 //---------------------------------------------------------------------------------------------------------------DELIMITER
-#define DELIM '|'                         // Delimiter.
-#define DMESG 4                           // Delemiters (in) Message.
-#define DDVCE 3                           // Delimiters (in) Device.
-//----------------------------------------------------------------------------------------------------------------GRAPHICS
+#define DELIM '|' // Delimiter.
+#define DMESG 4   // Delemiters Message.
+#define DDVCE 3   // Delimiters Device.
+//---------------------------------------------------------------------------------------------------------------"GRAPHICS"
 #define FORM_INFO "\t\t\t%s\n"
 #define System_Message(info) printf(FORM_INFO, info);
 

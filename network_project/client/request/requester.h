@@ -7,7 +7,6 @@ typedef struct Requester {
   int32_t sock_desc;
   uint8_t protocol[3];
   size_t pack_delm;
-  size_t size_ctrl;
   size_t size_user;
   char username[SBUFF];
   size_t size_datm;
@@ -25,10 +24,6 @@ typedef struct RequestItem {
 
 void datetime_attach(reqt_t *request);
 void protocol_attach(reqt_t *request);
-
-void writer_validate(reqt_t *request, uint8_t *state, uint16_t *error);
-void reader_validate(reqt_t *request, uint8_t *state, uint16_t *error);
-
 void request_driver(reqt_t *requester, uint8_t *state, uint16_t *error);
 
 #endif
