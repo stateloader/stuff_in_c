@@ -27,9 +27,7 @@ static void state_command(dver_t *driver) {
   if (driver->state & (1 << ERROR)) return;
   driver->state |= (1 << SCOMM);
 
-  uint8_t protocol[3] = {0};
-  command_driver(protocol);
-  protocol_copy(driver->protocol, protocol);
+  command_driver(driver->protocol);
 
   return;
 }

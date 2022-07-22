@@ -11,11 +11,18 @@
 #define CINIT 5   // Command Init
 #define CEXIT 6   // Command Exit
 
+typedef struct MenuItem {
+  const uint8_t this_state;
+  const uint8_t next_state;
+  const char *cmnd;
+} menu_item;
+
 typedef struct Commander {
   uint8_t menu_state;
   uint8_t protocol[3];
   size_t size_cmnd;
   char cmnd[SBUFF];
+  menu_item *current;
 } cmnd_t;
 
 void command_driver(uint8_t *protocol);

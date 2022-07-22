@@ -51,7 +51,7 @@ TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    - 
 ---------------------------------------------------------------------------------------------------------------------------
 ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
+ECHO BYTE          2                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
 -------------------------------------------------------------------------------------------------------------------------*/
 #define UNBIT 7                           // Most Significant Bit. Always set, constant used for error-checking/formatting.
 
@@ -76,7 +76,7 @@ ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    - 
 #define RBUFF 4096                        // Receive Buffer
 #define SBUFF 512                         // Standard (Input) Buffer.
 #define TBUFF 22                          // Datetime Buffer
-#define POFFS 4                           // Package offset (size added/reduced for PROTOCOL and a terminator.
+#define POFFS 4                           // Package offset. Size added/reduced for PROTOCOL (and a terminator).
 //---------------------------------------------------------------------------------------------------------------DELIMITER
 #define DELIM '|'                         // Delimiter.
 #define DMESG 4                           // Delemiters (in) Message.
