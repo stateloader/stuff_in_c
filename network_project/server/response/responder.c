@@ -72,7 +72,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
     database_push(response, state, error);
   break;
   default:
-    *state |= (1 << ERROR); *error |= (1 << SWERR);
+    *state |= (1 << ERROR); *error |= (1 << SDERR);
   return;
   }
   
@@ -81,7 +81,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
 
   System_Message("Sending response to client.");
   if (size_send != response->size_resp) {
-    *state |= (1 << ERROR); *error |= (1 << RCERR);
+    *state |= (1 << ERROR); *error |= (1 << PSERR);
   }
   return;
 }

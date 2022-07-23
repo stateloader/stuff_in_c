@@ -66,11 +66,14 @@ void protocol_attach(reqt_t *request) {
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver.*/
 
+  request->protocol[EBIDX] |= (1 << VALID);
+
   for (size_t i = 0; i < ARRAY_SIZE(table_items); i++) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
-  if (*state & (1 << ERROR)) return;
+  if (*state & (1 << ERROR))
+    request->package[request->size_pack - 2] &= ~(1 << VALID);
 
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   System_Message("sending request to server.");

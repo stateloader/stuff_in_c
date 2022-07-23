@@ -35,7 +35,7 @@ static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
 
   response->size_recv = string_copy(response->received, receive->package, SBUFF);
   if (response->size_recv != receive->size_pack) {
-    driver->status |= (ERROR); driver->error |= (1 << PCERR);
+    driver->status |= (ERROR); driver->error |= (1 << CPERR);
   }
   return;
 }
