@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------PUBLISH
-Publishes/Prints table created out of received data. For now ALL data. I'll probably implement a menu of some sort making
-it possible to examine the table based on date, name, topic etc.                                                         
+Publishes/Prints table created out of received data. For now ALL DATA. I'll probably implement a menu of some sort making
+it possible to examine the table based on date, name, topic etc. Guess playing around with CRUDE using linked lists works
+fine as well.                                              
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
@@ -22,7 +23,6 @@ static void release_memo(mmod_t *mesg, dmod_t *dvce) {
 
 static void publish_mesg(mmod_t *mesg, size_t rows) {
 /*Publish message-data.*/
-
   Render_Header("RECORDS", "Messages");
 
   for (size_t i = 0; i < rows; i++)
@@ -32,7 +32,6 @@ static void publish_mesg(mmod_t *mesg, size_t rows) {
 
 static void publish_dvce(dmod_t *dvce, size_t rows) {
 /*Publish device-data (for now "led-history").*/
-
   Render_Header("RECORDS", "Device, LED colour");
 
   for (size_t i = 0; i < rows; i++)
@@ -41,10 +40,7 @@ static void publish_dvce(dmod_t *dvce, size_t rows) {
 }
 
 void publish_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Examines if read-request. If so, switch tatement checks which table to print in PROTOCOL.*/
   
-  if (receive->protocol[EBIDX] & (1 << RWBIT)) return;
-
   switch (receive->protocol[TBIDX]) {
   case PUBL_MESG:
     publish_mesg(receive->table_mesg, receive->amnt_rows);

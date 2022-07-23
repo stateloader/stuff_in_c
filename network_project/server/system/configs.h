@@ -17,54 +17,48 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SCONN 0                           // State Connected.
+#define SCONN 0 //  State Connected.
 #define SCACC 1                           // State Accept.
 #define RECVF 2                           // When set, a request has successfully been revieved from the server.
 
 #define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
-ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR  |  PCERR  |  RUERR  |  RTERR  |  RSERR  |
+ERROR HIGH BYTE                           |    -    |    -    |    -    |  FRERR  |  FWERR  |  SDERR  |  CPERR  |  IFERR  |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
+ERROR HIGH BYTE                           |  PIERR  |  PBERR  |  PDERR  |  PTERR  |  PSERR  |  CAERR  |  CLERR  |  SCERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SSERR 0                           // Server socket Error.
-#define SCERR 1                           // Server connection Error.
-#define CLERR 2                           // Server listening (On Client) Error.
-#define CAERR 3                           // Failed to accepting client.
-#define SWERR 4                           // Switch statement has reached Default.
-#define ITERR 5                           // Iteration failed (where a match should has been vailable).
-#define FOERR 6                           // Failed to Open file.
-#define RWERR 7                           // Failed to read/write to file.
-#define RSERR 8                           // Received package is below lowest accepted size.
-#define RTERR 9                           // Received package isn't nullterminated.
-#define RUERR 10                          // Received package has a corrupted protocol.
-#define PCERR 11                          // Package copy failure.
-#define FWERR 12                          // Failed to write (append) to file.
-#define FRERR 13                          // Failet do read from file.
-#define DDERR 14                          // Delimiter error.
-#define RCERR 15                          // Failed to response client.
+#define SCERR 0   // Server Connection    Connection lost.
+#define CLERR 1   // Client Listening     Failed to listening for clients.
+#define CAERR 2   // Client Accept        Failed to accept client.
+#define PSERR 3   // Package Size         Package size is corrupted.
+#define PTERR 4   // Package Terminate    Package isn't nullterminated.
+#define PDERR 5   // Package Delimiter    Corrupted delimiter-format on package.
+#define PBERR 6   // Protocol Byte        MSB (one or more bytes) in PROTOCOL isn't set.
+#define PIERR 7   // Package Invalid      Package (response) has its VALID-flag cleared (Something went south client-side).
+#define IFERR 8   // Iterate Fetch        Failed to fetch an item during iteration (wich should be in place).
+#define CPERR 9   // Copy                 Copy is corrupted.
+#define SDERR 10  // Switch Default       Defaulted Switch-statement.
+#define FWERR 11  // File Write           Failed write to file.
+#define FRERR 12  // File Reas            Failed read from file.
 
 /*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
-The protocol, throughout the comments referred to as 'PROTOCOL' consist of 3 bytes (and a NULL-terminator). This protocol
-will be attached at the end of every package from both the server and the client during transmissions. For the moment it's
-just possble to write/read records regarding comments and interact with the device and read its historical records. Much
-logic across the program is mostly in place for (eventual) later implementations. 
-
 BIT (N)          INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------------------------------
-TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
+TABLE BYTE         0                       |  MSBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
 ---------------------------------------------------------------------------------------------------------------------------
-ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
+ATTRIBUTE BYTE     1                       |  MSBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
+ECHO BYTE          3                       |  MSBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define UNBIT 7
-//---------------------------------------------------------------------------------------------------------------TABLE BITS
-#define TMESG 0                           // Table Message Byte, indicates there's message-business ongoing.
-#define TDVCE 1                           // Table Device Byte, indicates there's device-business ongoing.
-//-----------------------------------------------------------------------------------------------------------ATTRIBUTE BITS
+#define TBIDX 0   // Table Byte Index.
+#define ABIDX 1   // Attribute Byte Index.
+#define EBIDX 2   // Echo Byte Index.
+//---------------------------------------------------------------------------------------------------------------Table Bits
+#define TMESG 0   // Table Message Byte
+#define TDVCE 1   // Table Device Byte
+//-----------------------------------------------------------------------------------------------------------Attribute Bits
 #define ATTR0 0
 #define ATTR1 1
 #define ATTR2 2
@@ -72,22 +66,20 @@ ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    - 
 #define ATTR4 4
 #define ATTR5 5
 #define ATTR6 6
-//---------------------------------------------------------------------------------------------------------------ECHO BITS
-#define RWBIT 0                           // Read/Write bit.
+//---------------------------------------------------------------------------------------------------------------Echo Bits
+#define RWBIT 0   // Read/Write bit.
 #define VALID 6
 //------------------------------------------------------------------------------------------------------------------------
-#define TBIDX 0                           // Table Byte Index (in PROTOCOL).
-#define ABIDX 1                           // Attribute Byte Index (in PROTOCOL).
-#define EBIDX 2                           // EXHO Byte Index (in PROTOCOL).
+#define MSBIT 7   // Most Significant Bit. Always set in bytes belonging to PROTOCOL.
 //-----------------------------------------------------------------------------------------------------------------BUFFERS
-#define RBUFF 4096                        // Receive Buffer
-#define SBUFF 512                         // Standard (Input) Buffer.
-#define TBUFF 22                          // Datetime Buffer
-#define POFFS 4                           // Package offset (size added for 3 protocol bytes and a terminator.
+#define RBUFF 4096  // Receive Buffer.
+#define SBUFF 512 // Standard Buffer.
+#define TBUFF 22  // Datetime Buffer.
+#define POFFS 4   // Package offset.    Size added/reduced for PROTOCOL (and a terminator).
 //---------------------------------------------------------------------------------------------------------------DELIMITER
-#define DELIM '|'                         // 
-#define DMESG 4
-#define DDVCE 3
+#define DELIM '|' // Delimiter.
+#define DMESG 4   // Delemiters Message.
+#define DDVCE 3   // Delimiters Device.
 //----------------------------------------------------------------------------------------------------------------GRAPHICS
 #define FORM_INFO "\t\t\t%s\n"
 #define System_Message(info) printf(FORM_INFO, info);

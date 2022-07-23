@@ -3,43 +3,45 @@
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "../connect/connection.h"
 #include "models.h"
+#include "publish.h"
 #include "receiver.h"
 
-static void validate_pack(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*A package on both client- and serverside should end with the PROTOCOL. If the received package has a lesser size than
- *'POFFS' or isn't nullterminated it's instantly invalid.*/
-
-  System_Message("validating package.");
+static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
+/*Validates received data. If the received data isn't terminated, or is lesser than POFFS in size, something went
+ *horrible and the func will call return immediately after the error-flags is set.*/
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
-  }
+  }//received package isn't terminated.
   if (receive->size_pack < POFFS) {
-    *state |= (1 << ERROR); *error |= (1 << RSERR); return;
-  }
+    *state |= (1 << ERROR); *error |= (1 << PSERR); return;
+  }//received package is of corrupted size.
+
   receive->protocol[TBIDX] = receive->package[receive->size_pack - 4];
   receive->protocol[ABIDX] = receive->package[receive->size_pack - 3];
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
+  //assigns received protocol. 
 
-  if (receive->protocol[EBIDX] & (0 << VALID)) {
-    *state |= (1 << ERROR); *error |= (1 << IVERR);
-  }
-  if (receive->protocol[TBIDX] & (0 << UNBIT)) {
+  if (!(receive->protocol[EBIDX] & (1 << VALID))) {
+    *state |= (1 << ERROR); *error |= (1 << PIERR);
+  }//received package hasen't valid-flag set.
+  if (!(receive->protocol[TBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }
-  if (receive->protocol[ABIDX] & (0 << UNBIT)) {
+  }//received PROTOCOL corrupted (MSG not set).
+  if (!(receive->protocol[ABIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }
-  if (receive->protocol[EBIDX] & (0 << UNBIT)) {
+  }//received PROTOCOL corrupted (MSG not set).
+  if (!(receive->protocol[EBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }
+  }//received PROTOCOL corrupted (MSG not set).
+
   return;
 }
 
 static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16_t *error) {
- /*Here I'm fetching number of rows in the (current) dataset by dividing all delims found in the received package with the
-  *constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with fetched rows I'm
-  *able to check nothing gone south as well.*/
+ /*I'm fetching number of rows in the (current) dataset by dividing all delims found in the received package with the
+  *constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with fetched rows
+  *I'm able to check that nothing gone south in the process as well.*/
 
   size_t amnt_delm = 0;
 
@@ -48,60 +50,75 @@ static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16
   receive->amnt_rows = (amnt_delm / dcount);
   
   if (amnt_delm % receive->amnt_rows != 0) {
-    *state |= (1 << ERROR); *error |= (1 << DCERR);
-  }
+    *state |= (1 << ERROR); *error |= (1 << PDERR);
+  }//delimiter-count is corrupted.
+
   return;
 }
 
-static void validate_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Table out of (set) Table-bit will be created from received package.*/
+static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*If data received from a request is of type 'pull', an entire database (for the moment) being organised into tables
+ *and published.*/ 
 
   receive->size_pack -= POFFS;
 
-  if (receive->protocol[TBIDX] & (1 << TMESG)) {
+  switch(receive->protocol[TBIDX]) {
+  case RECV_MESG:
     validate_rows(receive, DMESG, state, error);
     receive->table_mesg = table_mesg_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
-  }
-  if (receive->protocol[TBIDX] & (1 << TDVCE)) {
+  break;
+  case RECV_DVCE:
     validate_rows(receive, DDVCE, state, error);
     receive->table_dvce = table_dvce_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
+  break;
+  default:
+    *state |= (1 << ERROR); *error |= (1 << SDERR);
+  return;
   }
+  publish_driver(receive, state, error);
+
   return;
 }
 
-static void validate_push(recv_t *receive) {
-/*Given original table (write) request, a validation based on which TBIDX-bit set will be printed.*/
+static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
+/*If data received from a request is of type 'push', only the PROTOCOL is used for printing validations based on
+ *bit-arrangements.*/ 
 
-  if (receive->protocol[TBIDX] & (1 << TMESG))
+  switch(receive->protocol[TBIDX]) {
+  case RECV_MESG:
     System_Message("your message was successfully delivered.");
-
-  if (receive->protocol[TBIDX] & (1 << TDVCE))
+  break;
+  case RECV_DVCE:
     System_Message("your interaction with the device was successfully executed.");
+  break;
+  default:
+    *state |= (1 << ERROR); *error |= (1 << SDERR);
+  }
 
   return;
 }
 
 void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*Driver dealing with reveived data by doing some checks before assigning a 'receive_route' based on original
+ *request-type (push/pull).*/
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
+  validate_recv(receive, state, error);
 
-  System_Message("package received from server.");
-
-  validate_pack(receive, state, error);
   if (*state & (1 << ERROR)) return;
 
-  int32_t route = (receive->protocol[EBIDX] & (1 << RWBIT)) ? 1 :  0;
+  int32_t receive_route = (receive->protocol[EBIDX] & (1 << RWBIT)) ? 1 :  0;
 
-  switch (route) {
+  switch (receive_route) {
   case 0:
-    validate_pull(receive, state, error);
-    break;
+    received_pull(receive, state, error);
+  break;
   case 1:
-    validate_push(receive);
-    break;
+    received_push(receive, state, error);
+  break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
-    return;
   }
+
   return;
 }

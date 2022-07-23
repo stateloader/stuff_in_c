@@ -1,4 +1,4 @@
-/*---------------------------------------------------------------------------------------------------------------Connection
+/*---------------------------------------------------------------------------------------------------------------CONNECTION
 Dealing with Client connection.                                                                                                
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
@@ -50,4 +50,5 @@ void client_connect(clnt_t *client, const char *ADDRESS, const char *PORT_STR) {
   
   Render_Header("CLIENT", "You've been connected! Please enter username");
   client->size_user = scan_driver(client->username, "username", SBUFF);
+  return;
 }

@@ -35,7 +35,7 @@ static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
 
   response->size_recv = string_copy(response->received, receive->package, SBUFF);
   if (response->size_recv != receive->size_pack) {
-    driver->status |= (ERROR); driver->error |= (1 << PCERR);
+    driver->status |= (ERROR); driver->error |= (1 << CPERR);
   }
   return;
 }
@@ -45,7 +45,7 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
   if (driver->status & (1 << ERROR)) return;
   System_Message("initiates response-driver.");
-
+  
   response_driver(response, &driver->status, &driver->error);
 
   return;
@@ -53,8 +53,8 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
 static void state_outcome(dver_t *driver) {
 
-  System_Message("Evaluates errors.");
   error_driver(driver->status, driver->error);
+  close(driver->client_sock_desc);
 }
 
 void server_driver(dver_t *driver) {

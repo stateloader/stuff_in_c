@@ -4,8 +4,9 @@
 #include "../system/configs.h"
 #include "requester.h"
 
-#define DVCER 0
-#define DVCEW 1
+#define INIT_RED 0x81
+#define INIT_BLU 0x82
+#define INIT_GRN 0x84
 
 typedef struct Device {
   size_t size_push;

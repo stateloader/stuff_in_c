@@ -1,6 +1,6 @@
-
 #ifndef CSTRINGS_H_
 #define CSTRINGS_H_
+
 #include "configs.h"
 
 void buffer_flush(char *string, size_t size_buffer);
