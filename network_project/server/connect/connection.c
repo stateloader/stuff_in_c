@@ -13,7 +13,7 @@ static void server_create(serv_t *server) {
   if (server->server_sock_desc < 0) {
     System_Message("Failed to create socket.");
     exit(EXIT_FAILURE);
-  }//Server failed to create a socket.
+  }//server failed to create a socket.
 
   return;
 }
@@ -35,18 +35,20 @@ static void server_binder(serv_t *server, const char *ADDRESS, const char *PORT_
   if (bind_sock < 0) {
     System_Message("Failed to bind socket.");
     exit(EXIT_FAILURE);
-  }//Server failed to bind socket.
+  }//server failed to bind socket.
 
   return;
 }
 
 void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR) {
-/*Wraps the  previous static functions. If nothing fails the server's up an running.*/
+/*Wraps the previous static functions. If nothing fails the server's up an running.*/
 
   server_create(client);
   server_binder(client, ADDRESS, PORT_STR);
 
   System_Message("Server's up and running!");
+
+  return;
 }
 
 void socket_listen(serv_t *server, uint16_t *status, uint16_t *error) {
@@ -55,7 +57,7 @@ void socket_listen(serv_t *server, uint16_t *status, uint16_t *error) {
   int32_t list_sock = listen(server->server_sock_desc, MCONN);
   if (list_sock < 0) {
     *status |= (1 << ERROR); *error |= (1 << CLERR);
-  }//Server failed listening for clients.
+  }//server failed listening for clients.
 
   return;
 }
@@ -73,11 +75,12 @@ void socket_accept(serv_t *server, uint16_t *status, uint16_t *error) {
   if (server->client_sock_desc < 0) {
     *status |= (1 << ERROR); *error |= (1 << CAERR);
     return;
-  }//Server failed accepting client.
+  }//server failed accepting client.
 
   printf("\t\t\tClient connected at IP: %s and port: %i\n", 
     inet_ntoa(server->client_address.sin_addr),
     ntohs(server->client_address.sin_port)
   );
+  
   return;
 }

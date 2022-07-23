@@ -17,7 +17,7 @@ BIT(N)                                    |    7    |    6    |    5    |    4  
 CONSTANT                                  |  ERROR  |    -    |    -    |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
-#define SCONN 0                           // State Connected.
+#define SCONN 0 //  State Connected.
 #define SCACC 1                           // State Accept.
 #define RECVF 2                           // When set, a request has successfully been revieved from the server.
 
@@ -28,12 +28,24 @@ ERROR HIGH BYTE                           |  RCERR  |  DDERR  |  FRERR  |  FWERR
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
 ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR  |  CAERR  |  CLERR  |  SCERR  |  SSERR  |
 -------------------------------------------------------------------------------------------------------------------------*/
+/*
+#define PSERR 0   // Package Size         Package size is corrupted.
+#define PTERR 1   // Package Terminate    Package isn't nullterminated.
+#define PDERR 2   // Package Delimiter    Corrupted delimiter-format on package.
+#define IFERR 3   // Iterate Fetch        Failed to fetch an item during iteration (wich should be in place).
+#define CPERR 4   // Copy                 Copy (String) is corrupted.
+#define SDERR 5   // Switch Default       Defaulted Switch-statement.
+#define RSERR 6   // Response Send        Sent package is corrupted (control-size and send-size differ).
+#define PBERR 7   // Protocol Byte        MSB (one or more bytes) in PROTOCOL isn't set.
+#define PIERR 8   // Package Invalid      Package (response) has its VALID-flag cleared (Something went south server-side).
+#define MAERR 9   // Memory Alloc         Failed to allocate memory.
+*/
 
 #define SSERR 0                           // Server socket Error.
 #define SCERR 1                           // Server connection Error.
 #define CLERR 2                           // Server listening (On Client) Error.
 #define CAERR 3                           // Failed to accepting client.
-#define SWERR 4                           // Switch statement has reached Default.
+#define SWERR 4                           // Defaulted Switch-statement.
 #define ITERR 5                           // Iteration failed (where a match should has been vailable).
 #define FOERR 6                           // Failed to Open file.
 #define RWERR 7                           // Failed to read/write to file.
@@ -41,26 +53,21 @@ ERROR HIGH BYTE                           |  RWERR  |  FOERR  |  ITERR  |  SWERR
 #define RTERR 9                           // Received package isn't nullterminated.
 #define RUERR 10                          // Received package has a corrupted protocol.
 #define PCERR 11                          // Package copy failure.
-#define FWERR 12                          // Failed to write (append) to file.
+#define FWERR 12                          // Failed to write to file.
 #define FRERR 13                          // Failet do read from file.
 #define DDERR 14                          // Delimiter error.
 #define RCERR 15                          // Failed to response client.
 
 /*-----------------------------------------------------------------------------------------------------------------PTOTOCOL
-The protocol, throughout the comments referred to as 'PROTOCOL' consist of 3 bytes (and a NULL-terminator). This protocol
-will be attached at the end of every package from both the server and the client during transmissions. For the moment it's
-just possble to write/read records regarding comments and interact with the device and read its historical records. Much
-logic across the program is mostly in place for (eventual) later implementations. 
-
 BIT (N)          INDEX (in PROTOCOL)            7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------------------------------
-TABLE BYTE         0                       |  UNBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
+TABLE BYTE         0                       |  MSBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG |
 ---------------------------------------------------------------------------------------------------------------------------
-ATTRIBUTE BYTE     1                       |  UNBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
+ATTRIBUTE BYTE     1                       |  MSBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE          3                       |  UNBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
+ECHO BYTE          3                       |  MSBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
 -------------------------------------------------------------------------------------------------------------------------*/
-#define UNBIT 7
+#define MSBIT 7
 //---------------------------------------------------------------------------------------------------------------TABLE BITS
 #define TMESG 0                           // Table Message Byte, indicates there's message-business ongoing.
 #define TDVCE 1                           // Table Device Byte, indicates there's device-business ongoing.

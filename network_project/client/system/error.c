@@ -18,7 +18,6 @@ static error_item error_items[] = {
   {MAERR, "Memory",     "Failed to allocate memory."}
 };
 
-
 static void print_errors(uint8_t status, uint16_t error) {
 /*Prints error(s) detected.*/
 
@@ -26,6 +25,7 @@ static void print_errors(uint8_t status, uint16_t error) {
     if (error & (1 << error_items[i].flag))
     printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
   }
+  
   exit(EXIT_FAILURE);
 }
 

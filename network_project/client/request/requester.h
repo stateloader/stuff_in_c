@@ -5,10 +5,10 @@
 
 typedef struct Requester {
   int32_t sock_desc;
-  uint8_t protocol[3];
+  uint8_t *protocol;
   size_t pack_delm;
-  size_t size_user;
-  char username[SBUFF];
+  size_t size_user; 
+  char *username;
   size_t size_datm;
   char datetime[SBUFF];
   size_t size_pack;

@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------------------WRITER
-Any request from client where pushing/writing/inserting anything to the server beeing thrown here by the response-driver.                                                                             
+                                                                           
 /------------------------------------------------------------------------------------------------------------------------*/
 
 #include "writer.h"
@@ -46,7 +46,7 @@ static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
   size_t size_push = fwrite(writer->append, sizeof(char), writer->size_appd, writer->file);
   if (size_push != writer->size_appd) {
     *state |= (1 << ERROR); *error |= (1 << FOERR);
-  }//Failed to append data to file.
+  }//failed to append data to file.
 
   if (writer->file) fclose(writer->file);
   
@@ -54,8 +54,6 @@ static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
 }
 
 void write_driver(write_t *writer, uint16_t *state, uint16_t *error) {
-
-  System_Message("Initiates database append.");
 
   database_trim(writer, state, error);
   database_open(writer, state, error);

@@ -1,5 +1,5 @@
 /*----------------------------------------------------------------------------------------------------------------COMMANDER
-Menues being represented as instances of type 'menu_item' collected as list of 'items'. Each item stores constants relevant
+Menues being represented as instances of type 'menu_item' collected as list of 'items'. Each menu stores constants relevant
 for where the user is now and where she/he's heading next in the menu-system depending on input.
 
 Yes indeed, this fell out WAY more MESSIER than I thought in andvance but it somewhat works quite nice. I think it's easier
@@ -78,6 +78,7 @@ static void protocol_write(cmnd_t *command, menu_item item, int8_t index) {
     System_Message("something went south while writing protocol.");
     exit(EXIT_FAILURE);
   }
+  
   return;
 }
 
@@ -86,6 +87,7 @@ static void print_options(menu_item *items, size_t size_array) {
 
   for (size_t i = 0; i < size_array; i++)
     System_Message(items[i].cmnd);
+
   return;
 }
 
@@ -102,6 +104,7 @@ static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array)
     }
   }
   System_Message("Not an option. Try again");
+
   return command->menu_state;
 }
 
@@ -139,26 +142,3 @@ void command_driver(uint8_t *protocol) {
 
   return;
 }
-
-
-/*------------------------------------------------------------------------------------------------------------Weird Example
-Current 'menu_state' is CMAIN and client has entered "-comment". Hence bit 0 ("comment-business") will be set in 
-Now, 'next_state' going to be CMESG where the user enters -read or -send wheras their index-positions tells if
-the PROTOCOL's ECHO_BYTE going to have its RWBIT (read/write to database) set or cleared. Returns CINIT.
--------------------------------------------------------------------------------------------------------------------------*/
-
-/*Every state has its own menu; 'items'. It and its size being fed into the 'command-scanner' where the allowed commands
- *being printed before the user choose one of them.
- 
- *If there's a match - checked by 'string_comp' (SEE SYSTEM MODULE) - the instance (item) at index-pos (N) will be used
- *for assigning a bit mapped to the given command "on the fly" to the correct 'blueprint'-byte before returning the
- *instance's hard coded 'next_state' as upcoming -menu_state.
- 
- *Recent/current menu_state will be reloaded if the user enters anything except allowed commands.*/
-
-
- /*Whithin the while-loop, the client's being thrown around in a "state-machine" where current 'menu_state' is assigned based
- *on command-choices. This party will carry on until 'menu_state' isn't CINIT (Command Init) or CEXIT (Command Exit).
- 
- *If the client has rage quitted it means 'CEXIT' (Command Exit) and the program will terminate, oterwise it should end up
- *in a 'CINIT' (Command Init) wheras the blueprint being copied to the PROTOCOL.*/

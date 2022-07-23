@@ -53,7 +53,7 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
 static void state_outcome(dver_t *driver) {
 
-  System_Message("Evaluates errors.");
+  System_Message("evaluates errors.");
   error_driver(driver->status, driver->error);
 }
 

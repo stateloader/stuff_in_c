@@ -3,7 +3,7 @@
 
 #include "../system/configs.h"
 
-#define CMAIN 0   // Command Main
+#define CMAIN 0   // Command Main                                     /// ändra STATE_<MENY>
 #define CMESG 1   // Command Message
 #define CDVCE 2   // Command Device
 #define CDLED 3   // Command Device Led

@@ -8,12 +8,10 @@
 
 static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
 /*Validates received data.*/
-  System_Message("validating package.");
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
   }//received package isn't terminated.
-
   if (receive->size_pack < POFFS) {
     *state |= (1 << ERROR); *error |= (1 << PSERR); return;
   }//received package is of corrupted size.
@@ -26,15 +24,12 @@ static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
   if (!(receive->protocol[EBIDX] & (1 << VALID))) {
     *state |= (1 << ERROR); *error |= (1 << PIERR);
   }//received package hasen't valid-flag set.
-
   if (!(receive->protocol[TBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }//received PROTOCOL corrupted.
-
   if (!(receive->protocol[ABIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }//received PROTOCOL corrupted.
-
   if (!(receive->protocol[EBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }//received PROTOCOL corrupted.
@@ -76,9 +71,9 @@ static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
   break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
-    return;
+  return;
   }
-  
+
   publish_driver(receive, state, error);
 
   return;
@@ -113,10 +108,10 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
   switch (receive_route) {
   case 0:
     received_pull(receive, state, error);
-    break;
+  break;
   case 1:
     received_push(receive, state, error);
-    break;
+  break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
   }

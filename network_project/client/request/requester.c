@@ -42,7 +42,7 @@ static reqt_item table_items[] = {
 };
 
 void datetime_attach(reqt_t *request) {
-/*Attaches a timestamp to packages.*/
+/*Attaches a timestamp to request-packages.*/
 
   strncat(request->datetime, __DATE__, TBUFF);
   strncat(request->datetime, " ", TBUFF);
@@ -53,7 +53,7 @@ void datetime_attach(reqt_t *request) {
 }
 
 void protocol_attach(reqt_t *request) {
-/*Attaches the PROTOCOL (and nullterminator) to packages.*/
+/*Attaches the PROTOCOL (and nullterminator) to request-packages.*/
 
   request->package[request->size_pack - 4] = request->protocol[TBIDX];
   request->package[request->size_pack - 3] = request->protocol[ABIDX];
@@ -74,10 +74,5 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   System_Message("sending request to server.");
-  /*
-  if (size_send != request->size_pack) {
-    *state |= (1 << ERROR); *error |= (1 << RSERR);
-  }
-*/
   return;
 }
