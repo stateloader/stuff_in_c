@@ -40,8 +40,6 @@ static void publish_dvce(dmod_t *dvce, size_t rows) {
 
 void publish_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
 /*Examines if read-request. If so, switch tatement checks which table to print in PROTOCOL.*/
-  
-  if (receive->protocol[EBIDX] & (1 << RWBIT)) return;
 
   switch (receive->protocol[TBIDX]) {
   case PUBL_MESG:

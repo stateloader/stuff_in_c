@@ -10,6 +10,12 @@ to follow this bad boy from south to north, starting on the bottom with func 'co
 #include "../system/cstrings.h"
 #include "commander.h"
 
+typedef struct MenuItem {
+  const uint8_t this_state;
+  const uint8_t next_state;
+  const char *cmnd;
+} menu_item;
+
 static menu_item main[] = {       //  Main Menu Items.
   {CMAIN, CMESG, "-comment"},
   {CMAIN, CDVCE, "-device"},
@@ -40,43 +46,33 @@ static menu_item help[] = {       //  Help Menu Item.
   {CHELP, CMAIN, "-back"},
 };
 
-static int8_t menu_state;
+static void protocol_reset(cmnd_t *command) {
+/*Main Menu always resets the PROTOCOL.*/
 
-static uint8_t blueprint[3] = {
-  0x80, 0x80, 0x80
-};
-
-static uint8_t TABLE = 0x80;
-static uint8_t ATTRB = 0x80;
-static uint8_t ECHOB = 0x80;
-
-//The static variables TABLE, ATTRB and ECHOB are used as blueprints during the command-session, later attached to PROTOCOL.
-
-static void protocol_reset(void) {
-  TABLE = 0x80, ATTRB = 0x80, ECHOB = 0x80;
+  for (size_t i = 0; i < 3; i++)
+    command->protocol[i] = 0x80;
   return;
 }
 
-static void protocol_write(menu_item item, int8_t index) {
-/*Set bits to PROTOCOL "on the fly". Guess the Exemple-comment below makes this mess easier to understand.*/
+static void protocol_write(cmnd_t *command, menu_item item, int8_t index) {
+/*Set bits to PROTOCOL "on the fly".*/
 
   switch(item.this_state) {
 
   case CMAIN:
-    protocol_reset();
-    TABLE |= (1 << index);
+    protocol_reset(command);
+    command->protocol[TBIDX] |= (1 << index);
   break;
   case CMESG:
-    ECHOB |= (index << RWBIT);
+    command->protocol[EBIDX] |= (index << RWBIT);
   break;
   case CDVCE:
-    ECHOB |= (index << RWBIT);
+    command->protocol[EBIDX] |= (index << RWBIT);
   break;
   case CDLED:
-    ATTRB |= (1 << index);
+    command->protocol[ABIDX] |= (1 << index);
   break;
   case CHELP:
-    System_Message("just go nuts.");
   break;
   default:
     System_Message("something went south while writing protocol.");
@@ -86,67 +82,60 @@ static void protocol_write(menu_item item, int8_t index) {
 }
 
 static void print_options(menu_item *items, size_t size_array) {
-/*Prints allowed commands in (current) item-menu.*/
+/*Prints allowed commands in current item-menu.*/
+
   for (size_t i = 0; i < size_array; i++)
-    printf("\t\t\t%s\n", items[i].cmnd);
+    System_Message(items[i].cmnd);
   return;
 }
 
 static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array) {
-  command->current = items;
 
-  print_options(command->current, size_array);
+  print_options(items, size_array);
   command->size_cmnd = scan_driver(command->cmnd, "select", SBUFF);
-
 
   for (size_t i = 0; i < size_array; i++) {
     if (string_comp(command->cmnd, items[i].cmnd, command->size_cmnd)) {
       if (i < size_array - 1)
-        protocol_write(items[i], i);
+        protocol_write(command, items[i], i);
       return items[i].next_state;
     }
   }
-  System_Message("Not an option. try again");
-  return menu_state;
+  System_Message("Not an option. Try again");
+  return command->menu_state;
 }
 
 void command_driver(uint8_t *protocol) {
 
-  menu_state = CMAIN;
-  cmnd_t command = {.menu_state = CMAIN};
+  cmnd_t command = {.menu_state = CMAIN,.protocol = protocol};
 
-  while (menu_state != CINIT) {
+  while (command.menu_state != CINIT) {
    
-    switch(menu_state) {
+    switch(command.menu_state) {
     case CMAIN:
       Render_Header("MAIN", "Select in menu by enter any of the available commands");
-      command.current = main;
-      menu_state = command_scan(&command, main, ARRAY_SIZE(main));
+      command.menu_state = command_scan(&command, main, ARRAY_SIZE(main));
     break;
     case CMESG:
       Render_Header("COMMENT", "Read old comments or post a new");
-      menu_state = command_scan(&command, mesg, ARRAY_SIZE(mesg));
+      command.menu_state = command_scan(&command, mesg, ARRAY_SIZE(mesg));
     break;
     case CDVCE:
       Render_Header("DEVICE", "Read old LED-activity or interact yourself by enter '-push'");
-      menu_state = command_scan(&command, dvce, ARRAY_SIZE(dvce));
+      command.menu_state = command_scan(&command, dvce, ARRAY_SIZE(dvce));
     break;
     case CDLED:
-      Render_Header("PUSH", "Pick a colour");
-      menu_state = command_scan(&command, dled, ARRAY_SIZE(dled));
+      Render_Header("PUSH", "Choose colour");
+      command.menu_state = command_scan(&command, dled, ARRAY_SIZE(dled));
     break;
     case CHELP:
       Render_Header("HELP", "Everything you need to know");
-      menu_state = command_scan(&command, help, ARRAY_SIZE(help));
+      command.menu_state = command_scan(&command, help, ARRAY_SIZE(help));
     break;
     } 
-    if (menu_state == CEXIT)
+    if (command.menu_state == CEXIT)
       exit(EXIT_SUCCESS);
   }
-
-  protocol[TBIDX] = TABLE;
-  protocol[ABIDX] = ATTRB;
-  protocol[EBIDX] = ECHOB;
 
   return;
 }

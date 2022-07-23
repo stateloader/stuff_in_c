@@ -10,7 +10,6 @@ If any error accurs during the process the logic will just "fall through" with i
 #include "command/commander.h"
 #include "system/cstrings.h"
 #include "system/scanner.h"
-#include "receive/publish.h"
 #include "receive/receiver.h"
 #include "cdriver.h"
 
@@ -58,9 +57,7 @@ static void state_receive(dver_t *driver) {
   driver->state |= (1 << SRECV);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
-  
   receive_driver(&receive, &driver->state, &driver->error);
-  publish_driver(&receive, &driver->state, &driver->error);
 
   return;
 }

@@ -74,10 +74,10 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   size_t size_send = send(request->sock_desc, request->package, request->size_pack, 0);
   System_Message("sending request to server.");
-  
+  /*
   if (size_send != request->size_pack) {
     *state |= (1 << ERROR); *error |= (1 << RSERR);
   }
-
+*/
   return;
 }

@@ -3,6 +3,7 @@
 ------------------------------------------------------------------------------------------------------------------------*/
 #include "../connect/connection.h"
 #include "models.h"
+#include "publish.h"
 #include "receiver.h"
 
 static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
@@ -75,8 +76,11 @@ static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
   break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
+    return;
   }
   
+  publish_driver(receive, state, error);
+
   return;
 }
 
