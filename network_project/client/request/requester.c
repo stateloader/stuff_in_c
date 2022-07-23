@@ -42,7 +42,7 @@ static reqt_item table_items[] = {
 };
 
 void datetime_attach(reqt_t *request) {
-/*Attaches a timestamp to a packages.*/
+/*Attaches a timestamp to packages.*/
 
   strncat(request->datetime, __DATE__, TBUFF);
   strncat(request->datetime, " ", TBUFF);

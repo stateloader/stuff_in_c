@@ -7,9 +7,7 @@
 
 static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
 /*Validates received data.*/
-
   System_Message("validating package.");
-  PrintByte(receive->protocol[EBIDX]);
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -22,6 +20,7 @@ static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
   receive->protocol[TBIDX] = receive->package[receive->size_pack - 4];
   receive->protocol[ABIDX] = receive->package[receive->size_pack - 3];
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
+  //assigns received protocol. 
 
   if (!(receive->protocol[EBIDX] & (1 << VALID))) {
     *state |= (1 << ERROR); *error |= (1 << PIERR);
@@ -65,25 +64,35 @@ static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
 
   receive->size_pack -= POFFS;
 
-  if (receive->protocol[TBIDX] & (1 << TMESG)) {
+  switch(receive->protocol[TBIDX]) {
+  case RECV_MESG:
     validate_rows(receive, DMESG, state, error);
     receive->table_mesg = table_mesg_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
-  }
-  if (receive->protocol[TBIDX] & (1 << TDVCE)) {
+  break;
+  case RECV_DVCE:
     validate_rows(receive, DDVCE, state, error);
     receive->table_dvce = table_dvce_create(receive->package, receive->size_pack, receive->amnt_rows, state, error);
+  break;
+  default:
+    *state |= (1 << ERROR); *error |= (1 << SDERR);
   }
+  
   return;
 }
 
-static void received_push(recv_t *receive) {
+static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
 /*Data received from a request of type 'push' just "decoding" the PROTOCOL for printing validations.*/ 
 
-  if (receive->protocol[TBIDX] & (1 << TMESG))
+  switch(receive->protocol[TBIDX]) {
+  case RECV_MESG:
     System_Message("your message was successfully delivered.");
-
-  if (receive->protocol[TBIDX] & (1 << TDVCE))
+  break;
+  case RECV_DVCE:
     System_Message("your interaction with the device was successfully executed.");
+  break;
+  default:
+    *state |= (1 << ERROR); *error |= (1 << SDERR);
+  }
 
   return;
 }
@@ -102,10 +111,11 @@ void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
     received_pull(receive, state, error);
     break;
   case 1:
-    received_push(receive);
+    received_push(receive, state, error);
     break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
   }
+
   return;
 }

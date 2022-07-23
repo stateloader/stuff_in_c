@@ -4,6 +4,9 @@
 #include "../system/configs.h"
 #include "models.h"
 
+#define RECV_MESG 0x81
+#define RECV_DVCE 0x82
+
 typedef struct Receiver {
   int32_t sock_desc;
   uint8_t protocol[3];

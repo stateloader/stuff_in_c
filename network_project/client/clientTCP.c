@@ -28,17 +28,3 @@ int main(int argc, char **argv) {
 
   exit(EXIT_SUCCESS);
 }
-
-/*
-  dver_t driver = {.state = 0x00};
-  driver.protocol[TBIDX] = 0x80;
-  driver.protocol[ABIDX] = 0x80;
-  driver.protocol[EBIDX] = 0x80;
-
-  PrintByte(driver.protocol[TBIDX]);
-  PrintByte(driver.protocol[ABIDX]);
-  PrintByte(driver.protocol[EBIDX]);
-
-  if (driver.protocol[TBIDX] & (1 << MSBIT))
-    System_Message("jada");
-    */

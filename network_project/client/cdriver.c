@@ -5,7 +5,6 @@ If any error accurs during the process the logic will just "fall through" with i
 //-----------------------------------------------------------------------------------------------------------------------*/
 
 #include "system/error.h"
-#include "bitwise/bitengine.h"
 #include "connect/connection.h"
 #include "request/requester.h"
 #include "command/commander.h"

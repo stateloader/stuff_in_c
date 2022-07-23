@@ -46,6 +46,8 @@ static void mesg_pull(reqt_t *request) {
 
   request->size_pack = POFFS;
   protocol_attach(request);
+
+  return;
 }
 
 void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
