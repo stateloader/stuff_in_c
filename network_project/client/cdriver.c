@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------CLIENT DRIVER
-When connected, the (a) session going to run through 4 states shown and described below. If any error accurs during the
-process the logic will from that point just "fall through" with immideate return-calls down to 'state_outcome'.
+When connected, the (a) session going to run through 4 states shown and described below. If any error accurs during this
+process, flags will be raised whereafter the logic from that point forward will "fall through" down to 'state_outcome'
+by immideate return-calls.
 //-----------------------------------------------------------------------------------------------------------------------*/
 
 #include "system/error.h"
@@ -13,8 +14,9 @@ process the logic will from that point just "fall through" with immideate return
 #include "cdriver.h"
 
 static void state_command(dver_t *driver) {
-/*Struct variable 'driver' throws member 'protocol' into the 'command_driver' where this 3 byte-array being assigned
- *based on userinput. SEE COMMAND MODULE.*/
+/*Struct variable 'driver' throws member 'protocol' into the 'command_driver' where this 3 byte-array being assigned based
+ *on userinput. When assigned, it becomes 'the very' PROTOCOL and governs how the program behaves in upcoming state both on
+ *client and server-side. SEE COMMAND MODULE.*/
 
   if (driver->state & (1 << ERROR)) return;
 
@@ -37,7 +39,6 @@ static void state_request(dver_t *driver) {
     .sock_desc = driver->client.sock_desc, .protocol = driver->protocol,
     .size_user = driver->client.size_user, .username = driver->client.username
   };
-
   request_driver(&request, &driver->state, &driver->error);
 
   return;

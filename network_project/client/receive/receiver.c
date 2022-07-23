@@ -41,7 +41,7 @@ static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
 static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16_t *error) {
  /*I'm fetching number of rows in the (current) dataset by dividing all delims found in the received package with the
   *constant (N of delimiters) attached to every row/entry/model. By mod the amount of delims found with fetched rows
-  *I'm able to check nothing gone south in the process as well.*/
+  *I'm able to check that nothing gone south in the process as well.*/
 
   size_t amnt_delm = 0;
 
@@ -57,7 +57,8 @@ static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16
 }
 
 static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Data received from a request of type 'pull' (an entire database atm) being organised into tables and published.*/ 
+/*If data received from a request is of type 'pull', an entire database (for the moment) being organised into tables
+ *and published.*/ 
 
   receive->size_pack -= POFFS;
 
@@ -74,15 +75,14 @@ static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SDERR);
   return;
   }
-
   publish_driver(receive, state, error);
 
   return;
 }
 
 static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*Data received from a request of type 'push' only the PROTOCOL is used for printing validations based on
- *bit-arrangement in the PROTOCOL.*/ 
+/*If data received from a request is of type 'push', only the PROTOCOL is used for printing validations based on
+ *bit-arrangements.*/ 
 
   switch(receive->protocol[TBIDX]) {
   case RECV_MESG:
@@ -99,7 +99,8 @@ static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
 }
 
 void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Driver that receive the data and doing the checks before assigning a 'receive_route'.*/
+/*Driver dealing with reveived data by doing some checks before assigning a 'receive_route' based on original
+ *request-type (push/pull).*/
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
   validate_recv(receive, state, error);

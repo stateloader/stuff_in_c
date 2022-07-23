@@ -1,5 +1,6 @@
 /*----------------------------------------------------------------------------------------------------------------REQUESTER
-                                                                                    
+Source-file hosting the 'driver' and some generic functionality that's true for all requests; at time being just message
+and device, however.
 -------------------------------------------------------------------------------------------------------------------------*/
 #include <string.h>
 #include "../connect/connection.h"
@@ -60,12 +61,12 @@ void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
   return;
 }
 static reqt_item table_items[] = {
-  {TMESG, message_driver},
-  {TDVCE, device_driver}
+  {TMESG, message_driver}, {TDVCE, device_driver}
 };
 
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver.*/
+/*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver. The purpose is to make
+ *this endevour more scalable as more optons and functionality occupies the other TBDIX-bits.*/
 
   request->protocol[EBIDX] |= (1 << VALID);
 
@@ -73,6 +74,7 @@ void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
     if (request->protocol[TBIDX] & (1 << table_items[i].table))
       table_items[i].func(request, state, error);
   }
+
   if (*state & (1 << ERROR))
     request->package[request->size_pack - 2] &= ~(1 << VALID);
 

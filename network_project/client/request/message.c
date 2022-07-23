@@ -1,5 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------MESSAGE
-info info info                                                                                               
+For some reason I can't create the message struct-variable inside 'mesg_push' and take it from there without formatting
+going mayhem. 
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
@@ -17,7 +18,7 @@ static void mesg_scan(mesg_t *message) {
   return;
 }
 
-static void mesg_push(mesg_t *message, reqt_t *request) {
+static void mesg_push(mesg_t *message, reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Creates a Message push-request by binding all relevant data into a canonical string.*/
 
   datetime_attach(request);
@@ -35,22 +36,23 @@ static void mesg_push(mesg_t *message, reqt_t *request) {
   strncat(request->package, message->comment, request->size_pack);
 
   protocol_attach(request);
-
+  validate_push(request, state, error);
   return;
 }
 
-static void mesg_pull(reqt_t *request) {
+static void mesg_pull(reqt_t *request,  uint8_t *state, uint16_t *error) {
 /*Creates a Message pull-request. Only PROTOCOL (and terminator) necessary.*/
 
   request->size_pack = POFFS;
   protocol_attach(request);
+  validate_pull(request, state, error);
 
   return;
 }
 
 void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*The driver assigns member 'pack_delm' - basically how many delimiters an row/entry/instance of Message has while
- *being stored in the database - before a route being determined based on RWBIT in PROTOCOL.*/
+/*The driver assigns member 'pack_delm' - constant of amount delimiters an row/entry/instance of Message has -
+ *before a route being determined based on RWBIT in PROTOCOL.*/
 
   request->pack_delm = DMESG;
   mesg_t message = {.size_subj = 0};
@@ -58,11 +60,11 @@ void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   switch (route) {
   case MESGR:
-    mesg_pull(request);
+    mesg_pull(request, state, error);
   break;
   case MESGW:
     mesg_scan(&message);
-    mesg_push(&message, request);
+    mesg_push(&message, request, state, error);
   break;
   default:
     *state |= (1 << ERROR); *error |= (1 << SDERR);
