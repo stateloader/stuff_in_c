@@ -25,5 +25,7 @@ typedef struct RequestItem {
 void datetime_attach(reqt_t *request);
 void protocol_attach(reqt_t *request);
 void request_driver(reqt_t *requester, uint8_t *state, uint16_t *error);
+void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error);
+void validate_push(reqt_t *request, uint8_t *state, uint16_t *error);
 
 #endif

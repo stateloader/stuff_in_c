@@ -2,7 +2,7 @@
 Menues being represented as instances of type 'menu_item' collected as list of 'items'. Each menu stores constants relevant
 for where the user is now and where she/he's heading next in the menu-system depending on input.
 
-Yes indeed, this fell out WAY more MESSIER than I thought in andvance but it somewhat works quite nice. I think it's easier
+Yes indeed, this fell out WAY more MESSIER than I thought in andvance but it somewhat works quite nice. Guess it's easier
 to follow this bad boy from south to north, starting on the bottom with func 'command_driver'.                                                                                   
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
@@ -51,11 +51,13 @@ static void protocol_reset(cmnd_t *command) {
 
   for (size_t i = 0; i < 3; i++)
     command->protocol[i] = 0x80;
+
   return;
 }
 
 static void protocol_write(cmnd_t *command, menu_item item, int8_t index) {
-/*Set bits to PROTOCOL "on the fly".*/
+/*Set bits to PROTOCOL "on the fly". Every revisit to the Main Menu - state 'CMAIN' - will reset PROTOCOL to
+ *default which means MSB set while rest of them is cleared.*/
 
   switch(item.this_state) {
 
@@ -92,6 +94,9 @@ static void print_options(menu_item *items, size_t size_array) {
 }
 
 static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array) {
+/*Different 'menu_state's feed different 'items' into the function. Allowed commands stored among these items
+ *will be printed before the user enter one of them. Their index-position determines which bit that will be set
+ *inside 'protocol_write' and current state ('this_state') maps which byte its going to be.*/
 
   print_options(items, size_array);
   command->size_cmnd = scan_driver(command->cmnd, "select", SBUFF);
@@ -109,6 +114,10 @@ static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array)
 }
 
 void command_driver(uint8_t *protocol) {
+/*Struct-variable 'command' assigns its member 'menu_state' to CMAIN while 'protocol' - pointer of type uint8_t -
+ *points at <porotocol/byt namn>. Depending on input the user gives, 'menu_state' vill jump back and forth in the
+ *switch-statement whithin the while-loop until the user rage quits or makes a decision. At this point, the protocol
+ will become 'the' PROTOCOL.*/
 
   cmnd_t command = {.menu_state = CMAIN,.protocol = protocol};
 

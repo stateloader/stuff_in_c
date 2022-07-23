@@ -1,6 +1,11 @@
 /*------------------------------------------------------------------------------------------------------------------DEVICE
-info info info
+
 ------------------------------------------------------------------------------------------------------------------------*/
+
+/*TODO  
+  -se över device-struct.
+  -skriva nått kort i headern.
+*/
 
 #include <string.h>
 #include "../system/cstrings.h"
@@ -8,7 +13,7 @@ info info info
 #include "device.h"
 
 static void dvce_scan(uint8_t push, devc_t *device) {
-/*A short string being attached to the dvce push-package corresponding with whatever LED-colour the user "picked".*/
+/*A short string being attached to the push-package mapped by the user's choice of LED-colour.*/
 
   if (push & (1 << ATTR0))
     device->size_push = string_copy(device->dvcepush, "RED", SBUFF);
@@ -16,14 +21,12 @@ static void dvce_scan(uint8_t push, devc_t *device) {
     device->size_push = string_copy(device->dvcepush, "BLU", SBUFF);
   if (push & (1 << ATTR2))
     device->size_push = string_copy(device->dvcepush, "GRN", SBUFF);
-
+    
   return;
 }
 
 static void dvce_push(devc_t *device, reqt_t *request) {
 /*Creates a Device push-request by binding all relevant data into a canonical string.*/
-
-  System_Message("initiates device push request.");
 
   datetime_attach(request);
   dvce_scan(request->protocol[ABIDX], device);
@@ -46,24 +49,23 @@ static void dvce_push(devc_t *device, reqt_t *request) {
 static void dvce_pull(reqt_t *request) {
 /*Creates a Device pull-request. Only PROTOCOL (and terminator) necessary.*/
 
-  System_Message("initiates device pull request.");
-
   request->size_pack = POFFS;
   protocol_attach(request);
 }
 
 void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*The driver assigns member 'pack_delm' - basically how many delimiters an row/entry/instance of Device has while
+ *being stored in the database - before a route being determined based on RWBIT in PROTOCOL.*/
 
   request->pack_delm = DDVCE;
   devc_t device = {.size_push = 0};
-  int32_t route = (request->protocol[EBIDX] & (1 << RWBIT)) ? DVCEW : DVCER;
+  int32_t route = (request->protocol[EBIDX] & (1 << RWBIT)) ? 1 : 0;
 
   switch (route) {
-
-  case DVCER:
+  case 0:
     dvce_pull(request);
     break;
-  case DVCEW:
+  case 1:
     dvce_push(&device, request);
     break;
   default:

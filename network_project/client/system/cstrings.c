@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------STRINGS
-Same naive approach for string-handeling as in Server. I assume The <libraries> regarding these operations works fine, are
-safer and works much efficient but it was/is fun and educational to play around with by myself.                                                                     
+Same naive approach for string-handeling as in Server. I assume libraries regarding these operations works fine, are safer
+and works much more efficient but it was/is fun and educational to play around with it myself.                                                                     
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstrings.h"

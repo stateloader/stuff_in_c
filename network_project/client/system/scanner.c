@@ -59,7 +59,7 @@ static void scan_input(scan_t *scanner, char *prompt) {
 }
 
 size_t scan_driver(char *user_input, char *prompt, size_t size_buffer) {
-/*State-machine of some sort starting with input followed by some checks*/
+/*State-machine of some sort dealing with input and some checks.*/
 
   scan_t scanner = {.state = SSCAN,.size_buff = size_buffer};
   scanner.scan_input = user_input;

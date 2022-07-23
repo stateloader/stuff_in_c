@@ -1,9 +1,6 @@
 /*-------------------------------------------------------------------------------------------------------------------MODELS
-When the client/user has sent a read-requests a corresponding database (entire, for now) will be sent from the server.
+When the client/user has sent a read-requests a corresponding database (entire, for now) will be sent back from the server.
 The model-structs below are used for creating rows/instances, these in turn collected into 'tables'.
-
-At first, I did a more generic solution in place involving recursion and some fanzy stuff but it turned out to be even
-messier than this hard-coded solution.
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
 #include "models.h"

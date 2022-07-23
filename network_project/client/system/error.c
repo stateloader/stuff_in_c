@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------------------------ERROR
-info info info
+If an error is flagged it's going to be printed and dealt with here.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
@@ -25,7 +25,6 @@ static void print_errors(uint8_t status, uint16_t error) {
     if (error & (1 << error_items[i].flag))
     printf(ERROR_FORMAT, error_items[i].type, error_items[i].mesg);
   }
-  
   exit(EXIT_FAILURE);
 }
 

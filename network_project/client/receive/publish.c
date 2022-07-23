@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------------PUBLISH
-Publishes/Prints table created out of received data. For now ALL data. I'll probably implement a menu of some sort making
-it possible to examine the table based on date, name, topic etc.                                                         
+Publishes/Prints table created out of received data. For now ALL DATA. I'll probably implement a menu of some sort making
+it possible to examine the table based on date, name, topic etc. Guess playing around with CRUDE using linked lists works
+fine as well.                                              
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>

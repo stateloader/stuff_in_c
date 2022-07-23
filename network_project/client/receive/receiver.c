@@ -7,7 +7,8 @@
 #include "receiver.h"
 
 static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*Validates received data.*/
+/*Validates received data. If the received data isn't terminated, or is lesser than POFFS in size, something went
+ *horrible and the func will call return immediately after the error-flags is set.*/
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -26,13 +27,13 @@ static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
   }//received package hasen't valid-flag set.
   if (!(receive->protocol[TBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }//received PROTOCOL corrupted.
+  }//received PROTOCOL corrupted (MSG not set).
   if (!(receive->protocol[ABIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }//received PROTOCOL corrupted.
+  }//received PROTOCOL corrupted (MSG not set).
   if (!(receive->protocol[EBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
-  }//received PROTOCOL corrupted.
+  }//received PROTOCOL corrupted (MSG not set).
 
   return;
 }
@@ -56,7 +57,7 @@ static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16
 }
 
 static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Data received from a request of type 'pull' (an entire database atm) being organised into tables.*/ 
+/*Data received from a request of type 'pull' (an entire database atm) being organised into tables and published.*/ 
 
   receive->size_pack -= POFFS;
 
@@ -80,7 +81,8 @@ static void received_pull(recv_t *receive, uint8_t *state, uint16_t *error) {
 }
 
 static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*Data received from a request of type 'push' just "decoding" the PROTOCOL for printing validations.*/ 
+/*Data received from a request of type 'push' only the PROTOCOL is used for printing validations based on
+ *bit-arrangement in the PROTOCOL.*/ 
 
   switch(receive->protocol[TBIDX]) {
   case RECV_MESG:
@@ -97,6 +99,7 @@ static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
 }
 
 void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
+/*Driver that receive the data and doing the checks before assigning a 'receive_route'.*/
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
   validate_recv(receive, state, error);

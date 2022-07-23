@@ -45,7 +45,7 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
   if (driver->status & (1 << ERROR)) return;
   System_Message("initiates response-driver.");
-
+  
   response_driver(response, &driver->status, &driver->error);
 
   return;
@@ -53,8 +53,8 @@ static void state_respond(resp_t *response, dver_t *driver) {
 
 static void state_outcome(dver_t *driver) {
 
-  System_Message("evaluates errors.");
   error_driver(driver->status, driver->error);
+  close(driver->client_sock_desc);
 }
 
 void server_driver(dver_t *driver) {

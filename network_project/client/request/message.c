@@ -8,7 +8,7 @@ info info info
 #include "message.h"
 
 static void mesg_scan(mesg_t *message) {
-/*A subject and a comment being entered/created by client input/scan.*/ 
+/*A subject and a comment being entered/created by user-input/scan.*/ 
   Render_Header("COMPOSE", "Enter subject comment.");
 
   message->size_subj = scan_driver(message->subject, "subject", SBUFF);
@@ -19,7 +19,6 @@ static void mesg_scan(mesg_t *message) {
 
 static void mesg_push(mesg_t *message, reqt_t *request) {
 /*Creates a Message push-request by binding all relevant data into a canonical string.*/
-  System_Message("initiates message push request.");
 
   datetime_attach(request);
 
@@ -42,7 +41,6 @@ static void mesg_push(mesg_t *message, reqt_t *request) {
 
 static void mesg_pull(reqt_t *request) {
 /*Creates a Message pull-request. Only PROTOCOL (and terminator) necessary.*/
-  System_Message("initializes message pull request.");
 
   request->size_pack = POFFS;
   protocol_attach(request);
@@ -51,6 +49,8 @@ static void mesg_pull(reqt_t *request) {
 }
 
 void message_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*The driver assigns member 'pack_delm' - basically how many delimiters an row/entry/instance of Message has while
+ *being stored in the database - before a route being determined based on RWBIT in PROTOCOL.*/
 
   request->pack_delm = DMESG;
   mesg_t message = {.size_subj = 0};

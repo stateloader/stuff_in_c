@@ -8,39 +8,6 @@
 #include "message.h"
 #include "requester.h"
 
-static void validate_push(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*Some checks before a push-request being sent to the server.*/
-
-  size_t delim_count = 0;
-  for (size_t i = 0; i < request->size_pack; i++)
-    delim_count += (request->package[i] == DELIM) ? 1 : 0;
-
-  if (delim_count != request->pack_delm) {
-    *state |= (1 << ERROR); *error |= (1 << PDERR);
-  }//wrong delimiter-format.
-  if (request->size_pack < POFFS) {
-    *state |= (1 << ERROR); *error |= (1 << PSERR);
-  }//corrupted size on package.
-  if (request->package[request->size_pack - 1] != '\0') {
-    *state |= (1 << ERROR); *error |= (1 << PTERR);
-  }//package isn't nullterminated.
-
-  return;
-}
-
-static void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*Some checks before a pull-request being sent to the server.*/
-
-  if (request->package[request->size_pack - 1] != '\0') {
-    *state |= (1 << ERROR); *error |= (1 << PTERR);
-  }//package isn't nullterminated.
-
-  return;
-}
-static reqt_item table_items[] = {
-  {TMESG, message_driver}, {TDVCE, device_driver}
-};
-
 void datetime_attach(reqt_t *request) {
 /*Attaches a timestamp to request-packages.*/
 
@@ -62,6 +29,40 @@ void protocol_attach(reqt_t *request) {
 
   return;
 }
+
+void validate_push(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*Some checks before a push-request being sent to the server.*/
+
+  size_t delim_count = 0;
+  for (size_t i = 0; i < request->size_pack; i++)
+    delim_count += (request->package[i] == DELIM) ? 1 : 0;
+
+  if (delim_count != request->pack_delm) {
+    *state |= (1 << ERROR); *error |= (1 << PDERR);
+  }//wrong delimiter-format.
+  if (request->size_pack < POFFS) {
+    *state |= (1 << ERROR); *error |= (1 << PSERR);
+  }//corrupted size on package.
+  if (request->package[request->size_pack - 1] != '\0') {
+    *state |= (1 << ERROR); *error |= (1 << PTERR);
+  }//package isn't nullterminated.
+
+  return;
+}
+
+void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
+/*Some checks before a pull-request being sent to the server.*/
+
+  if (request->package[request->size_pack - 1] != '\0') {
+    *state |= (1 << ERROR); *error |= (1 << PTERR);
+  }//package isn't nullterminated.
+
+  return;
+}
+static reqt_item table_items[] = {
+  {TMESG, message_driver},
+  {TDVCE, device_driver}
+};
 
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver.*/
