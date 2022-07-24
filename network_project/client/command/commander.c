@@ -144,10 +144,11 @@ void command_driver(uint8_t *protocol) {
       Render_Header("HELP", "Everything you need to know");
       command.menu_state = command_scan(&command, help, ARRAY_SIZE(help));
     break;
-    } 
-    if (command.menu_state == CEXIT)
+    case CEXIT:
+      Render_Header("BYE!", "asdasda asd asd aasd asd  sdd s.");
       exit(EXIT_SUCCESS);
+    break;
+    }
   }
-
   return;
 }

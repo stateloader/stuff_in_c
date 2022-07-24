@@ -1,5 +1,7 @@
 /*-----------------------------------------------------------------------------------------------------------------RESPONSE
-                                                                              
+When a response being created from the server it always read or write to a database depending on whether the request was
+of type pull(read something from database) or push(write/append to database). This source-file, through its driver, sewing
+all logic in the RESPONSE-module togheter.                                  
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <sys/socket.h>
@@ -33,7 +35,8 @@ static void database_pull(resp_t *response, uint16_t *state, uint16_t *error) {
 }
 
 static void database_push(resp_t *response, uint16_t *state, uint16_t *error) {
- /*Struct-variable 'writer' points at protocol and received data to append inside the 'write_driver'.*/
+ /*Struct-variable 'writer' points at data stored among the response-members before append-logic taking place inside
+  *the 'write_driver'.*/
 
   write_t writer = {.size_appd = response->size_recv};
   writer.protocol = response->protocol;
@@ -45,7 +48,8 @@ static void database_push(resp_t *response, uint16_t *state, uint16_t *error) {
 }
 
 static void validate_resp(resp_t *response, uint16_t *state) {
-/*Making room for PROTOCOL (and terminator). If any error has accured the VALID-flag will be cleared, else set.*/
+/*Making room for PROTOCOL (and terminator). If any error has accured the VALID-flag will be cleared, else set. A
+ *cleared flag will be interpreted by the client as something went wrong on server-side.*/
   
   response->size_resp += POFFS;
   if (*state & (1 << ERROR))
@@ -75,11 +79,11 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
     *state |= (1 << ERROR); *error |= (1 << SDERR);
   return;
   }
-  
   validate_resp(response, state);
+  
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
-
   System_Message("Sending response to client.");
+  
   if (size_send != response->size_resp) {
     *state |= (1 << ERROR); *error |= (1 << PSERR);
   }

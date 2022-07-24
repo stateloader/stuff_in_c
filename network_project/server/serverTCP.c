@@ -31,6 +31,5 @@ int main(int argc, char **argv) {
     socket_accept(&driver.server, &driver.status, &driver.error);
     server_driver(&driver);
   }
-  
   exit(EXIT_SUCCESS);
 }

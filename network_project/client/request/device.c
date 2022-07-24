@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------------DEVICE
-Nått kort.
+For now, you're only able to manage which color the device's LED is shone in but it will be more stuff in place later.
 ------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>

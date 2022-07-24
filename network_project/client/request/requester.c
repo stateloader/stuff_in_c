@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------------------------------------------REQUESTER
-Source-file hosting the 'driver' and some generic functionality that's true for all requests; at time being just message
-and device, however.
+Source-file sewing all logic in the request-module togheter starting in the "driver".
 -------------------------------------------------------------------------------------------------------------------------*/
+
 #include <string.h>
 #include "../connect/connection.h"
 #include "../system/cstrings.h"
@@ -60,13 +60,23 @@ void validate_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
 
   return;
 }
+
+typedef void (*reqt_func)(reqt_t *request, uint8_t *state, uint16_t *error);
+
+typedef struct RequestItem {
+  const uint8_t table;
+  reqt_func func;
+} reqt_item;
+
+
 static reqt_item table_items[] = {
-  {TMESG, message_driver}, {TDVCE, device_driver}
+  {TMESG, message_driver},
+  {TDVCE, device_driver}
 };
 
 void request_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
 /*Iterates through the flags in the TBIDX-byte of the PROTOCOL and loads the associated driver. The purpose is to make
- *this endevour more scalable as more optons and functionality occupies the other TBDIX-bits.*/
+ *this endevour more scalable as more optons and functionality occupies the other TBDIX-bits later on.*/
 
   request->protocol[EBIDX] |= (1 << VALID);
 

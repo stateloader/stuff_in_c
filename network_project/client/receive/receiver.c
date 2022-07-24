@@ -7,8 +7,8 @@
 #include "receiver.h"
 
 static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
-/*Validates received data. If the received data isn't terminated, or is lesser than POFFS in size, something went
- *horrible and the func will call return immediately after the error-flags is set.*/
+/*Validates received data and assigns PROTOCOL out of the last bytes. If the received data isn't terminated, or is lesser
+ *than POFFS in size, something went horrible and the func will call return immediately after the error-flags is set.*/
 
   if (receive->package[receive->size_pack - 1] != '\0') {
     *state |= (1 << ERROR); *error |= (1 << PTERR); return;
@@ -99,14 +99,13 @@ static void received_push(recv_t *receive, uint8_t *state, uint16_t *error)  {
 }
 
 void receive_driver(recv_t *receive, uint8_t *state, uint16_t *error) {
-/*Driver dealing with reveived data by doing some checks before assigning a 'receive_route' based on original
- *request-type (push/pull).*/
+/*Assigns received data to members of struct-variable 'receive' and validates its content. From here, logic takes
+ *different "routes" depending of original request-type (push/pull).*/
 
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
   validate_recv(receive, state, error);
 
   if (*state & (1 << ERROR)) return;
-
   int32_t receive_route = (receive->protocol[EBIDX] & (1 << RWBIT)) ? 1 :  0;
 
   switch (receive_route) {

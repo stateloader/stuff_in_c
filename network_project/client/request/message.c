@@ -1,6 +1,6 @@
 /*------------------------------------------------------------------------------------------------------------------MESSAGE
-For some reason I can't create the message struct-variable inside 'mesg_push' and take it from there without formatting
-going mayhem. 
+For some reason I can't create the message struct-variable inside 'mesg_push' and run the same logic already in place from
+there without formatting going mayhem. 
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>

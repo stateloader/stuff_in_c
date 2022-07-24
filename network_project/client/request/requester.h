@@ -15,13 +15,6 @@ typedef struct Requester {
   char package[SBUFF];
 } reqt_t;
 
-typedef void (*reqt_func)(reqt_t *request, uint8_t *state, uint16_t *error);
-
-typedef struct RequestItem {
-  const uint8_t table;
-  reqt_func func;
-} reqt_item;
-
 void datetime_attach(reqt_t *request);
 void protocol_attach(reqt_t *request);
 void request_driver(reqt_t *requester, uint8_t *state, uint16_t *error);

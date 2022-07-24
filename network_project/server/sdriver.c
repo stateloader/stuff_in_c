@@ -1,5 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------SERVER DRIVER
-I'd mwih ease                                                                              
+When the server has established connection with a client four states will be ran and they're quite straight forward where
+most of the logic for a given task taking place inside various "drivers". If any error-flag being raised, the process going
+to "fall down" to 'state_outcome' with immediate return-calls.                                                                        
 /------------------------------------------------------------------------------------------------------------------------*/
 #include "connect/connection.h"
 #include "receive/receiver.h"
@@ -9,20 +11,29 @@ I'd mwih ease
 #include "system/cstrings.h"
 #include "sdriver.h"
 
+static void print_bytes(uint8_t *protocol) {
+  PrintByte(protocol[TBIDX]);
+  PrintByte(protocol[ABIDX]);
+  PrintByte(protocol[EBIDX]);
+}
+
+//static char state_checker()
+
 static void state_receive(dver_t *driver, recv_t *receive) {
+/*Fetches received data from client inside the "driver".*/
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("state receive.");
 
   receive_driver(receive, &driver->status, &driver->error);
-
+  print_bytes(receive->protocol);
   return;
 }
                   
 static void state_courier(dver_t *driver, resp_t *response, recv_t *receive) {
+/*Before struct-variable 'response' taking over it needs to gain access to data stored among members in 'receive' which is
+ *taking place in here.*/
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("state courier.");
 
   response->protocol = receive->protocol;
   response->received = receive->package;
@@ -32,9 +43,9 @@ static void state_courier(dver_t *driver, resp_t *response, recv_t *receive) {
 }
 
 static void state_respond(dver_t *driver, resp_t *response) {
+/*Creates and send a response to client inside the "driver".*/
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("state respond.");
   
   response_driver(response, &driver->status, &driver->error);
 
@@ -44,7 +55,6 @@ static void state_respond(dver_t *driver, resp_t *response) {
 static void state_outcome(dver_t *driver) {
 
   error_driver(driver->status, driver->error);
-  driver->error &= ~(1 << ERROR);
   close(driver->server.client_sock_desc);
 }
 

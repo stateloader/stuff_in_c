@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------------------------------------------------CLIENT DRIVER
 When connected, the (a) session going to run through 4 states shown and described below. If any error accurs during this
-process, flags will be raised whereafter the logic from that point forward will "fall through" down to 'state_outcome'
-by immideate return-calls.
+process, flags will be raised whereafter the logic from that point forward will "fall through" down to 'state_outcome' by
+immideate return-calls.
 //-----------------------------------------------------------------------------------------------------------------------*/
 
 #include "system/error.h"
@@ -15,8 +15,8 @@ by immideate return-calls.
 
 static void state_command(dver_t *driver) {
 /*Struct variable 'driver' throws member 'protocol' into the 'command_driver' where this 3 byte-array being assigned based
- *on userinput. When assigned, it becomes 'the very' PROTOCOL and governs how the program behaves in upcoming state both on
- *client and server-side. SEE COMMAND MODULE.*/
+ *on userinput. When assigned, it becomes "the" PROTOCOL and governs how the program behaves in upcoming states both on
+ *client and server-side.*/
 
   if (driver->state & (1 << ERROR)) return;
 
@@ -28,7 +28,7 @@ static void state_command(dver_t *driver) {
 
 static void state_request(dver_t *driver) {
 /*Struct-variable 'request' will assign 'sock_desc' and 'size_user' from 'driver/client' while pointing at its
- *'protocol' and 'username'-array, making this data available inside the 'request_driver'. SEE REQUEST MODULE.*/
+ *'protocol' and 'username'-array, making this data available inside the 'request_driver'.*/
 
   if (driver->state & (1 << ERROR)) return;
 
@@ -45,7 +45,7 @@ static void state_request(dver_t *driver) {
 }
 
 static void state_receive(dver_t *driver) {
-/*Struct-variable 'receive' going to be used while crunching the server's response. SEE RECEIVE MODULE.*/
+/*Struct-variable 'receive' going to be used while crunching the server's response inside 'receive_driver'.*/
 
   if (driver->state & (1 << ERROR)) return;
 

@@ -1,11 +1,21 @@
 /*-------------------------------------------------------------------------------------------------------------------WRITER
-                                                                           
+Source-file containing all logic dealing with writing/appending to database(s).                 
 /------------------------------------------------------------------------------------------------------------------------*/
 
 #include "writer.h"
 
+typedef struct WriteItem {
+  const uint8_t flag;
+  const char *filepath;
+} write_item;
+
+static write_item write_items[] = {
+  {TMESG, "response/database/mesg.dat"},
+  {TDVCE, "response/database/dvce.dat"}
+};
+
 static void database_trim(write_t *writer, uint16_t *state, uint16_t *error) {
-/*Removes the PROTOCOL (rather trims down the package-size for not including it). Not desired in the database.*/
+/*Removes the PROTOCOL, or, rather trims it down for not including the package-data (isn't desired in the database.*/
 
   writer->size_appd -= POFFS;
   if (writer->append[writer->size_appd - 1] != DELIM) {
@@ -14,14 +24,9 @@ static void database_trim(write_t *writer, uint16_t *state, uint16_t *error) {
   return;
 }
 
-static write_item write_items[] = {
-  {TMESG, "response/database/mesg.dat"},
-  {TDVCE, "response/database/dvce.dat"}
-};
-
 static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
-/*For now just two items why this loop isn't really needed but it's in place for scaling when (if) more stuff to handle
- *comes in place*/
+/*A given database being open by fetch an item (with a mapped file-path) based on TBIDX in PROTOCOL. For now just two items
+ *why this loop is rather pointless but in place for scaling when (if) more stuff to handle comes in place.*/
 
   if (*state & (1 << ERROR)) return;
   System_Message("Opens database.");
@@ -37,7 +42,7 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
 }
 
 static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
-/*Writing (appending) to database*/
+/*Writing (appending) to database.*/
 
   if (*state & (1 << ERROR)) return;
   System_Message("Writing to database.");
