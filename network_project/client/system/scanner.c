@@ -15,12 +15,12 @@ static void scan_byte(scan_t *scanner) {
   for (size_t i = 0; i < scanner->size_scan; i++) {
     
     if (!scan_check_asci(scanner->scan_input[i])) {
-      System_Message("Only ASCII ('English') characters allowed.");
+      System_Message("only ASCII ('English') characters allowed.");
       scanner->state = SSCAN;
       return;
     }
     if (scan_check_delm(scanner->scan_input[i])) {
-      System_Message("Pipe charachter ('|') is for losers. Use another one.");
+      System_Message("pipe charachter ('|') is for losers. Use another one.");
       scanner->state = SSCAN; 
       return;
     }
@@ -35,12 +35,12 @@ static void scan_size(scan_t *scanner) {
 /*Checks input is within the boarders for allowed input-sizes (max 'broken' at the moment)*/
 
   if (scan_check_minl(scanner->size_scan, 1)) {
-    System_Message("Enter at least one character.");
+    System_Message("enter at least one character.");
     scanner->state = SSCAN;
     return;
   }
   if (scan_check_maxl(scanner->size_scan, scanner->size_buff)) {
-    System_Message("You've passed allowed input-limit. Yay!");
+    System_Message("you've passed allowed input-limit. Yay!");
     exit(EXIT_FAILURE);
   }
   scanner->state = SDONE;

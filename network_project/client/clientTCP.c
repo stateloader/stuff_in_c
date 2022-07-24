@@ -23,10 +23,9 @@ int main(int argc, char **argv) {
   dver_t driver = {.client = client};
   driver.state |= (1 << SCONN);
   
-  while(driver.state & (1 << SCONN)) {
-    client_driver(&driver);
-    if (driver.state & (1 << ERROR))
-      exit(EXIT_FAILURE);
-  }
+  client_driver(&driver);
+  if (driver.state & (1 << ERROR))
+    exit(EXIT_FAILURE);
+    
   exit(EXIT_SUCCESS);
 }

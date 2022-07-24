@@ -22,9 +22,6 @@ static void validate_recv(recv_t *receive, uint8_t *state, uint16_t *error)  {
   receive->protocol[EBIDX] = receive->package[receive->size_pack - 2];
   //assigns received protocol. 
 
-  if (!(receive->protocol[EBIDX] & (1 << VALID))) {
-    *state |= (1 << ERROR); *error |= (1 << PIERR);
-  }//received package hasen't valid-flag set.
   if (!(receive->protocol[TBIDX] & (1 << MSBIT))) {
     *state |= (1 << ERROR); *error |= (1 << PBERR);
   }//received PROTOCOL corrupted (MSG not set).
@@ -51,7 +48,7 @@ static void validate_rows(recv_t *receive, size_t dcount, uint8_t *state, uint16
   
   if (amnt_delm % receive->amnt_rows != 0) {
     *state |= (1 << ERROR); *error |= (1 << PDERR);
-  }//delimiter-count is corrupted.
+  }//delimiter-count corrupted.
 
   return;
 }

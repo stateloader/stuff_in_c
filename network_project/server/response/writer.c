@@ -29,7 +29,7 @@ static void database_open(write_t *writer, uint16_t *state, uint16_t *error) {
  *why this loop is rather pointless but in place for scaling when (if) more stuff to handle comes in place.*/
 
   if (*state & (1 << ERROR)) return;
-  System_Message("Opens database.");
+  System_Message("opens the file.");
 
   for (size_t i = 0; i < ARRAY_SIZE(write_items); i++) {
     if (writer->protocol[TBIDX] & (1 << write_items[i].flag))
@@ -45,7 +45,7 @@ static void database_push(write_t *writer, uint16_t *state, uint16_t *error)  {
 /*Writing (appending) to database.*/
 
   if (*state & (1 << ERROR)) return;
-  System_Message("Writing to database.");
+  System_Message("writing to database.");
 
   size_t size_push = fwrite(writer->append, sizeof(char), writer->size_appd, writer->file);
   if (size_push != writer->size_appd) {

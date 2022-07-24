@@ -13,7 +13,7 @@ static void database_open(read_t *reader, uint16_t *state, uint16_t *error) {
  *is in place.*/
 
   if (*state & (1 << ERROR)) return;
-  System_Message("Open file.");
+  System_Message("opens the file.");
 
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (reader->protocol[TBIDX] & (1 << read_items[i].flag))
@@ -30,7 +30,7 @@ static void database_pull(read_t *reader, uint16_t *state, uint16_t *error)  {
 /*Reading content from the (a) database.*/
 
   if (*state & (1 << ERROR)) return;
-  System_Message("Reading from database.");
+  System_Message("reading from database.");
 
   reader->size_cont = fread(reader->content, sizeof(char), RBUFF, reader->file);
   if (reader->size_cont <= 0) {

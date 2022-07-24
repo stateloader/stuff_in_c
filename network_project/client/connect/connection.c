@@ -14,7 +14,7 @@ static void client_create(clnt_t *client) {
 
   client->sock_desc = socket(AF_INET, SOCK_STREAM, 0);
   if (client->sock_desc < 0) {
-    System_Message("Failed to create socket.");
+    System_Message("failed to create socket.");
     exit(EXIT_FAILURE);
   }
   return;
@@ -31,10 +31,10 @@ static void client_binder(clnt_t *client, const char *ADDRESS, const char *PORT_
   client->server_address.sin_family = AF_INET;
   client->server_address.sin_port = htons(PORT);
    
-  client->conn_stat = connect(
+  int32_t conn = connect(
     client->sock_desc, (struct sockaddr *) &client->server_address, sizeof(client->server_address));
 
-  if (client->conn_stat < 0) {
+  if (conn < 0) {
     System_Message("failed connect to server. Address, port or both is incorrect.");
     exit(EXIT_FAILURE);
   }

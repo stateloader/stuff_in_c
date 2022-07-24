@@ -10,7 +10,7 @@ there without formatting going mayhem.
 
 static void mesg_scan(mesg_t *message) {
 /*A subject and a comment being entered/created by user-input/scan.*/ 
-  Render_Header("COMPOSE", "Enter subject comment.");
+  Render_Header("COMPOSE", "Enter Subject and Comment.");
 
   message->size_subj = scan_driver(message->subject, "subject", SBUFF);
   message->size_comm = scan_driver(message->comment, "comment", SBUFF);

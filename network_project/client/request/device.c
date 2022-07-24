@@ -11,11 +11,11 @@ static void dvce_scan(uint8_t push, devc_t *device) {
 /*A short string being attached to the push-package mapped by the user's choice of LED-colour.*/
 
   if (push & (1 << ATTR0))
-    device->size_push = string_copy(device->dvcepush, "RED", SBUFF);
+    device->size_push = string_copy(device->dvcepush, "Red", SBUFF);
   if (push & (1 << ATTR1))
-    device->size_push = string_copy(device->dvcepush, "BLU", SBUFF);
+    device->size_push = string_copy(device->dvcepush, "Blue", SBUFF);
   if (push & (1 << ATTR2))
-    device->size_push = string_copy(device->dvcepush, "GRN", SBUFF);
+    device->size_push = string_copy(device->dvcepush, "Green", SBUFF);
     
   return;
 }

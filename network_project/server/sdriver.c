@@ -11,21 +11,12 @@ to "fall down" to 'state_outcome' with immediate return-calls.
 #include "system/cstrings.h"
 #include "sdriver.h"
 
-static void print_bytes(uint8_t *protocol) {
-  PrintByte(protocol[TBIDX]);
-  PrintByte(protocol[ABIDX]);
-  PrintByte(protocol[EBIDX]);
-}
-
-//static char state_checker()
-
 static void state_receive(dver_t *driver, recv_t *receive) {
 /*Fetches received data from client inside the "driver".*/
 
   if (driver->status & (1 << ERROR)) return;
-
   receive_driver(receive, &driver->status, &driver->error);
-  print_bytes(receive->protocol);
+  
   return;
 }
                   
@@ -52,9 +43,10 @@ static void state_respond(dver_t *driver, resp_t *response) {
   return;
 }
 
-static void state_outcome(dver_t *driver) {
+static void state_summary(dver_t *driver) {
 
-  error_driver(driver->status, driver->error);
+  if (driver->status & (1 << ERROR))
+    error_driver(&driver->status, &driver->error);
   close(driver->server.client_sock_desc);
 }
 
@@ -66,6 +58,7 @@ void server_driver(dver_t *driver) {
   state_receive(driver, &receive);
   state_courier(driver, &response, &receive);
   state_respond(driver, &response);
-  
-  state_outcome(driver);
+  state_summary(driver);
+
+  return;
 }

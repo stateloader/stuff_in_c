@@ -1,9 +1,10 @@
 /*------------------------------------------------------------------------------------------------------------CLIENT DRIVER
-When connected, the (a) session going to run through 4 states shown and described below. If any error accurs during this
+When connected, the (a) session going to run through four states shown and described below. If any error accurs during this
 process, flags will be raised whereafter the logic from that point forward will "fall through" down to 'state_outcome' by
 immideate return-calls.
 //-----------------------------------------------------------------------------------------------------------------------*/
 
+#include <unistd.h>
 #include "system/error.h"
 #include "connect/connection.h"
 #include "request/requester.h"
@@ -18,8 +19,6 @@ static void state_command(dver_t *driver) {
  *on userinput. When assigned, it becomes "the" PROTOCOL and governs how the program behaves in upcoming states both on
  *client and server-side.*/
 
-  if (driver->state & (1 << ERROR)) return;
-
   driver->state |= (1 << SCOMM);
   command_driver(driver->protocol);
 
@@ -32,8 +31,7 @@ static void state_request(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
 
-  driver->state &= ~(1 << SCOMM);
-  driver->state |= (1 << SREQT);
+  driver->state &= ~(1 << SCOMM); driver->state |= (1 << SREQT);
 
   reqt_t request = {
     .sock_desc = driver->client.sock_desc, .protocol = driver->protocol,
@@ -49,8 +47,7 @@ static void state_receive(dver_t *driver) {
 
   if (driver->state & (1 << ERROR)) return;
 
-  driver->state &= ~(1 << SREQT);
-  driver->state |= (1 << SRECV);
+  driver->state &= ~(1 << SREQT); driver->state |= (1 << SRECV);
 
   recv_t receive = {.sock_desc = driver->client.sock_desc};
   receive_driver(&receive, &driver->state, &driver->error);
@@ -58,14 +55,11 @@ static void state_receive(dver_t *driver) {
   return;
 }
 
-static void state_outcome(dver_t *driver) {
-/*Outcome state, checks for errors and asks for more.*/
+static void state_summary(dver_t *driver) {
+/*Prints error(s), for now.*/
 
   error_driver(driver->state, driver->error);
-  if (driver->state & (1 << ERROR)) return;
-
-  driver->state &= ~(1 << SREQT);
-  driver->state &= ~(1 << SCONN);
+  close(driver->client.sock_desc);
 }
 
 void client_driver(dver_t *driver) {
@@ -73,5 +67,5 @@ void client_driver(dver_t *driver) {
   state_command(driver);
   state_request(driver);
   state_receive(driver);
-  state_outcome(driver);
+  state_summary(driver);
 }

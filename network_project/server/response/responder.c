@@ -65,7 +65,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
 /*State of the RWBIT in Received PROTOCOL decides which database-route to take - push or pull - before the crated
  *response being validated and sent.*/
 
-  System_Message("Creating response.");
+  System_Message("creating response.");
   int32_t database_route = (response->protocol[EBIDX] & (1 << RWBIT)) ? 1 : 0;
 
   switch (database_route) {
@@ -82,7 +82,7 @@ void response_driver(resp_t *response, uint16_t *state, uint16_t *error) {
   validate_resp(response, state);
   
   size_t size_send = send(response->client_sock_desc, response->response, response->size_resp, 0);
-  System_Message("Sending response to client.");
+  System_Message("sending response to client.");
   
   if (size_send != response->size_resp) {
     *state |= (1 << ERROR); *error |= (1 << PSERR);

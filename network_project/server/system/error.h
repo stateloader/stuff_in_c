@@ -12,7 +12,7 @@ typedef struct ErrorItem {
 } error_item;
 
 
-void error_driver(uint16_t status, uint16_t error);
+void error_driver(uint16_t *status, uint16_t *error);
 
 #endif
 

@@ -6,16 +6,16 @@ If any errors is flagged it's going to be printed and dealt with here.
 #include "error.h"
 
 static error_item error_items[] = {
-  {PSERR, "Package",    "Package size is corrupted."},
-  {PTERR, "Package",    "Package isn't nullterminated."},
-  {PDERR, "Package",    "Corrupted delimiter-format on package."},
-  {IFERR, "System",     "Failed to fetch an item which should be in place."},
-  {CPERR, "System",     "Copy failure."},
-  {SDERR, "System",     "Defaulted Switch-statement."},
-  {RSERR, "Request",    "Sent package is corrupted (control-size and send-size differ)."},
+  {PSERR, "Package",    "package size is corrupted."},
+  {PTERR, "Package",    "package isn't nullterminated."},
+  {PDERR, "Package",    "corrupted delimiter-format on package."},
+  {IFERR, "System",     "failed to fetch an item which should be in place."},
+  {CPERR, "System",     "copy failure."},
+  {SDERR, "System",     "defaulted Switch-statement."},
+  {RSERR, "Request",    "sent package is corrupted (control-size and send-size differ)."},
   {PBERR, "Response",   "MSB (one or more bytes) in PROTOCOL isn't set."},
-  {PIERR, "Response",   "Package (response) has its VALID-flag cleared (Something went south server-side)."},
-  {MAERR, "Memory",     "Failed to allocate memory."}
+  {PIERR, "Response",   "package (response) has its VALID-flag cleared (Something went south server-side)."},
+  {MAERR, "Memory",     "failed to allocate memory."}
 };
 
 static void print_errors(uint8_t status, uint16_t error) {

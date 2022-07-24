@@ -14,13 +14,14 @@ BIT(N)                                    |    15   |    14   |    13   |    12 
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRESP  |  SCOUR  |  SRECV  |  SCONN  |
+CONSTANT                                  |  ERROR  |  ADVCE  |    -    |    -    |  SRESP  |  SCOUR  |  SRECV  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define SCONN 0 //  State Connected.
 #define SRECV 1 //  State Receive.
 #define SCOUR 2 //  State Courier.
 #define SRESP 3 //  State Response.
+#define ADVCE 4 //  Activate Device.
 #define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |  FRERR  |  FWERR  |  SDERR  |  CPERR  |  IFERR  |
@@ -50,7 +51,7 @@ TABLE BYTE         0                       |  MSBIT  |    -    |    -    |    - 
 ---------------------------------------------------------------------------------------------------------------------------
 ATTRIBUTE BYTE     1                       |  MSBIT  |  ATTR6  |  ATTR5  |  ATTR4  |  ATTR3  |  ATTR2  |  ATTR1  |  ATTR0 |
 ---------------------------------------------------------------------------------------------------------------------------
-ECHO BYTE          3                       |  MSBIT  |  VALID  |    -    |    -    |    -    |     -   |    -    |  RWBIT |
+ECHO BYTE          3                       |  MSBIT  |    -    |    -    |    -    |    -    |     -   |    -    |  RWBIT |
 -------------------------------------------------------------------------------------------------------------------------*/
 #define TBIDX 0   // Table Byte Index.
 #define ABIDX 1   // Attribute Byte Index.
@@ -68,7 +69,6 @@ ECHO BYTE          3                       |  MSBIT  |  VALID  |    -    |    - 
 #define ATTR6 6
 //---------------------------------------------------------------------------------------------------------------Echo Bits
 #define RWBIT 0   // Read/Write bit.
-#define VALID 6
 //------------------------------------------------------------------------------------------------------------------------
 #define MSBIT 7   // Most Significant Bit. Always set in bytes belonging to PROTOCOL.
 //-----------------------------------------------------------------------------------------------------------------BUFFERS
