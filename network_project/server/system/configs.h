@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------------------------------MACROS SERVER MODULE
-Macros implemented reg                                                                                                   
+Server Macros.                                                                                  
 //-----------------------------------------------------------------------------------------------------------------------*/
 #ifndef CONFIGS_H_
 #define CONFIGS_H_
@@ -14,13 +14,13 @@ BIT(N)                                    |    15   |    14   |    13   |    12 
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |    -    |    -    |
 ---------------------------------------------------------------------------------------------------------------------------
 BIT(N)                                    |    7    |    6    |    5    |    4    |    3    |    2    |    1    |    0    |
-CONSTANT                                  |  ERROR  |    -    |    -    |    -    |    -    |  RECVF  |  SCACC  |  SSONN  |
+CONSTANT                                  |  ERROR  |    -    |    -    |    -    |  SRESP  |  SCOUR  |  SRECV  |  SCONN  |
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #define SCONN 0 //  State Connected.
-#define SCACC 1                           // State Accept.
-#define RECVF 2                           // When set, a request has successfully been revieved from the server.
-
+#define SRECV 1 //  State Receive.
+#define SCOUR 2 //  State Courier.
+#define SRESP 3 //  State Response.
 #define ERROR 7                           /*Something went wrong---------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |  FRERR  |  FWERR  |  SDERR  |  CPERR  |  IFERR  |

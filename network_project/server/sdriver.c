@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------------------------------------SERVER DRIVER
-Main driver. Runs until something goes (very) south.                                                                                             
+I'd mwih ease                                                                              
 /------------------------------------------------------------------------------------------------------------------------*/
 #include "connect/connection.h"
 #include "receive/receiver.h"
@@ -9,42 +9,32 @@ Main driver. Runs until something goes (very) south.
 #include "system/cstrings.h"
 #include "sdriver.h"
 
-static void state_receive(recv_t *receive, dver_t *driver) {
-/*Receive state. See RECEIVE MODULE.*/
+static void state_receive(dver_t *driver, recv_t *receive) {
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("initiates receive-driver.");
+  System_Message("state receive.");
 
   receive_driver(receive, &driver->status, &driver->error);
 
   return;
 }
-
-static void state_courier(resp_t *response, recv_t *receive, dver_t *driver) {
-/*After a package has (successfully) been received, this state is about copy received content over to the response-members
- *while some checks being done. A "middle-hand" of some sort. In earlier interpretations I just pointed at the received
- *data in later states. It worked, but tended to behave unpredictable sometimes for some reason why I settled on this
- *solution.*/
+                  
+static void state_courier(dver_t *driver, resp_t *response, recv_t *receive) {
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("initiates curier.");
+  System_Message("state courier.");
 
-  response->protocol[TBIDX] = receive->protocol[TBIDX];
-  response->protocol[ABIDX] = receive->protocol[ABIDX];
-  response->protocol[EBIDX] = receive->protocol[EBIDX];
+  response->protocol = receive->protocol;
+  response->received = receive->package;
+  response->size_recv = receive->size_pack;
 
-  response->size_recv = string_copy(response->received, receive->package, SBUFF);
-  if (response->size_recv != receive->size_pack) {
-    driver->status |= (ERROR); driver->error |= (1 << CPERR);
-  }
   return;
 }
 
-static void state_respond(resp_t *response, dver_t *driver) {
-/*Response state. See RESPONSE MODULE.*/
+static void state_respond(dver_t *driver, resp_t *response) {
 
   if (driver->status & (1 << ERROR)) return;
-  System_Message("initiates response-driver.");
+  System_Message("state respond.");
   
   response_driver(response, &driver->status, &driver->error);
 
@@ -54,19 +44,18 @@ static void state_respond(resp_t *response, dver_t *driver) {
 static void state_outcome(dver_t *driver) {
 
   error_driver(driver->status, driver->error);
-  close(driver->client_sock_desc);
+  driver->error &= ~(1 << ERROR);
+  close(driver->server.client_sock_desc);
 }
 
 void server_driver(dver_t *driver) {
 
-  socket_listen(&driver->server, &driver->status, &driver->error);
-  socket_accept(&driver->server, &driver->status, &driver->error);
-
   recv_t receive =  {.client_sock_desc = driver->server.client_sock_desc};
   resp_t response = {.client_sock_desc = driver->server.client_sock_desc};
   
-  state_receive(&receive, driver);
-  state_courier(&response, &receive, driver);
-  state_respond(&response, driver);
+  state_receive(driver, &receive);
+  state_courier(driver, &response, &receive);
+  state_respond(driver, &response);
+  
   state_outcome(driver);
 }

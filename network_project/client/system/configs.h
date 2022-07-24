@@ -1,7 +1,7 @@
 #ifndef CONFIGS_H_
 #define CONFIGS_H_
 /*-----------------------------------------------------------------------------------------------------MACROS CLIENT MODULE
-All Macroes that popple in the bakground throughout the program.
+Client Macros.
 //-----------------------------------------------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stddef.h>
@@ -15,7 +15,7 @@ CONSTANT                                  |  ERROR  |    -    |    -    |    -  
 #define SREQT 2   // State Request.
 #define SRECV 3   // State Receive.
 
-#define ERROR 7   /* State Error.         Something went wrong-----------------------------------------------ERROR HANDLING
+#define ERROR 7   /* Error.               Something went wrong-----------------------------------------------ERROR HANDLING
 BIT(N)                                    |    15   |    14   |    13   |    12   |    11   |    10   |    9    |    8    |
 ERROR HIGH BYTE                           |    -    |    -    |    -    |    -    |    -    |    -    |  MAERR  |  PIERR  |
 ---------------------------------------------------------------------------------------------------------------------------

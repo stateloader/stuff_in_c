@@ -41,7 +41,7 @@ static void server_binder(serv_t *server, const char *ADDRESS, const char *PORT_
 }
 
 void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR) {
-/*Wraps the previous static functions. If nothing fails the server's up an running.*/
+/*Wraps the previous static functions. If nothing fails the server's up and running.*/
 
   server_create(client);
   server_binder(client, ADDRESS, PORT_STR);

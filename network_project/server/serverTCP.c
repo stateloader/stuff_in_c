@@ -26,8 +26,11 @@ int main(int argc, char **argv) {
   driver.server = server;
   driver.status |= (1 << SCONN);
 
-  while (driver.status & (1 << SCONN))
+  while (driver.status & (1 << SCONN)) {
+    socket_listen(&driver.server, &driver.status, &driver.error);
+    socket_accept(&driver.server, &driver.status, &driver.error);
     server_driver(&driver);
+  }
   
   exit(EXIT_SUCCESS);
 }

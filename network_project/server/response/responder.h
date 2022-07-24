@@ -5,9 +5,9 @@
 
 typedef struct Responder {
   int32_t client_sock_desc;
-  uint8_t protocol[3];
+  uint8_t *protocol;
   size_t size_recv;
-  char received[SBUFF];
+  char *received;
   size_t size_resp;
   char response[RBUFF];
 } resp_t;

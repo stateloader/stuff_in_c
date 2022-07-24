@@ -1,10 +1,9 @@
 /*------------------------------------------------------------------------------------------------------------------STRINGS
-Same naive approach for string-handeling as in Client. I asume The <libraries> regarding these operations works fine, are
-safer and works much efficient but it was/is fun and educational to play around with the stuff myself.                                                                     
-/------------------------------------------------------------------------------------------------------------------------*/
+Same naive approach for string-handeling as in Client. I assume libraries regarding these operations works fine, are safer
+and works much more efficient but it was/is fun and educational to play around with it myself.                                                                     
+-------------------------------------------------------------------------------------------------------------------------*/
 
 #include "cstrings.h"
-
 
 void buffer_flush(char *buffer, size_t size_buffer) {
 /*Nullterminates a buffer.*/
@@ -42,4 +41,3 @@ int8_t string_comp(char *str1, const char *str2, size_t comp_buff) {
     return 1;
   return 0;
 }
-

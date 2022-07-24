@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------------------------ERROR
-If an error is flagged it's going to be printed and dealt with here.
+If any errors is flagged it's going to be printed and dealt with here.
 -------------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
