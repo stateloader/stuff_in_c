@@ -20,5 +20,5 @@ GENERAL
 	Hence, In this project I wanted to take it a step further and don't have ANYTHING to with Arduino at all but I just couldn't
 	get my hands on the damn chip. Instead it all boiled down to an ESP8266EX (development card "Wemos D1 Mini").
 
-	I've Flashed the "Wemos" using MicroPython. Nothing fancy. It just reads the latest entry in device.dat within a loop while
-	current LED-colour is govern based on latest entry stored in this file.
+	I've Flashed the "Wemos" using MicroPython. Nothing fancy. It just reads from the device.dat-file within a loop while the
+	current LED-colour is govern based on latest entry.
