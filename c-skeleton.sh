@@ -21,7 +21,7 @@ OS, even less if it isn't a Linux dist.
 
 INTRO
 
-DATE=$( date )
+DATE=$( date '+%d:%m:%Y' )
 
 #	User being prompted for her/his name (creator of the project) and a name of the project.
 # It's OK to yolo and just press enter to CREATOR but PROJECT must be assigned.
@@ -50,94 +50,155 @@ elif [ -d "$PROJECT-project" ]; then
 	exit 1
 fi
 
-# Upcoming functions create and append files with some base-content. The content is
-# collected into a string-array and appended item by item whithin a for-loop for each file.
+# Upcoming functions create and append files with some base-content.
 
 create_readme() {
 #	Creates a README containing some default data.
 
-  touch README.md
+touch README.md
+cat << EOF > README.md
+ABOUT
+	Project \"$PROJECT\"
 
-	local -a content=(
-		"ABOUT" "	Project \"$PROJECT\"" "GENERAL" "	created by $CREATOR, $DATE"
-  )
-  for i in "${content[@]}"; do
-		echo "$i" >> README.md
-  done
+GENERAL
+	Created by $CREATOR, $DATE
+EOF
+}
+
+create_todo() {
+
+touch TODO.md
+cat << EOF > TODO.md
+TODO PROJECT "${PROJECT,,}"
+
+	TASK_______________________________________________________________________________DONE[X]
+		Create skeleton
+
+	HOW---------------------------------------------------------------------------------------
+		Ran ./c-skeleton
+
+	WHERE-------------------------------------------------------------------------------------
+		Gnu
+
+	WHO---------------------------------------------------------------------------------------
+		$USER
+
+	WHEN--------------------------------------------------------------------------------------
+		${DATE}
+
+	WHY---------------------------------------------------------------------------------------
+		Because it's awesome
+
+	NOTES-------------------------------------------------------------------------------------
+		Project successfully created
+
+	TASK_______________________________________________________________________________DONE[ ]
+	
+	HOW---------------------------------------------------------------------------------------
+
+	WHERE-------------------------------------------------------------------------------------
+	
+	WHO---------------------------------------------------------------------------------------
+	
+	WHEN--------------------------------------------------------------------------------------
+	
+	WHY---------------------------------------------------------------------------------------
+	
+	NOTES-------------------------------------------------------------------------------------
+	
+	...
+EOF
 }
 
 create_makefile() {
 # Creates a make containing some basic commands.
 
-	touch Makefile
+touch Makefile
 
-	local -a content=(
-		"make:" "	gcc -o ${PROJECT,,} source/*c -Wall -Wextra -g" "clean:" "	rm -f ${PROJECT,,}"
-	)
-	for i in "${content[@]}"; do
-		echo "$i" >> Makefile
-  done
+cat << EOF > Makefile
+make:
+	gcc -o ${PROJECT,,} source/* -Wall -Wextra -g
+clean:
+	rm -f ${PROJECT,,}
+EOF
 }
 
 create_main() {
 # Creates a main containing standard includes and the mainfunction.
 
-  touch main.c
+touch main.c
 
-  local -a content=(
-		"#include <stdio.h>" "#include <stdlib.h>" "#include \"${PROJECT,,}.h\"" ""
-		"int main(void) {" "" " printf(\"Hello $PROJECT\n\");" " return 0;" "" "}"
-	)
-  for i in "${content[@]}"; do
-    echo "$i" >> main.c
-  done
+cat << EOF > main.c
+/*------------------------------------------------------------------------------------------
+Description, main-file main.c
+------------------------------------------------------------------------------------------*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "${PROJECT,,}.h"
+
+int main(void) {
+
+	printf("Hello \"$PROJECT\"\n");
+	return 0;
+}
+EOF
 }
 
 create_header() {
-# Creates a project header-file containing includes for std variable types.
+# Creates a project header-file containing includes for standard variable types.
 
-	touch ${PROJECT,,}.h
+touch ${PROJECT,,}.h
 
-	local -a content=(
-		"#ifndef ${PROJECT^^}_H_" "#define ${PROJECT^^}_H_" "" "#include <stddef.h>"
-		"#include <stdint.h>" "" "#endif"
-  )
-  for i in "${content[@]}"; do
-  	echo "$i" >> ${PROJECT,,}.h
-  done
+cat << EOF > ${PROJECT,,}.h
+/*------------------------------------------------------------------------------------------
+Description, header-file ${PROJECT,,}.h
+------------------------------------------------------------------------------------------*/
+
+#ifndef ${PROJECT^^}__H_
+#define ${PROJECT^^}__H_
+
+#include <stddef.h>
+#include <stdint.h>
+
+#endif
+EOF
 }
 
 create_source() {
-# Creates a project source-file containing standard includes.
+# Creates a project source-file containing PROJECT.h-header and some standard includes.
 
-  touch ${PROJECT,,}.c
+touch ${PROJECT,,}.c
+cat << EOF > ${PROJECT,,}.c
+/*------------------------------------------------------------------------------------------
+Description, source-file ${PROJECT,,}.c
+------------------------------------------------------------------------------------------*/
 
-  local -a content=(
-		"#include <stdio.h>" "#include <stdlib.h>" "#include \"${PROJECT,,}.h\""
-	)
-	for i in "${content[@]}"; do
-		echo "$i" >> ${PROJECT,,}.c
-  done
+#include <stdio.h>
+#include <stdlib.h>
+#include "${PROJECT,,}.h"
+EOF
 }
 
 create_project() {
 #	Sewing everything together.
 
-	mkdir $PROJECT"_project"; cd $PROJECT"_project"
+mkdir $PROJECT"_project"; cd $PROJECT"_project"
 
-	create_readme
-	create_makefile
+create_readme
+create_todo
+create_makefile
 
-  mkdir slask source; cd source
+mkdir slask source; cd source
 
-  create_main
-	create_header
-	create_source
+create_main
+create_header
+create_source
 
-	if [ $? -gt 0 ]; then
-		echo "Something went horrible wrong during setup. Bye!"
-  	exit $?
-	fi
+if [ $? -gt 0 ]; then
+	echo "Something went horrible wrong during setup. Bye!"
+	exit $?
+fi
 }
 
 create_project
