@@ -1,13 +1,19 @@
-#ifndef CSTRINGS_H_
-#define CSTRINGS_H_
+#ifndef CSTRING__H_
+#define CSTRING__H_
 
-#include "configs.h"
+#ifndef BUFF_SIZE_LIMIT
+#define BUFF_SIZE_LIMIT 4019
+#endif
 
-void buffer_flush(char *string, size_t size_buffer);
+#include <stdio.h>
+#include <stddef.h>
+#include <stdint.h>
 
-size_t string_size(const char *string, size_t size_buffer);
-size_t string_copy(char *dest, const char *from, size_t size_buffer);
-int8_t string_comp(char *str1, const char *str2, size_t comp_length);
-size_t string_ccat(char *dest, const char *from, size_t ccat_buffer);
+void buffer_flush(size_t size_buff, char *data_buff);
+
+size_t string_size(size_t size_data_buff, const char *data_buff);
+size_t string_copy(size_t size_copy_buff, char *copy_buff, const char *from_buff);
+size_t string_ccat(size_t size_dest_buff, char *dest_buff, const char *with_buff);
+int8_t string_comp(size_t size_comp_buff, const char *str1, const char *str2);
 
 #endif

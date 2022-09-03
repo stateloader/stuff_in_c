@@ -11,11 +11,11 @@ static void dvce_scan(uint8_t push, devc_t *device) {
 /*A short string being attached to the push-package mapped by the user's choice of LED-colour.*/
 
   if (push & (1 << ATTR0))
-    device->size_push = string_copy(device->dvcepush, "Red", SBUFF);
+    device->size_push = string_copy(SBUFF, device->dvcepush, "Red");
   if (push & (1 << ATTR1))
-    device->size_push = string_copy(device->dvcepush, "Blue", SBUFF);
+    device->size_push = string_copy(SBUFF, device->dvcepush, "Blue");
   if (push & (1 << ATTR2))
-    device->size_push = string_copy(device->dvcepush, "Green", SBUFF);
+    device->size_push = string_copy(SBUFF, device->dvcepush, "Green");
     
   return;
 }
@@ -33,6 +33,7 @@ static void dvce_push(reqt_t *request, uint8_t *state, uint16_t *error) {
   request->username[request->size_user - 1] = DELIM;
   request->datetime[request->size_datm - 1] = DELIM;
   device.dvcepush[device.size_push - 1] = DELIM;
+
 
   strncat(request->package, request->username, request->size_pack);
   strncat(request->package, request->datetime, request->size_pack);

@@ -51,7 +51,6 @@ static void protocol_reset(cmnd_t *command) {
 
   for (size_t i = 0; i < 3; i++)
     command->protocol[i] = 0x80;
-
   return;
 }
 
@@ -99,10 +98,10 @@ static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array)
  *inside 'protocol_write' and current state ('this_state') maps which byte its going to be.*/
 
   print_options(items, size_array);
-  command->size_cmnd = scan_driver(command->cmnd, "select", SBUFF);
+  command->size_cmnd = scan_driver(ASCI_PLUG, 512, command->cmnd, "select");
 
   for (size_t i = 0; i < size_array; i++) {
-    if (string_comp(command->cmnd, items[i].cmnd, command->size_cmnd)) {
+    if (string_comp(command->size_cmnd, command->cmnd, items[i].cmnd)) {
       if (i < size_array - 1)
         protocol_write(command, items[i], i);
       return items[i].next_state;

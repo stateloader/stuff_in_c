@@ -10,10 +10,10 @@ there without formatting going mayhem.
 
 static void mesg_scan(mesg_t *message) {
 /*A subject and a comment being entered/created by user-input/scan.*/ 
-  Render_Header("COMPOSE", "Enter Subject and Comment.");
 
-  message->size_subj = scan_driver(message->subject, "subject", SBUFF);
-  message->size_comm = scan_driver(message->comment, "comment", SBUFF);
+  Render_Header("COMPOSE", "Enter Subject and Comment.");
+  message->size_subj = scan_driver(ASCI_PLUG, SBUFF, message->subject, "subject");
+  message->size_comm = scan_driver(ASCI_PLUG, SBUFF, message->comment, "comment");
 
   return;
 }
@@ -37,6 +37,7 @@ static void mesg_push(mesg_t *message, reqt_t *request, uint8_t *state, uint16_t
 
   protocol_attach(request);
   validate_push(request, state, error);
+  
   return;
 }
 

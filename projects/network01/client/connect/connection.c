@@ -21,7 +21,7 @@ static void client_create(clnt_t *client) {
 }
 
 static void client_binder(clnt_t *client, const char *ADDRESS, const char *PORT_STR) {
-/*Client's socket being binder to the server. Handshake bit under the hood.*/
+/*Client's socket being binder to the server.*/
 
   System_Message("binding server to socket.");
 
@@ -49,6 +49,6 @@ void client_connect(clnt_t *client, const char *ADDRESS, const char *PORT_STR) {
   client_binder(client, ADDRESS, PORT_STR);
   
   Render_Header("CLIENT", "You've been connected! Please enter username");
-  client->size_user = scan_driver(client->username, "username", SBUFF);
+  client->size_user = scan_driver(ASCI_PLUG, 512, client->username, "select");
   return;
 }

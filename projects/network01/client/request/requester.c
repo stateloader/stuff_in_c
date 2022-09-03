@@ -15,7 +15,7 @@ void datetime_attach(reqt_t *request) {
   strncat(request->datetime, __DATE__, TBUFF);
   strncat(request->datetime, " ", TBUFF);
   strncat(request->datetime, __TIME__, TBUFF);
-  request->size_datm = string_size(request->datetime, SBUFF);
+  request->size_datm = string_size(SBUFF, request->datetime);
 
   return;
 }
