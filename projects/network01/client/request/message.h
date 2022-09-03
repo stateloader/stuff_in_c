@@ -1,11 +1,8 @@
-#ifndef MESSAGE_H_
-#define MESSAGE_H_
+#ifndef MESSAGE__H_
+#define MESSAGE__H_
 
-#include "../system/configs.h"
-#include "requester.h"
-
-#define MESGR 0 //  Message Pull
-#define MESGW 1 //  Message Push
+#include "../configs.h"
+#include "request.h"
 
 typedef struct Message {
   size_t size_subj;
@@ -14,6 +11,6 @@ typedef struct Message {
   char comment[SBUFF];
 } mesg_t;
 
-void message_driver(reqt_t *request, uint8_t *state, uint16_t *error);
+void message_driver(reqt_t *request);
 
 #endif 

@@ -1,71 +1,59 @@
-/*------------------------------------------------------------------------------------------------------------CLIENT DRIVER
-When connected, the (a) session going to run through four states shown and described below. If any error accurs during this
-process, flags will be raised whereafter the logic from that point forward will "fall through" down to 'state_outcome' by
-immideate return-calls.
-//-----------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------CLIENT DRIVER
+When/if connected, the program going to run through three states.
 
+In 'state_command' the user choose a request which being assembled and sent to the server from
+'state_request' before the response is catched in 'state_receive'.
+-------------------------------------------------------------------------------------------------*/
 #include <unistd.h>
-#include "system/error.h"
-#include "connect/connection.h"
-#include "request/requester.h"
+#include "connect/connect.h"
+#include "request/request.h"
 #include "command/commander.h"
-#include "system/cstrings.h"
-#include "system/scanner.h"
-#include "receive/receiver.h"
+#include "jackIO/cstrings.h"
+#include "jackIO/scanner.h"
+#include "receive/receive.h"
 #include "cdriver.h"
 
-static void state_command(dver_t *driver) {
-/*Struct variable 'driver' throws member 'protocol' into the 'command_driver' where this 3 byte-array being assigned based
- *on userinput. When assigned, it becomes "the" PROTOCOL and governs how the program behaves in upcoming states both on
- *client and server-side.*/
-
+static void state_command(driver_t *driver) {
+/*Sets SCOMM (command-state bit) so the system know where we are in the process before the user
+ *choose a command/task/errant inside 'command_driver'.*/
+ 
   driver->state |= (1 << SCOMM);
   command_driver(driver->protocol);
-
   return;
 }
 
-static void state_request(dver_t *driver) {
-/*Struct-variable 'request' will assign 'sock_desc' and 'size_user' from 'driver/client' while pointing at its
- *'protocol' and 'username'-array, making this data available inside the 'request_driver'.*/
-
-  if (driver->state & (1 << ERROR)) return;
-
+static void state_request(driver_t *driver) {
+/*Clears the SCOMM bit and sets SREQT (request-state bit). reqt_t struct-variable 'request' is
+ *declared before relevant data for the request-process is assigned/referenced to it's members.
+ *'request' then being pointed to from the request_driver.*/
+  
   driver->state &= ~(1 << SCOMM); driver->state |= (1 << SREQT);
-
+  
   reqt_t request = {
-    .sock_desc = driver->client.sock_desc, .protocol = driver->protocol,
-    .size_user = driver->client.size_user, .username = driver->client.username
+    .sock_desc = driver->client.sock_desc,.protocol = driver->protocol,
+    .size_user = driver->client.size_user,.username = driver->client.username
   };
-  request_driver(&request, &driver->state, &driver->error);
-
+  request_driver(&request);
   return;
 }
 
-static void state_receive(dver_t *driver) {
-/*Struct-variable 'receive' going to be used while crunching the server's response inside 'receive_driver'.*/
-
-  if (driver->state & (1 << ERROR)) return;
+static void state_receive(driver_t *driver) {
+/*Clears the SREQT-bit and sets SRECV (receive-state bit). recv_t struct-variable 'receive' is
+ *declared and relevant data för the receive-process is assigned/referenced to it's members.
+ *'receive' then being pointed to from the receive-driver.*/
 
   driver->state &= ~(1 << SREQT); driver->state |= (1 << SRECV);
-
+  
   recv_t receive = {.sock_desc = driver->client.sock_desc};
-  receive_driver(&receive, &driver->state, &driver->error);
-
+  receive_driver(&receive);
   return;
 }
 
-static void state_summary(dver_t *driver) {
-/*Prints error(s), for now.*/
-
-  error_driver(driver->state, driver->error);
-  close(driver->client.sock_desc);
-}
-
-void client_driver(dver_t *driver) {
-
+void client_driver(driver_t *driver) {
+  
   state_command(driver);
   state_request(driver);
   state_receive(driver);
-  state_summary(driver);
+  
+  close(driver->client.sock_desc);
 }

@@ -37,9 +37,8 @@ static void state_respond(dver_t *driver, resp_t *response) {
 /*Creates and send a response to client inside the "driver".*/
 
   if (driver->status & (1 << ERROR)) return;
-  
   response_driver(response, &driver->status, &driver->error);
-
+  
   return;
 }
 

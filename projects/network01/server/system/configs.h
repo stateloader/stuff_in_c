@@ -90,9 +90,5 @@ ECHO BYTE          3                       |  MSBIT  |    -    |    -    |    - 
 #define HEADER_FORM "\n%s\n%s\t\t\t%s\n%s\n\n"
 #define Header_Border "--------------------------------------------------------------------------------------------------"
 #define Render_Header(itm, inf) printf(HEADER_FORM, Header_Border, itm, inf, Header_Border);
-//-------------------------------------------------------------------------------------------------------------------DEBUG
-#define PrintByte(byte) {for (int i = 7; 0 <= i; i--) {printf("%c", (byte & (1 << i)) ? '1' : '0');} printf("\n");}
-#define NUMBFORM "\t\t\tNUMBTEST [%s] %ld\n\n"
-//------------------------------------------------------------------------------------------------------------------------
 
 #endif

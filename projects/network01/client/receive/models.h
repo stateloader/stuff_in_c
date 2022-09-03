@@ -1,7 +1,7 @@
-#ifndef MODELS_H_
-#define MODELS_H_
+#ifndef MODELS__H_
+#define MODELS__H_
 
-#include "../system/configs.h"
+#include "../configs.h"
 
 typedef struct MesgModel {
   uint32_t id;
@@ -18,10 +18,7 @@ typedef struct DvceModel {
   int8_t push[SBUFF];
 } dmod_t;
 
-mmod_t *table_mesg_create(
-  const char *package, size_t size_pack, size_t rows, uint8_t *state, uint16_t *error);
-  
-dmod_t *table_dvce_create(
-  const char *package, size_t size_pack, size_t rows, uint8_t *state, uint16_t *error);
+mmod_t *table_mesg_create(const char *package, size_t size_pack, size_t size_rows);
+dmod_t *table_dvce_create(const char *package, size_t size_pack, size_t size_rows);
 
 #endif

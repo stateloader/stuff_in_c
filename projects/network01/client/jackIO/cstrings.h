@@ -1,5 +1,5 @@
-#ifndef CSTRING__H_
-#define CSTRING__H_
+#ifndef CSTRINGS__H_
+#define CSTRINGS__H_
 
 #ifndef BUFF_SIZE_LIMIT
 #define BUFF_SIZE_LIMIT 4019

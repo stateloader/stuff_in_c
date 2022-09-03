@@ -1,6 +1,9 @@
+/*----------------------------------------------------------------------------------------CLIENT TCP
+Main function.
+--------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
-#include "connect/connection.h"
-#include "system/configs.h"
+#include "connect/connect.h"
+#include "configs.h"
 #include "cdriver.h"
 
 static void validate_usage(int argc) {
@@ -17,15 +20,12 @@ int main(int argc, char **argv) {
 
   validate_usage(argc);
 
-  clnt_t client = {.sock_desc = 0};
-  client_connect(&client, argv[1], argv[2]);
+  cent_t client = client_connect(argv[1], argv[2]);
 
-  dver_t driver = {.client = client};
+  driver_t driver = {.client = client};
   driver.state |= (1 << SCONN);
   
   client_driver(&driver);
-  if (driver.state & (1 << ERROR))
-    exit(EXIT_FAILURE);
-    
+  
   exit(EXIT_SUCCESS);
 }

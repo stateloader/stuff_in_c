@@ -1,74 +1,78 @@
-/*------------------------------------------------------------------------------------------------------------------DEVICE
-For now, you're only able to manage which color the device's LED is shone in but it will be more stuff in place later.
-------------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------------------------DEVICE
+
+--------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
-#include "../system/cstrings.h"
-#include "../system/scanner.h"
+#include <stdlib.h>
+#include "../jackIO/cstrings.h"
+#include "../jackIO/scanner.h"
+#include "../jackIO/screener.h"
 #include "device.h"
 
-static void dvce_scan(uint8_t push, devc_t *device) {
-/*A short string being attached to the push-package mapped by the user's choice of LED-colour.*/
+static void datetime_attach(reqt_t *request) {
+/*Attaches a timestamp to request-packages.*/
 
-  if (push & (1 << ATTR0))
-    device->size_push = string_copy(SBUFF, device->dvcepush, "Red");
-  if (push & (1 << ATTR1))
-    device->size_push = string_copy(SBUFF, device->dvcepush, "Blue");
-  if (push & (1 << ATTR2))
-    device->size_push = string_copy(SBUFF, device->dvcepush, "Green");
-    
+  strncat(request->datetime, __DATE__, TBUFF);
+  strncat(request->datetime, " ", TBUFF);
+  strncat(request->datetime, __TIME__, TBUFF);
+  request->size_datm = string_size(SBUFF, request->datetime);
   return;
 }
 
-static void dvce_push(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*Creates a Device push-request by binding all relevant data into a canonical string.*/
+static void protocol_attach(reqt_t *request) {
 
-  devc_t device = {.size_push = 0};
-
-  datetime_attach(request);
-  dvce_scan(request->protocol[ABIDX], &device);
-
-  request->size_pack = (request->size_user + request->size_datm + device.size_push + POFFS);
-
-  request->username[request->size_user - 1] = DELIM;
-  request->datetime[request->size_datm - 1] = DELIM;
-  device.dvcepush[device.size_push - 1] = DELIM;
-
-
-  strncat(request->package, request->username, request->size_pack);
-  strncat(request->package, request->datetime, request->size_pack);
-  strncat(request->package, device.dvcepush, request->size_pack);
-
-  protocol_attach(request);
-  validate_push(request, state, error);
+  request->package[request->size_pack - 4] = request->protocol[TINDX];
+  request->package[request->size_pack - 3] = request->protocol[PINDX];
+  request->package[request->size_pack - 2] = request->protocol[CINDX];
+  request->package[request->size_pack - 1] = '\0';
   
   return;
 }
 
-static void dvce_pull(reqt_t *request, uint8_t *state, uint16_t *error) {
+static void ledcolor_attach(uint8_t perf_byte, devc_t *device) {
+
+  if (perf_byte & (1 << PERF0))
+    device->size_note = string_copy(SBUFF, device->dvce_note, "Red");
+  if (perf_byte & (1 << PERF1))
+    device->size_note = string_copy(SBUFF, device->dvce_note, "Blue");
+  if (perf_byte & (1 << PERF2))
+    device->size_note = string_copy(SBUFF, device->dvce_note, "Green");
+  return;
+}
+
+static void push_device(reqt_t *request) {
+
+  devc_t device = {.size_note = 0};
+
+  datetime_attach(request);
+  ledcolor_attach(request->protocol[PINDX], &device);
+
+  request->size_pack = (request->size_user + request->size_datm + device.size_note + POFFS);
+
+  request->username[request->size_user - 1] = DELIM;
+  request->datetime[request->size_datm - 1] = DELIM;
+  device.dvce_note[device.size_note - 1] = DELIM;
+
+  strncat(request->package, request->username, request->size_pack);
+  strncat(request->package, request->datetime, request->size_pack);
+  strncat(request->package, device.dvce_note, request->size_pack);
+
+  protocol_attach(request);
+  return;
+}
+
+static void pull_device(reqt_t *request) {
 /*Creates a Device pull-request. Only PROTOCOL (and terminator) necessary.*/
 
   request->size_pack = POFFS;
   protocol_attach(request);
-  validate_pull(request, state, error);
 }
 
-void device_driver(reqt_t *request, uint8_t *state, uint16_t *error) {
-/*The driver assigns member 'pack_delm' - basically how many delimiters an row/entry/instance of Device has while
- *being stored in the database - before a route being determined based on RWBIT in PROTOCOL.*/
-
-  request->pack_delm = DDVCE;
-  int32_t route = (request->protocol[EBIDX] & (1 << RWBIT)) ? 1 : 0;
-
-  switch (route) {
-  case 0:
-    dvce_pull(request, state, error);
-    break;
-  case 1:
-    dvce_push(request, state, error);
-    break;
-  default:
-    *state |= (1 << ERROR); *error |= (1 << SDERR);
-  }
+void device_driver(reqt_t *request) {
+  
+  if ((request->protocol[CINDX] & (1 << PPREQ)))
+    push_device(request);
+  else
+    pull_device(request);
   return;
 }

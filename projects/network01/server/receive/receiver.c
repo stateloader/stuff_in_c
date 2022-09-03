@@ -42,6 +42,6 @@ void receive_driver(recv_t *receive, uint16_t *state, uint16_t *error) {
   System_Message("package received from client.");
 
   validate_recv(receive, state, error);
-
+  
   return;
 }

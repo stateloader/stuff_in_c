@@ -1,16 +1,15 @@
 #ifndef CDRIVER_H_
 #define CDRIVER_H_
 
-#include "system/configs.h"
-#include "connect/connection.h"
+#include "configs.h"
+#include "connect/connect.h"
 
 typedef struct ClientDriver {
   uint8_t state;
-  uint16_t error;
   uint8_t protocol[3];
-  clnt_t client;
-} dver_t;
+  cent_t client;
+} driver_t;
 
-void client_driver(dver_t *driver);
+void client_driver(driver_t *driver);
 
 #endif

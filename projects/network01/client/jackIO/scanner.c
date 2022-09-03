@@ -1,5 +1,6 @@
 /*--------------------------------------------------------------------------------------------SCANNER
-Basic userinput.
+Basic userinput utilizing different "check-plugins". The idea is to make it easy to add new "plugins"
+and their purpose is to check, and alarm, if the input isn't of desired format. 
 ---------------------------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -137,13 +138,13 @@ static uint8_t ipv6_check(formc_t *ipv6) {
 
 typedef uint8_t (*form_func)(formc_t *scan);
 
-typedef struct FormatPlugin {
+typedef struct FormatPlugin {	
 	form_func func;
 } form_plug;
 
 static form_plug form_plugs[] = {
   {asci_check}, {intg_check}, {decm_check},
-  {ipv4_check}, {ipv6_check}, // so far.
+  {ipv4_check}, {ipv6_check}, // and so on.
 };
 
 //---------------------------------------------------------------------------------------------------

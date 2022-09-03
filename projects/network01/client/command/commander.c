@@ -6,8 +6,8 @@ Yes indeed, this fell out WAY more MESSIER than I thought in andvance but it som
 to follow this bad boy from south to north, starting on the bottom with func 'command_driver'.                                                                                   
 -------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
-#include "../system/scanner.h"
-#include "../system/cstrings.h"
+#include "../jackIO/scanner.h"
+#include "../jackIO/cstrings.h"
 #include "commander.h"
 
 typedef struct MenuItem {
@@ -62,24 +62,23 @@ static void protocol_write(cmnd_t *command, menu_item item, int8_t index) {
 
   case CMAIN:
     protocol_reset(command);
-    command->protocol[TBIDX] |= (1 << index);
+    command->protocol[TINDX] |= (1 << index);
   break;
   case CMESG:
-    command->protocol[EBIDX] |= (index << RWBIT);
+    command->protocol[CINDX] |= (index << PPREQ);
   break;
   case CDVCE:
-    command->protocol[EBIDX] |= (index << RWBIT);
+    command->protocol[CINDX] |= (index << PPREQ);
   break;
   case CDLED:
-    command->protocol[ABIDX] |= (1 << index);
+    command->protocol[PINDX] |= (1 << index);
   break;
   case CHELP:
   break;
   default:
     System_Message("something went south while writing protocol.");
     exit(EXIT_FAILURE);
-  }
-  
+  }  
   return;
 }
 
@@ -144,7 +143,7 @@ void command_driver(uint8_t *protocol) {
       command.menu_state = command_scan(&command, help, ARRAY_SIZE(help));
     break;
     case CEXIT:
-      Render_Header("BYE!", "asdasda asd asd aasd asd  sdd s.");
+      Render_Header("BYE!", "bye!");
       exit(EXIT_SUCCESS);
     break;
     }
