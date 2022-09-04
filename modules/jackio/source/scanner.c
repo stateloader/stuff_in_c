@@ -1,168 +1,195 @@
-/*------------------------------------------------------------------------------------------Scanner
-Logic for string, integer and double-input. "Main function" is 'scan_string' with args:
-
--user_input;  pointer to the buffer in which the input will be stored.
--scan_type;   input-type, 0 = string, 1 = integer, 2 = decimal.
--size_buffer; size of input-buffer (user_input).
--message;     prompt/message for the user.
-
-Current config only allows ASCII-chars and the user must input at least one char. On the other end,
-input will be cut and terminated if 'size_buff' is reached.
--------------------------------------------------------------------------------------------------*/
-
+/*--------------------------------------------------------------------------------------------SCANNER
+Basic userinput utilizing different "check-plugins". The idea is to make it easy to add new "plugins"
+and their purpose is to check, and alarm, if the input isn't of desired format. 
+---------------------------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "cstrings.h"
 #include "scanner.h"
 
-typedef struct ScanInfo {
-	const uint16_t info_code;
-	const char *mesg;
-} info_item;
+static uint8_t fail_print(const char *mesg) {
+/*Message (mesg) is printed if any check-condition is violated. Return-value going to be 0 which tells
+ *the while-loop wrapping the entire circus to redo the input-session.*/
+ 
+	printf("%s\n\n", mesg);
+	return 0;
+}
 
-static const uint16_t TERM_FAIL = 0; // string isn't terminated.
-static const uint16_t INFO_SIZE = 1; // string is lesser than 1 char.
-static const uint16_t INFO_ASCI = 2; // string contains anything but ASCII.
-static const uint16_t INFO_NUMB = 3; // string contains anything but integer.
-static const uint16_t INFO_FDCH = 4; // string doesn't begin with an integer.
-static const uint16_t INFO_NCOM = 5; // string contains two dots/commas.
-static const uint16_t INFO_MCOM = 6; // string doesn't contain dots/commas or integer.
+static uint8_t exit_print(const char *func, const char *cause) {
+/*Something went horrible. Terminates the program.*/
 
-//Current Info-flags/bits that will be set in the'check'-member ('scan'-instance) if the user
-//violates an expected input behaviour.
+	fprintf(stderr, "\nERROR | File [%s] Func [\"%s\"] Time [%s]" \
+		"\nCAUSE | %s\nProgram will Terminate...\n",
+		__FILE__, func, __DATE__, cause
+	);
+	exit(EXIT_FAILURE);
+}
 
-static info_item info_items[] = {
-  {TERM_FAIL, "input is corrupted, terminating program.\n"},
-  {INFO_SIZE, "enter at least one character.\n"},
-  {INFO_ASCI, "only ASCII (\"English characters\") allowed.\n"},
-  {INFO_NUMB, "only integers allowed.\n"},
-  {INFO_FDCH, "first character must be an integer.\n"},
-  {INFO_NCOM, "only one comma allowed.\n"},
-  {INFO_MCOM, "only one comma and digits allowed.\n"},
+static uint8_t asci_check(formc_t *asci) {
+/*Ascii (format) check.*/
+
+  for (size_t i = 0; i < asci->size_data - 1; i++) {
+  	if (!ASCI_CHECK(asci->data_buff[i]))
+  		return fail_print("only ASCII (\"English letters\") allowed.");
+  }
+  return 1;
+}
+
+static uint8_t intg_check(formc_t *intg) {
+/*Integer (format) check.*/
+
+  for (size_t i = 0; i < intg->size_data - 1; i++) {
+		if (!INTG_CHECK(intg->data_buff[i]))
+      return fail_print("only integers allowed.");
+  }
+  return 1;
+}
+
+static inline uint8_t decm_inline(guard_t *guard) {
+/*Byte for byte cruncher inside the upcoming 'decm_check'-func.*/
+
+  if (!DECM_CHECK(guard->byte))
+    return fail_print("corrupted format; invalid character.");
+    
+  guard->delm_count += (PERD_CHECK(guard->byte)) ? 1 : 0;
+  if (guard->delm_count > 1)
+  	return fail_print("corrupted format; only one period allowed.");
+  return 1;
+}
+
+static uint8_t decm_check(formc_t *decm) {
+/*decimal (format) check.*/
+
+  guard_t guard = {.state = ONLY_INTG};
+	
+	if (!INTG_CHECK(decm->data_buff[0]))
+		return fail_print("corrupted format; first character must be an integer.");
+		
+  for (size_t i = 0; i < decm->size_data - 1; i++) {
+    guard.byte = decm->data_buff[i];
+      if (!decm_inline(&guard))
+        return 0;
+  }
+  return 1;
+}
+static inline uint8_t ipv4_inline(guard_t *guard) {
+/*Byte for byte cruncher inside the upcoming 'ipv4_check'-func.*/
+
+  if (!IPV4_CHECK(guard->byte))
+    return fail_print("corrupted format; invalid character.");
+
+  switch(guard->state) {
+  case ONLY_DELM:
+    if (!PERD_CHECK(guard->byte))
+      return fail_print("corrupted format; more than 3 digits in octet(s).");
+    guard->delm_count += 1;
+    guard->state = ONLY_INTG;
+    break;
+  
+  case ONLY_INTG:
+    if (!INTG_CHECK(guard->byte))
+      return fail_print("corrupted format; two periods in a row.");
+    guard->intg_count += 1;
+    guard->state = THIS_CONF;
+    break;
+    
+  case THIS_CONF:
+    guard->intg_count += (INTG_CHECK(guard->byte)) ? 1 : 0;
+    if (guard->intg_count == 3) {
+      guard->intg_count = 0;
+      guard->state = ONLY_DELM;
+    } else {
+      guard->state = THIS_CONF;
+    }
+    break;
+  default:
+  	exit_print("ipv4_form", "default reached in switch statement");
+  }
+  return 1;
+}
+
+static uint8_t ipv4_check(formc_t *ipv4) {
+/*ipv4 (format) check.*/
+  
+  guard_t guard = {.state = ONLY_INTG};
+  
+  if (!IPV4_RANGE(ipv4->size_data))
+  	return fail_print("corrupted size; address size outside range 7 to 15.");
+  
+  if (!INTG_CHECK(ipv4->data_buff[0]))
+  	return fail_print("corrupted format; first character not an integer.");
+  
+  for (size_t i = 0; i < ipv4->size_data - 1; i++) {
+    guard.byte = ipv4->data_buff[i];
+    if (!ipv4_inline(&guard)) return 0;
+  }
+  return 1;
+}
+
+static uint8_t ipv6_check(formc_t *ipv6) {
+/*IPv6 format check (to be).*/
+	
+  for (size_t i = 0; i < ipv6->size_data - 1; i++) {
+  	if (!IPV6_CHECK(ipv6->data_buff[i]))
+  	  return fail_print("yolo\n");
+  }
+  return 1;
+}
+
+typedef uint8_t (*form_func)(formc_t *scan);
+
+typedef struct FormatPlugin {	
+	form_func func;
+} form_plug;
+
+static form_plug form_plugs[] = {
+  {asci_check}, {intg_check}, {decm_check},
+  {ipv4_check}, {ipv6_check}, // and so on.
 };
 
-static const uint8_t STATE_SCAN = 0, STATE_DONE = 1;
+//---------------------------------------------------------------------------------------------------
 
-static void scan_info(scan_t *scan) {
-/*By and:ing every bit in 'scan->check' with every 'info_code'-member in 'info_items', corresponding
- *'mesg'-member will be printed. Input logic will be ran again in all cases execept if a failed
- *string-termination is detected which going to force quit the entire program.*/
+static uint8_t scan_check(uint8_t plugin, size_t size_data, char *data_buff) {
+/*Desired 'plugin'-value is assigned to the member (struct-variable 'data' of type 'formc_t') with
+ *the same name. 'data' is used as a bucket to carry assigned value(s)/references to the the
+ *'scan_check'-args down the stack.*/
+
+	formc_t data = {.plugin = plugin,.size_data = size_data,.data_buff = data_buff};
+	
+	if (MINS_CHECK(data.size_data))
+	  return fail_print("enter at least one character.");
+	
+	if (!SPAN_CHECK(data.plugin, SIZE_ARRAY(form_plugs)))
+		return exit_print("format_check", "value of item-arg out of range.");
+	
+	if (!TERM_CHECK(data.data_buff[data.size_data]))
+    return exit_print("format_check", "string not terminated");
+    
+	return form_plugs[data.plugin].func(&data);
+}
+
+static uint8_t scan_input(scan_t *scan, char *message) {
+/*Utilizing fgets for input. The logic demands input of at least one character by compiled default. The
+ *input will be cut and automatically added a terminator if the user reaches the upper buff-limit.*/
  
-  for (size_t i = 0; i < array_size(info_items); i++) {
-    if (scan->check & (1 << info_items[i].info_code))
-    printf("%s\n", info_items[i].mesg);
-  }
-  if (scan->check & (1 << TERM_FAIL))
-    exit(EXIT_FAILURE);
-  
-  scan->check = 0x00;
-  scan->state = STATE_SCAN;
-  scan->dcount = 0;
-  return;
-}
-
-static void check_string(scan_t *scan) {
-/*String-scan check(s).*/
-  
-  scan->check |= (!char_check(scan->this_byte)) ? (1 << INFO_ASCI) : (0 << INFO_ASCI);
-  return;
-}
-
-static void check_integer(scan_t *scan) {
-/*Integer-scan check(s).*/
-
-  scan->check |= (!ints_check(scan->this_byte)) ? (1 << INFO_NUMB) : (0 << INFO_NUMB);
-  return;
-}
-
-static void check_decimal(scan_t *scan) {
-/*Decimal-scan check(s).*/
-
-  scan->dcount += (dots_check(scan->this_byte)) ? 1 : 0;
-
-	scan->check |= (!ints_check(scan->scan_input[0])) ? (1 << INFO_FDCH) : (0 << INFO_FDCH);
-	scan->check |= (!decm_check(scan->this_byte)) ? (1 << INFO_MCOM) : (0 << INFO_MCOM);
-	scan->check |= (scan->dcount > 1) ? (1 << INFO_NCOM) : (0 << INFO_NCOM);
-	return;
-}
-
-static void scan_check(scan_t *scan) {
-/*Some generic checks before type specific checks. Later is dealt with in the 'check'-functions
- *above and called from a func-ptr array ('check_funcs'), indexed by 'input_type'.*/
-
-	void (*check_funcs[])(scan_t *scan) = {check_string, check_integer, check_decimal};
-
-  scan->check |= (!term_check(scan->scan_input, scan->size_scan)) ? (1 << TERM_FAIL) : (0 << TERM_FAIL);
-  scan->check |= (!size_check(scan->size_scan)) ? (1 << INFO_SIZE) : (0 << INFO_SIZE);
-  if (scan->check > 0)
-    return scan_info(scan);
-  
-  for (size_t i = 0; i < scan->size_scan - 1; i++) {
-    scan->this_byte = scan->scan_input[i];
-  	(*check_funcs[scan->scan_type])(scan);
-  	if (scan->check > 0)
-  	  return scan_info(scan);
-  }
-  scan->state = STATE_DONE;
-  
-  return;
-}
-
-static void scan_input(scan_t *scan, char *message) {
-/*Utilizing fgets during input. When user has hit enter, '\n' is swapped for '\0' before the input
- *is checked within the 'scan_check'-function.*/
-
 	printf("%s> ", message);
-  buffer_flush(scan->scan_input, scan->size_buff);
+  buffer_flush(scan->size_buff, scan->scan_buff);
 
-  fgets(scan->scan_input, scan->size_buff, stdin);
-  scan->size_scan = string_size(scan->scan_input, scan->size_buff) - 1;
-  scan->scan_input[scan->size_scan - 1] = '\0';
-  
-  return scan_check(scan);
+  fgets(scan->scan_buff, scan->size_buff, stdin);
+  scan->size_scan = string_size(scan->size_buff, scan->scan_buff) - 1;
+  scan->scan_buff[scan->size_scan - 1] = '\0';
+
+  return scan_check(scan->plugin, scan->size_scan, scan->scan_buff);
 }
 
-static scan_t scan_setup(char *user_input, int8_t scan_type, size_t scan_buff) {
-/*<missing comment>.*/
-  scan_t scan = {0};
+size_t scan_driver(uint8_t plugin, size_t size_buff, char *read_buff, char *message) {
+/*I tend to call all "main-functions" for 'drivers' and this is no exception. Func-params being assigned/
+ *pointed to by the members in struct-variable 'scan' before everything being thrown into 'scan_input'.*/
   
-  scan.state = STATE_SCAN;
-  scan.scan_type = scan_type;
-  scan.size_buff = scan_buff;
-  scan.scan_input = user_input;
+  scan_t scan = {.state = 0,.plugin = plugin,.size_buff = size_buff,.scan_buff = read_buff};
   
-  return scan;
-}
-
-size_t scan_string(char *user_input, int8_t scan_type, size_t size_buff, char *message) {
-/*<missing comment>.*/
- 
-  scan_t scan = scan_setup(user_input, scan_type, size_buff);
+  while (scan.state != 1)
+    scan.state = scan_input(&scan, message);
   
-  while (scan.state != STATE_DONE)
-    scan_input(&scan, message);
-       
   return scan.size_scan;
-}
-
-int64_t scan_integer(char *message) {	
-/*Integer scan.*/
-
-	char integer_buffer[16] = {'\0'};
-	
-	scan_string(integer_buffer, 1, 16, message);
-	int64_t integer = atoi(integer_buffer);
-	
-	return integer;
-}
-
-double scan_decimal(char *message) {  
-/*Double scan.*/
-
-	char decimal_buffer[16] = {'\0'};
-	
-	scan_string(decimal_buffer, 2, 16, message);
-	double decimal = atof(decimal_buffer);
-	
-	return decimal;
 }

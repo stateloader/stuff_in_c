@@ -5,13 +5,10 @@
 
 int main(void) {
 
-  char scan_buff[512] = {'\0'};
-  size_t size_scan = scan_string(scan_buff, 0, 512, "enter awesome string");
+  char read_buff[512] = {'\0'};
+  size_t size_scan = scan_driver(ASCI_PLUG, 512, read_buff, "enter awesome string");
 
-  int64_t integer = scan_integer("enter awesome integer");
-  double decimal = scan_integer("enter awesome double");
-
-  printf("string:   %s [size: %ld]\ninteger:  %ld\ndouble:   %lf\n", scan_buff, size_scan - 1, integer, decimal);
+  printf("awesome string:  %s [size: %ld]\n", read_buff, size_scan - 1);
 
   return 0;
 }
