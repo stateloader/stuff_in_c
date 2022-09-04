@@ -1,10 +1,9 @@
-/*----------------------------------------------------------------------------------------------------------------COMMANDER
-Menues being represented as instances of type 'menu_item' collected as list of 'items'. Each menu stores constants relevant
-for where the user is now and where she/he's heading next in the menu-system depending on input.
+/*----------------------------------------------------------------------------------------COMMANDER
+This fell out WAY more MESSIER than I thought in andvance but it somewhat works quite nice. I've
+written different explanations but they turn up even messier. I'll put something in place later and
+probably sanitize this bad boy a bit. 
+-------------------------------------------------------------------------------------------------*/
 
-Yes indeed, this fell out WAY more MESSIER than I thought in andvance but it somewhat works quite nice. Guess it's easier
-to follow this bad boy from south to north, starting on the bottom with func 'command_driver'.                                                                                   
--------------------------------------------------------------------------------------------------------------------------*/
 #include "stdlib.h"
 #include "../jackIO/scanner.h"
 #include "../jackIO/cstrings.h"
@@ -16,33 +15,34 @@ typedef struct MenuItem {
   const char *cmnd;
 } menu_item;
 
-static menu_item main[] = {       //  Main Menu Items.
+//Main Menu Items.
+static menu_item main[] = {
   {CMAIN, CMESG, "-comment"},
   {CMAIN, CDVCE, "-device"},
   {CMAIN, CHELP, "-help"},
   {CMAIN, CEXIT, "-exit"}
 };
-
-static menu_item mesg[] = {       //  Message Menu Items.
+//Message Menu Items.
+static menu_item mesg[] = {
   {CMESG, CINIT, "-read"},
   {CMESG, CINIT, "-send"},
   {CMESG, CMAIN, "-back"}
 };
-
-static menu_item dvce[] = {       //  Device Menu Items.
+//Device Menu Items.
+static menu_item dvce[] = {
   {CDVCE, CINIT, "-read"},
   {CDVCE, CDLED, "-push"},
   {CDVCE, CMAIN, "-back"}
 };
-
-static menu_item dled[] = {       //  Led (in device) Menu Items.
+//Led (in device) Menu Items.
+static menu_item dled[] = {
   {CDLED, CINIT, "-red"},
   {CDLED, CINIT, "-blue"},
   {CDLED, CINIT, "-green"},
   {CDLED, CMAIN, "-back"}
 };
-
-static menu_item help[] = {       //  Help Menu Item.
+//Help Menu Item.
+static menu_item help[] = {
   {CHELP, CMAIN, "-back"},
 };
 
@@ -83,7 +83,6 @@ static void protocol_write(cmnd_t *command, menu_item item, int8_t index) {
 }
 
 static void print_options(menu_item *items, size_t size_array) {
-/*Prints allowed commands in current item-menu.*/
 
   for (size_t i = 0; i < size_array; i++)
     System_Message(items[i].cmnd);
@@ -92,9 +91,6 @@ static void print_options(menu_item *items, size_t size_array) {
 }
 
 static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array) {
-/*Different 'menu_state's feed different 'items' into the function. Allowed commands stored among these items
- *will be printed before the user enter one of them. Their index-position determines which bit that will be set
- *inside 'protocol_write' and current state ('this_state') maps which byte its going to be.*/
 
   print_options(items, size_array);
   command->size_cmnd = scan_driver(ASCI_PLUG, 512, command->cmnd, "select");
@@ -112,10 +108,6 @@ static int8_t command_scan(cmnd_t *command, menu_item *items, size_t size_array)
 }
 
 void command_driver(uint8_t *protocol) {
-/*Struct-variable 'command' assigns its member 'menu_state' to CMAIN while 'protocol' - pointer of type uint8_t -
- *points at <porotocol/byt namn>. Depending on input the user gives, 'menu_state' vill jump back and forth in the
- *switch-statement whithin the while-loop until the user rage quits or makes a decision. At this point, the protocol
- will become 'the' PROTOCOL.*/
 
   cmnd_t command = {.menu_state = CMAIN,.protocol = protocol};
 
@@ -123,23 +115,23 @@ void command_driver(uint8_t *protocol) {
    
     switch(command.menu_state) {
     case CMAIN:
-      Render_Header("MAIN", "Select in menu by enter any of the available commands");
+      Render_Header("MAIN", "Select in menu by enter any of the available commands.");
       command.menu_state = command_scan(&command, main, ARRAY_SIZE(main));
     break;
     case CMESG:
-      Render_Header("COMMENT", "Read old comments or post a new");
+      Render_Header("COMMENT", "Read old comments or post a new.");
       command.menu_state = command_scan(&command, mesg, ARRAY_SIZE(mesg));
     break;
     case CDVCE:
-      Render_Header("DEVICE", "Read old LED-activity or interact yourself by enter '-push'");
+      Render_Header("DEVICE", "Read old LED-activity or interact yourself by enter \"-push\".");
       command.menu_state = command_scan(&command, dvce, ARRAY_SIZE(dvce));
     break;
     case CDLED:
-      Render_Header("PUSH", "Choose colour");
+      Render_Header("PUSH", "Choose colour.");
       command.menu_state = command_scan(&command, dled, ARRAY_SIZE(dled));
     break;
     case CHELP:
-      Render_Header("HELP", "Everything you need to know");
+      Render_Header("HELP", "You're on your own for now.");
       command.menu_state = command_scan(&command, help, ARRAY_SIZE(help));
     break;
     case CEXIT:

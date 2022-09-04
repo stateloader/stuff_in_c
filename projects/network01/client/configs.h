@@ -4,11 +4,8 @@
 Now, this is what it is - an experimental play with bitwise operations - and nothing that made my
 code more readable nor more "clever".
 
-In a nutshell, the 'STATE CLIENT'-byte lets the system know where in the application-part of the
-process we are. As for now, the process doesn't use this bit-configuration for anything useful.
-
-These error-bits are set throughout the source-files when errors accurs and "summarized" after
-given sessions 4-step process is done (connect, command, request, receive). 
+The 'STATE CLIENT'-byte lets the system know where in the application-part of the process we are.
+As for now I don't use this bit-configuration for utilize for anything useful.
 -------------------------------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,23 +21,29 @@ CONSTANT          |    -    |    -    |    -    |    -    |  SRECV  |  SREQT  | 
 #define SREQT 2   // State Request.
 #define SRECV 3   // State Receive.
 
-/*-----------------------------------------------------------------------------------Protocol-flags
+/*-----------------------------------------------------------------------------------------PROTOCOL
 BIT (N)                7         6         5         4         3          2         1        0
 ---------------------------------------------------------------------------------------------------
 TABLE BYTE        |  MSBIT  |    -    |    -    |    -    |    -    |    -    |  TDVCE  |  TMESG  |
 ---------------------------------------------------------------------------------------------------
 PERFORM BYTE			|  MSBIT  |  PERF6  |  PERF5  |  PERF4  |  PERF3  |  PERF2  |  PERF1  |  PERF0  |
 ---------------------------------------------------------------------------------------------------
-CHECK BYTE				|  MSBIT  |   -     |    -    |    -    |    -    |     -   |    -    |  PPREQ  |
+CHECK BYTE				|  MSBIT  |   -     |    -    |    -    |    -    |  CFAIL  |  SFAIL  |  PPREQ  |
 -------------------------------------------------------------------------------------------------*/
 
-#define TINDX 0   // Table Byte Index.   Flags request-table (message, device, <tables to come>).
-#define PINDX 1   // Perform Byte Index. Flags what to do with the table (read, write, <to come>).
-#define CINDX 2   // Check Byte Index.   Flags of 
+#define TINDX 0   // Table Byte Index.   Flags tables (message, device, <tables to come>).
+
+#define PINDX 1   /* Perform Byte Index. Flags a specific action to perform regarding tables.
+									                       Right now just leds being switched on a device but guess
+									                       CRUDE-functionality lives here down the road.*/
+									                       	
+#define CINDX 2   /* Check Byte Index.   Flags pull/push-request to server. If the server detects
+																				 any errors in received package, bits will be set (in time)
+																				 explaining the problem and included in the response.*/
 //---------------------------------------------------------------------------------------Table Bits
 #define TMESG 0   // Table Message Bit
 #define TDVCE 1   // Table Device Bit
-//-------------------------------------------------------------------------------------Perform Bits
+ //------------------------------------------------------------------------------------Perform Bits
 #define PERF0 0
 #define PERF1 1
 #define PERF2 2
@@ -49,20 +52,20 @@ CHECK BYTE				|  MSBIT  |   -     |    -    |    -    |    -    |     -   |    -
 #define PERF5 5
 #define PERF6 6
 //---------------------------------------------------------------------------------------Check Bits
-#define PPREQ 0   // Push (or) Pull Request
+#define PPREQ 0   // Push (or) Pull Request.
+#define CFAIL 1		// Client Fail. (something wrong with received package).
+#define SFAIL 2		// Server Fail. (server having a bad day).
 #define MSBIT 7   // Most Significant Bit. Always set in bytes belonging to PROTOCOL.
 //------------------------------------------------------------------------------------------Buffers
-#define RBUFF 4096// Receive Buffer.		Max bytes possible to receive.
-#define SBUFF 512 // Send Buffer.				Max bytes possible to send.
+#define RBUFF 4096// Receive Buffer.		Max bytes possible to receive (i.e: tabk)
+#define SBUFF 512 // Standard Buffer.
 #define TBUFF 22  // Time Buffer.
-#define POFFS 4   // Package offset.    Size added/reduced for 'protocol' (and a terminator).
-/*----------------------------------------------------------------------------------------DELIMITER
-
--------------------------------------------------------------------------------------------------*/
+#define POFFS 4   // Package offset.    Size added/reduced for 'protocol' (and terminator).
+//----------------------------------------------------------------------------------------Delimiter
 #define DELIM '|' // Delimiter.
 #define DMESG 4   // Delemiters Message.
 #define DDVCE 3   // Delimiters Device.
-
+//------------------------------------------------------------------------------------------"Stuff"
 #define System_Message(info) printf("\t\t\t%s\n", info);
 
 static inline void Termination_Message(const char *func, const char *cause) {

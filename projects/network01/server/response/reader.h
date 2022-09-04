@@ -3,15 +3,10 @@
 
 #include "../configs.h"
 
-typedef struct ReadItem {
-  const uint8_t flag;
-  const char *filepath;
-} read_item;
-
 typedef struct Reader {
-  size_t size_cont;
+  size_t size_pull;
   uint8_t *protocol;
-  char content[RBUFF];
+  char read[RBUFF];
   FILE *file;
 } read_t;
 

@@ -1,6 +1,6 @@
-/*------------------------------------------------------------------------------------SERVER DRIVER
-
--------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------SERVER TCP
+Main function.
+--------------------------------------------------------------------------------------------------*/
 #include "connect/connect.h"
 #include "configs.h"
 #include "sdriver.h"
@@ -33,5 +33,7 @@ int main(int argc, char **argv) {
     socket_accept(&driver.server);
     server_driver(&driver);
   }
+  if (driver.status & (1 << STERM))
+    exit(EXIT_FAILURE);
   exit(EXIT_SUCCESS);
 }

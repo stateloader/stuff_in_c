@@ -1,11 +1,6 @@
 /*----------------------------------------------------------------------------------RESPONSE DRIVER
-The response
 
-When a response being created from the server it always read or write to a database depending on whether the request was
-of type pull(read something from database) or push(write/append to database). This source-file, through its driver, sewing
-all logic in the RESPONSE-module togheter.  
 -------------------------------------------------------------------------------------------------*/
-
 
 #include <sys/socket.h>
 #include "../jackIO/cstrings.h"
@@ -14,7 +9,9 @@ all logic in the RESPONSE-module togheter.
 #include "response.h"
 
 static void protocol_attach(resp_t *response) {
-/*Attaches the PROTOCOL (and nullterminator) to response-packages.*/
+/*Adds 'POFFS' (4 bytes) to the size of the response-string making room for 'protocol'.*/
+
+	response->size_resp += POFFS;
 
   response->response[response->size_resp - 4] = response->protocol[TINDX];
   response->response[response->size_resp - 3] = response->protocol[PINDX];
@@ -25,59 +22,69 @@ static void protocol_attach(resp_t *response) {
 }
 
 static void database_pull(resp_t *response) {
- /*Struct-variable 'reader' points at protocol and heads down the 'read_driver' before fetched content being copied to
-  *the response-package.*/ 
+/*Requested table will be fetched from given database and copied to the response-string.*/
 
-  read_t reader = {.size_cont = 0};
+  read_t reader = {.size_pull = 0};
   reader.protocol = response->protocol;
 
   read_driver(&reader);
-  response->size_resp = string_copy(RBUFF, response->response, reader.content) - 1;
+  response->size_resp = string_copy(RBUFF, response->response, reader.read) - 1;
+  
   return;
 }
 
 static void database_push(resp_t *response) {
- /*Struct-variable 'writer' points at data stored among the response-members before append-logic taking place inside
-  *the 'write_driver'.*/
+/*Database will be appended with data sent from the client.*/
 
-  write_t writer = {.size_appd = response->size_recv};
+  write_t writer = {.size_push = response->size_recv};
   writer.protocol = response->protocol;
   writer.append = response->received;
 
   write_driver(&writer);
-
-  return;
-}
-
-static void validate_resp(resp_t *response) {
-
-  response->size_resp += POFFS;
-  protocol_attach(response);
-  return;
-}
-
-void response_driver(resp_t *response) {
-/*State of the RWBIT in Received PROTOCOL decides which database-route to take - push or pull - before the crated
- *response being validated and sent.*/
-
-  System_Message("creating response.");
-  int32_t database_route = (response->protocol[CINDX] & (1 << PPREQ)) ? 1 : 0;
-
-  switch (database_route) {
-  case 0:
-    database_pull(response);
-  break;
-  case 1:
-    database_push(response);
-  break;
-  default:
-    System_Message("creating response.");
-  return;
-  }
-  validate_resp(response);
   
-  size_t size_send = send(response->client_sock, response->response, response->size_resp, 0);
-  System_Message("sending response to client.");
+  return;
+}
+
+void response_driver(resp_t *response, uint8_t *status) {
+/*Bit set in 'status' going to decide which path being taken in the switch-statement.*/
+
+  switch(*status) {
+  case 0x01: // SCONN, nothing out of the ordinary.
+		if (response->protocol[CINDX] & (1 << PPREQ))
+		  database_push(response);
+		else
+		  database_pull(response);
+		protocol_attach(response);
+		System_Message("sending response [success] to client.");
+		send(response->client_sock, response->response, response->size_resp, 0);
+  break;
+  
+  case 0x03: // client request corrupted somehow, 'CFAIL' set in the response's 'Check-Byte'.
+    response->protocol[CINDX] |= (1 << CFAIL);
+    protocol_attach(response);
+    System_Message("sending response [error client side] to client.");
+    send(response->client_sock, response->response, response->size_resp, 0);
+    
+    *status &= ~(1 << CWARN); *status |= (1 << SCONN);
+
+  break;
+  
+  case 0x07: // only received non terminated packages terminates (atm), hence 'CFAIL'.
+    response->protocol[CINDX] |= (1 << CFAIL);
+    protocol_attach(response);
+    System_Message("sending response [error client side] to client.");
+    send(response->client_sock, response->response, response->size_resp, 0);
+  break;
+  
+  default:		// reached default, some serious server-error.
+    response->protocol[CINDX] |= (1 << SFAIL);
+    protocol_attach(response);
+    System_Message("sending response [error server side] to client.");
+    send(response->client_sock, response->response, response->size_resp, 0);
+    
+    *status &= ~(1 << SCONN); *status |= (1 << SFAIL);
+  }
   close(response->client_sock);
+  
   return;
 }

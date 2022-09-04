@@ -1,17 +1,18 @@
-/*-------------------------------------------------------------------------------------------------------SERVER CONNECTION
-Dealing with Server connection(s).                                                                                           
-------------------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------CONNECT
+Logic for server-connection.
+-------------------------------------------------------------------------------------------------*/
+
 #include <stdlib.h>
 #include "connect.h"
 
 static void server_create(serv_t *server) {
-/*creates a socket for two-way communication.*/
+/*creates a socket for two-way communication (0 = TCP what I've understood.)*/
 
   server->server_sock_desc = socket(AF_INET, SOCK_STREAM, 0);
   if (server->server_sock_desc < 0) {
     System_Message("failed to create socket.");
     exit(EXIT_FAILURE);
-  }//server failed to create a socket.
+  }
 
   return;
 }
@@ -31,7 +32,7 @@ static void server_binder(serv_t *server, const char *ADDRESS, const char *PORT_
   if (bind_sock < 0) {
     System_Message("failed to bind socket.");
     exit(EXIT_FAILURE);
-  }//server failed to bind socket.
+  }
 
   return;
 }
@@ -48,12 +49,11 @@ void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR) {
 }
 
 void socket_listen(serv_t *server) {
-/*Listens for incomming connections.*/
+/*Listens for incoming connections.*/
 
   int32_t list_sock = listen(server->server_sock_desc, MCONN);
-  if (list_sock < 0) {
-    System_Message("server's up and running!");
-  }
+  if (list_sock < 0)
+    System_Message("server's deaf.");
 
   return;
 }

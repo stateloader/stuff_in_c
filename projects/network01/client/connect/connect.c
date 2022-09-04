@@ -1,6 +1,5 @@
 /*------------------------------------------------------------------------------------------CONNECT
-Something that was born on the fly while playing around with string functionality. Prints string-
-data byte for byte utilizing the ascii-table-thingie below.
+Logic for client-connection.
 -------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
 #include "../jackIO/scanner.h"

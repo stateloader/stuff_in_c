@@ -27,6 +27,12 @@ static void receive_checks(recv_t *receive) {
   if (!(receive->protocol[CINDX] & (1 << MSBIT)))
 		Termination_Message("receive_driver", "Check bit not set in received protocol.");
 	
+	if (receive->protocol[CINDX] & (1 << CFAIL))
+		Termination_Message("receive_driver", "Server detected errors in sent package.");
+	
+	if (receive->protocol[CINDX] & (1 << SFAIL))
+		Termination_Message("receive_driver", "Server having a bad day.");
+		
 	return;
 }
 
@@ -89,7 +95,6 @@ void receive_driver(recv_t *receive) {
  
   receive->size_pack = recv(receive->sock_desc, receive->package, RBUFF, 0);
   receive_checks(receive);
-  
   System_Message("response successfully received.");
   
   if (receive->protocol[CINDX] & (1 << PPREQ))

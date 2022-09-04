@@ -4,7 +4,7 @@
 #include "../configs.h"
 
 typedef struct Writer {
-  size_t size_appd;
+  size_t size_push;
   uint8_t *protocol;
   char *append;
   FILE *file;

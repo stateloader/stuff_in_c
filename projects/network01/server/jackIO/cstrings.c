@@ -56,6 +56,7 @@ size_t string_copy(size_t size_copy_buff, char *copy_buff, const char *from_buff
 	return size_copy;
 }
 
+/*[Under construction]
 size_t string_ccat(size_t size_dest_buff, char *dest_buff, const char *from_buff) {
 
   size_t size_from = string_size(BUFF_SIZE_LIMIT, from_buff);
@@ -69,6 +70,7 @@ size_t string_ccat(size_t size_dest_buff, char *dest_buff, const char *from_buff
   }
 	return size_last;
 }
+*/
 
 int8_t string_comp(size_t comp_size, const char *str1, const char *str2) {
 /*For every matching byte, 'equal' will be incremented. If it matches 'comp_size' there's a perfect

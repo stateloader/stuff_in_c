@@ -12,6 +12,6 @@ typedef struct Response {
   char response[RBUFF];
 } resp_t;
 
-void response_driver(resp_t *response);
+void response_driver(resp_t *response, uint8_t *status);
 
 #endif

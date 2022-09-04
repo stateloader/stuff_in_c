@@ -1,11 +1,15 @@
-
-/*------------------------------------------------------------------------------------SERVER DRIVER
-
+/*-------------------------------------------------------------------------------------------READER
+Logic dealing with requests ending up in reading from file.
 -------------------------------------------------------------------------------------------------*/
-/*-------------------------------------------------------------------------------------------------------------------READER
-Source-file containing all logic dealing with reading from database(s).                                                             
-/------------------------------------------------------------------------------------------------------------------------*/
+
 #include "reader.h"
+
+//'read_item'-whereabouts in place for scalability when/if more databases come in place.
+
+typedef struct ReadItem {
+  const uint8_t flag;
+  const char *filepath;
+} read_item;
 
 static read_item read_items[] = {
   {TMESG, "response/database/mesg.dat"},
@@ -13,22 +17,24 @@ static read_item read_items[] = {
 };
 
 static void database_open(read_t *reader) {
-/*For now just two items why this loop isn't really needed but it's in place for scaling when (if) more stuff to handle
- *is in place.*/
-
-  System_Message("opens the file.");
 
   for (size_t i = 0; i < ARRAY_SIZE(read_items); i++) {
     if (reader->protocol[TINDX] & (1 << read_items[i].flag))
       reader->file = fopen(read_items[i].filepath, "r");
   }
+  if (reader->file == NULL)
+ 		System_Message("[Error to catch]: file not found read.");
   return;
 }
 
 static void database_pull(read_t *reader)  {
-/*Reading content from the (a) database.*/
+/*Reading from database.*/
 
-  reader->size_cont = fread(reader->content, sizeof(char), RBUFF, reader->file);
+  reader->size_pull = fread(reader->read, sizeof(char), RBUFF, reader->file);
+  
+  if (reader->size_pull < 1)
+ 		System_Message("[Error to catch]: did't read any data from 'fread'.");
+  
   if (reader->file) fclose(reader->file);
 
   return;
