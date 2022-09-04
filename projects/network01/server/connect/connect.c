@@ -2,7 +2,7 @@
 Dealing with Server connection(s).                                                                                           
 ------------------------------------------------------------------------------------------------------------------------*/
 #include <stdlib.h>
-#include "connection.h"
+#include "connect.h"
 
 static void server_create(serv_t *server) {
 /*creates a socket for two-way communication.*/
@@ -47,18 +47,18 @@ void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR) {
   return;
 }
 
-void socket_listen(serv_t *server, uint16_t *status, uint16_t *error) {
+void socket_listen(serv_t *server) {
 /*Listens for incomming connections.*/
 
   int32_t list_sock = listen(server->server_sock_desc, MCONN);
   if (list_sock < 0) {
-    *status |= (1 << ERROR); *error |= (1 << CLERR);
-  }//server failed listening for clients.
+    System_Message("server's up and running!");
+  }
 
   return;
 }
 
-void socket_accept(serv_t *server, uint16_t *status, uint16_t *error) {
+void socket_accept(serv_t *server) {
 /*Accepting incoming connection.*/
 
   Render_Header("IDLE", "Waiting for incoming connections");
@@ -69,9 +69,9 @@ void socket_accept(serv_t *server, uint16_t *status, uint16_t *error) {
   server->server_sock_desc, (struct sockaddr *) &server->client_address, (socklen_t*) &client_length);
 
   if (server->client_sock_desc < 0) {
-    *status |= (1 << ERROR); *error |= (1 << CAERR);
+    System_Message("failed to accept client!");
     return;
-  }//server failed accepting client.
+  }
 
   printf("\t\t\tclient connected at IP: %s and port: %i\n", 
     inet_ntoa(server->client_address.sin_addr),

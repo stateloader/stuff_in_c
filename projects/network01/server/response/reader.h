@@ -1,7 +1,7 @@
-#ifndef READER_H_
-#define READER_H_
+#ifndef READER__H_
+#define READER__H_
 
-#include "../system/configs.h"
+#include "../configs.h"
 
 typedef struct ReadItem {
   const uint8_t flag;
@@ -15,6 +15,6 @@ typedef struct Reader {
   FILE *file;
 } read_t;
 
-void read_driver(read_t *reader, uint16_t *state, uint16_t *error);
+void read_driver(read_t *reader);
 
 #endif

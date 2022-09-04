@@ -1,7 +1,7 @@
-#ifndef WRITER_H_
-#define WRITER_H_
+#ifndef WRITER__H_
+#define WRITER__H_
 
-#include "../system/configs.h"
+#include "../configs.h"
 
 typedef struct Writer {
   size_t size_appd;
@@ -10,6 +10,6 @@ typedef struct Writer {
   FILE *file;
 } write_t;
 
-void write_driver(write_t *writer, uint16_t *state, uint16_t *error);
+void write_driver(write_t *writer);
 
 #endif

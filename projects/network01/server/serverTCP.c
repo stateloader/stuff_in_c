@@ -1,6 +1,8 @@
-#include <stdlib.h>
-#include "connect/connection.h"
-#include "system/configs.h"
+/*------------------------------------------------------------------------------------SERVER DRIVER
+
+-------------------------------------------------------------------------------------------------*/
+#include "connect/connect.h"
+#include "configs.h"
 #include "sdriver.h"
 
 static void validate_usage(int argc) {
@@ -18,7 +20,7 @@ int main(int argc, char **argv) {
 
   validate_usage(argc);
 
-  dver_t driver = {.status = 0x00};
+  driver_t driver = {.status = 0x00};
   serv_t server = {.client_sock_desc = 0};
 
   server_connect(&server, argv[1], argv[2]);
@@ -27,8 +29,8 @@ int main(int argc, char **argv) {
   driver.status |= (1 << SCONN);
 
   while (driver.status & (1 << SCONN)) {
-    socket_listen(&driver.server, &driver.status, &driver.error);
-    socket_accept(&driver.server, &driver.status, &driver.error);
+    socket_listen(&driver.server);
+    socket_accept(&driver.server);
     server_driver(&driver);
   }
   exit(EXIT_SUCCESS);

@@ -1,13 +1,13 @@
-#ifndef SDRIVER_H_
-#define SDRIVER_H_
+#ifndef SDRIVER__H_
+#define SDRIVER__H_
 
-#include "connect/connection.h"
+#include "connect/connect.h"
 
 typedef struct ServerDriver {
-  uint16_t status, error;
+  uint8_t status;
   serv_t server;
-} dver_t;
+} driver_t;
 
-void server_driver(dver_t *driver);
+void server_driver(driver_t *driver);
 
 #endif

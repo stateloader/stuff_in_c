@@ -1,7 +1,7 @@
-#ifndef CONNECTION_H_
-#define CONNECTION_H_
+#ifndef CONNECT__H_
+#define CONNECT__H_
 
-#include "../system/configs.h"
+#include "../configs.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
@@ -16,7 +16,7 @@ typedef struct Server {
 } serv_t;
 
 void server_connect(serv_t *client, const char *ADDRESS, const char *PORT_STR);
-void socket_listen(serv_t *server, uint16_t *status, uint16_t *error);
-void socket_accept(serv_t *server, uint16_t *status, uint16_t *error);
+void socket_listen(serv_t *server);
+void socket_accept(serv_t *server);
 
 #endif
